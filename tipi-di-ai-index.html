@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mappa visuale dei tipi di AI</title>
+<style>
+  :root{
+    --bg:#100f0d;
+    --bg2:#171512;
+    --panel:#1c1a17;
+    --panel2:#232019;
+    --line:#332f28;
+    --ink:#f2efe9;
+    --ink-soft:#a8a196;
+    --ink-faint:#6e6961;
+
+    --a1:#f5a524;  /* capacità */
+    --a2:#3fa9e8;  /* tecnologia */
+    --a3:#b06bf5;  /* filosofia */
+    --a4:#35d18f;  /* cognizione */
+    --a5:#f4653f;  /* regolazione */
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 26px 110px}
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding:80px 0 46px;position:relative;overflow:hidden;
+  }
+  .hero:before{
+    content:'';position:absolute;top:-160px;left:50%;transform:translateX(-50%);
+    width:900px;height:420px;pointer-events:none;
+    background:radial-gradient(ellipse at center,rgba(245,165,36,.13),transparent 65%);
+  }
+  .eyebrow{
+    position:relative;font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--a1);font-weight:700;margin-bottom:18px;
+  }
+  h1{
+    position:relative;font-size:clamp(34px,6vw,62px);line-height:1.04;margin:0 0 22px;
+    letter-spacing:-.035em;font-weight:800;
+  }
+  h1 em{
+    font-style:normal;
+    background:linear-gradient(100deg,var(--a1),var(--a5) 45%,var(--a3) 78%,var(--a2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .lede{position:relative;font-size:18px;color:var(--ink-soft);max-width:600px;margin:0 0 34px}
+
+  .legend{
+    position:relative;display:flex;flex-wrap:wrap;gap:22px;
+    padding:16px 20px;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;font-size:13px;color:var(--ink-soft);
+  }
+  .legend b{display:inline-flex;align-items:center;gap:8px;font-weight:600;color:var(--ink)}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .d-real{background:var(--a4)}
+  .d-part{background:var(--a1)}
+  .d-theo{background:var(--a3);opacity:.55}
+
+  /* ---------- axis block ---------- */
+  .axis{
+    border-top:1px solid var(--line);
+    padding:52px 0 10px;
+  }
+  .axis-top{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+  .axis-num{
+    font-size:13px;font-weight:800;letter-spacing:.1em;
+    padding:5px 11px;border-radius:6px;
+  }
+  .n1{background:rgba(245,165,36,.14);color:var(--a1)}
+  .n2{background:rgba(63,169,232,.14);color:var(--a2)}
+  .n3{background:rgba(176,107,245,.14);color:var(--a3)}
+  .n4{background:rgba(53,209,143,.14);color:var(--a4)}
+  .n5{background:rgba(244,101,63,.14);color:var(--a5)}
+  .axis h2{font-size:clamp(24px,3.4vw,32px);margin:0;letter-spacing:-.022em;font-weight:750}
+  .axis-q{color:var(--ink-faint);font-size:15.5px;margin:6px 0 30px;font-style:italic}
+
+  .stage{
+    background:linear-gradient(160deg,var(--panel),var(--bg2));
+    border:1px solid var(--line);border-radius:18px;
+    padding:38px 32px;margin-bottom:16px;
+  }
+
+  /* ---------- asse 1 : scala ---------- */
+  .scale{display:flex;gap:14px;align-items:stretch;flex-wrap:wrap}
+  .step{
+    flex:1 1 190px;min-height:150px;position:relative;
+    border-radius:13px;padding:20px;display:flex;flex-direction:column;
+    justify-content:flex-end;transition:transform .18s,box-shadow .18s;
+    border:1.5px solid;
+  }
+  .step:hover{transform:translateY(-4px)}
+  .s-real{
+    background:linear-gradient(165deg,rgba(53,209,143,.16),rgba(53,209,143,.03));
+    border-color:rgba(53,209,143,.5);
+  }
+  .s-real:hover{box-shadow:0 10px 30px -10px rgba(53,209,143,.4)}
+  .s-part{
+    background:linear-gradient(165deg,rgba(245,165,36,.10),transparent);
+    border-color:rgba(245,165,36,.42);border-style:dashed;
+  }
+  .s-part:hover{box-shadow:0 10px 30px -10px rgba(245,165,36,.35)}
+  .s-theo{
+    background:linear-gradient(165deg,rgba(176,107,245,.07),transparent);
+    border-color:rgba(176,107,245,.3);border-style:dashed;
+  }
+  .s-theo:hover{box-shadow:0 10px 30px -10px rgba(176,107,245,.3)}
+  .step .tag{
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
+    margin-bottom:auto;
+  }
+  .s-real .tag{color:var(--a4)}
+  .s-part .tag{color:var(--a1)}
+  .s-theo .tag{color:var(--a3)}
+  .step .nm{font-size:21px;font-weight:750;letter-spacing:-.015em;margin-bottom:5px}
+  .step .ds{font-size:13.5px;color:var(--ink-soft);line-height:1.45}
+  .step .go{
+    font-size:12px;color:var(--ink-faint);margin-top:11px;
+    opacity:0;transition:opacity .18s;
+  }
+  .step:hover .go{opacity:1}
+
+  .aside-card{
+    margin-top:16px;display:flex;gap:18px;align-items:flex-start;
+    background:var(--panel2);border:1px solid var(--line);
+    border-left:3px solid var(--a5);
+    border-radius:0 13px 13px 0;padding:20px 24px;
+    transition:background .18s;
+  }
+  .aside-card:hover{background:#2a2620}
+  .aside-card .x{
+    font-size:26px;line-height:1;color:var(--a5);font-weight:300;flex:0 0 auto;margin-top:2px;
+  }
+  .aside-card .nm{font-size:18px;font-weight:700;margin-bottom:4px}
+  .aside-card .ds{font-size:14px;color:var(--ink-soft)}
+
+  /* ---------- svg generico ---------- */
+  .svg-row{display:flex;gap:34px;align-items:center;flex-wrap:wrap;justify-content:center}
+  svg{max-width:100%;height:auto;display:block}
+  svg a{cursor:pointer}
+  svg a .hit{transition:opacity .18s}
+  svg text{font-family:inherit}
+  .svg-note{
+    flex:1 1 220px;min-width:210px;font-size:14px;color:var(--ink-soft);
+  }
+  .svg-note h4{
+    margin:0 0 8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:800;
+  }
+  .svg-note p{margin:0 0 12px}
+  .svg-note p:last-child{margin:0}
+  .svg-note b{color:var(--ink)}
+
+  /* ---------- asse 2 pill agentica ---------- */
+  .agent-pill{
+    display:flex;align-items:center;gap:16px;justify-content:center;
+    margin-top:24px;padding:18px 24px;border-radius:13px;
+    background:linear-gradient(100deg,rgba(63,169,232,.14),rgba(63,169,232,.03));
+    border:1.5px solid rgba(63,169,232,.45);
+    transition:transform .18s,box-shadow .18s;flex-wrap:wrap;text-align:left;
+  }
+  .agent-pill:hover{transform:translateY(-3px);box-shadow:0 10px 30px -10px rgba(63,169,232,.4)}
+  .agent-pill .ar{font-size:22px;color:var(--a2)}
+  .agent-pill .nm{font-size:18px;font-weight:750}
+  .agent-pill .ds{font-size:13.5px;color:var(--ink-soft)}
+
+  /* ---------- asse 3 : split ---------- */
+  .split{display:grid;grid-template-columns:1fr auto 1fr;gap:22px;align-items:center}
+  .side{
+    border-radius:14px;padding:26px;min-height:210px;
+    display:flex;flex-direction:column;justify-content:center;
+    border:1.5px solid;transition:transform .18s,box-shadow .18s;
+  }
+  .side:hover{transform:translateY(-4px)}
+  .side-w{
+    background:linear-gradient(165deg,rgba(176,107,245,.15),rgba(176,107,245,.02));
+    border-color:rgba(176,107,245,.5);
+  }
+  .side-w:hover{box-shadow:0 12px 34px -12px rgba(176,107,245,.45)}
+  .side-s{
+    background:linear-gradient(165deg,rgba(176,107,245,.05),transparent);
+    border-color:rgba(176,107,245,.25);border-style:dashed;
+  }
+  .side-s:hover{box-shadow:0 12px 34px -12px rgba(176,107,245,.25)}
+  .side .tag{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--a3);margin-bottom:12px}
+  .side .nm{font-size:24px;font-weight:750;letter-spacing:-.02em;margin-bottom:8px}
+  .side .ds{font-size:14px;color:var(--ink-soft);margin-bottom:14px}
+  .side .q{
+    font-size:13px;color:var(--ink);background:rgba(255,255,255,.05);
+    border-radius:8px;padding:10px 13px;font-style:italic;
+  }
+  .vs{
+    font-size:12px;letter-spacing:.16em;font-weight:800;color:var(--ink-faint);
+    writing-mode:vertical-rl;text-orientation:mixed;
+  }
+
+  /* ---------- matrice ---------- */
+  .matrix{
+    border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    background:var(--panel);margin-top:8px;
+  }
+  .mx-scroll{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;min-width:700px;font-size:13.5px}
+  th,td{padding:13px 14px;text-align:left;border-bottom:1px solid var(--line)}
+  th{
+    font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:800;background:var(--panel2);
+  }
+  tr:last-child td{border-bottom:none}
+  tbody tr{transition:background .15s}
+  tbody tr:hover{background:rgba(255,255,255,.028)}
+  td.sys{font-weight:650;color:var(--ink)}
+  .cell{
+    display:inline-block;padding:3px 9px;border-radius:5px;
+    font-size:12px;font-weight:600;white-space:nowrap;
+  }
+  .cst{background:rgba(245,165,36,.13);color:var(--a1)}     /* costante */
+  .ctc{background:rgba(63,169,232,.13);color:var(--a2)}
+  .ccg{background:rgba(53,209,143,.13);color:var(--a4)}
+  .crg{background:rgba(244,101,63,.13);color:var(--a5)}
+  .crg-hi{background:rgba(244,101,63,.26);color:#ff9271;font-weight:750}
+
+  .insight{
+    margin-top:20px;padding:22px 26px;border-radius:14px;
+    background:linear-gradient(100deg,rgba(245,165,36,.12),rgba(244,101,63,.05));
+    border:1px solid rgba(245,165,36,.3);font-size:15.5px;
+  }
+  .insight b{color:var(--a1)}
+
+  /* ---------- cta ---------- */
+  .cta{
+    margin-top:60px;text-align:center;padding:48px 32px;border-radius:18px;
+    background:linear-gradient(160deg,var(--panel),var(--bg2));
+    border:1px solid var(--line);
+  }
+  .cta h3{font-size:26px;margin:0 0 10px;letter-spacing:-.02em}
+  .cta p{color:var(--ink-soft);margin:0 0 24px;font-size:15.5px}
+  .btn{
+    display:inline-block;padding:14px 30px;border-radius:10px;
+    background:var(--ink);color:var(--bg);font-weight:750;font-size:15px;
+    transition:transform .16s,box-shadow .16s;
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px -10px rgba(242,239,233,.4)}
+
+  footer{
+    margin-top:56px;padding-top:24px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--ink-faint);text-align:center;
+  }
+
+  @media(max-width:760px){
+    .split{grid-template-columns:1fr;gap:14px}
+    .vs{writing-mode:horizontal-tb;text-align:center}
+    .stage{padding:26px 18px}
+    .wrap{padding:0 18px 70px}
+    .hero{padding:52px 0 34px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <div class="eyebrow">Mappa visuale · tipi di intelligenza artificiale</div>
+  <h1>Cinque domande,<br>non <em>una scala sola</em>.</h1>
+  <p class="lede">Le classificazioni dell'AI sembrano contraddirsi solo perché rispondono a domande diverse. Eccole separate. Clicca su qualunque nome per aprirne la spiegazione completa.</p>
+  <div class="legend">
+    <b><span class="dot d-real"></span> Esiste ed è in produzione</b>
+    <b><span class="dot d-part"></span> Contesa / ricerca aperta</b>
+    <b><span class="dot d-theo"></span> Teorica o ipotetica</b>
+  </div>
+</div>
+
+<!-- ========== ASSE 1 ========== -->
+<div class="axis">
+  <div class="axis-top"><span class="axis-num n1">Asse 1</span><h2>Capacità</h2></div>
+  <p class="axis-q">Quanto è ampio il dominio in cui il sistema è competente?</p>
+
+  <div class="stage">
+    <div class="scale">
+      <a class="step s-real" href="tipi-di-ai.html#c-ani">
+        <div class="tag">● Tutto ciò che esiste</div>
+        <div class="nm">AI ristretta</div>
+        <div class="ds">Picco altissimo su un dominio solo. Fuori da lì, il vuoto.</div>
+        <div class="go">Apri la scheda →</div>
+      </a>
+      <a class="step s-part" href="tipi-di-ai.html#c-agi">
+        <div class="tag">◌ Contesa</div>
+        <div class="nm">AI generale</div>
+        <div class="ds">Trasferisce la competenza da un dominio all'altro. Nessuna definizione condivisa.</div>
+        <div class="go">Apri la scheda →</div>
+      </a>
+      <a class="step s-theo" href="tipi-di-ai.html#c-asi">
+        <div class="tag">◌ Ipotetica</div>
+        <div class="nm">Superintelligenza</div>
+        <div class="ds">Supera l'uomo in virtualmente ogni dominio. Per velocità, numero o qualità.</div>
+        <div class="go">Apri la scheda →</div>
+      </a>
+    </div>
+
+    <a class="aside-card" href="tipi-di-ai.html#c-singolarita">
+      <span class="x">✕</span>
+      <span>
+        <span class="nm">Singolarità tecnologica — fuori scala</span>
+        <span class="ds">Non è un tipo di AI. È l'ipotesi di un <b>momento storico</b> oltre il quale il futuro smette di essere prevedibile. Compare in questi elenchi per errore di categoria. →</span>
+      </span>
+    </a>
+  </div>
+</div>
+
+<!-- ========== ASSE 2 ========== -->
+<div class="axis">
+  <div class="axis-top"><span class="axis-num n2">Asse 2</span><h2>Tecnologia</h2></div>
+  <p class="axis-q">Con quale tecnica è costruito il sistema?</p>
+
+  <div class="stage">
+    <div class="svg-row">
+      <svg viewBox="0 0 420 420" width="420" role="img" aria-label="Cerchi concentrici: AI contiene machine learning, che contiene deep learning, che contiene AI generativa">
+        <defs>
+          <radialGradient id="g4" cx="50%" cy="42%">
+            <stop offset="0%" stop-color="#3fa9e8" stop-opacity=".42"/>
+            <stop offset="100%" stop-color="#3fa9e8" stop-opacity=".16"/>
+          </radialGradient>
+        </defs>
+
+        <!-- AI -->
+        <a href="tipi-di-ai.html#t-simbolica">
+          <circle class="hit" cx="210" cy="210" r="200" fill="rgba(63,169,232,.05)" stroke="rgba(63,169,232,.35)" stroke-width="1.5"/>
+          <text x="210" y="34" text-anchor="middle" fill="#f2efe9" font-size="15" font-weight="700">Intelligenza Artificiale</text>
+          <text x="210" y="54" text-anchor="middle" fill="#a8a196" font-size="12">qui vive anche l'AI simbolica ↗</text>
+        </a>
+
+        <!-- ML -->
+        <a href="tipi-di-ai.html#t-ml">
+          <circle class="hit" cx="210" cy="228" r="158" fill="rgba(63,169,232,.07)" stroke="rgba(63,169,232,.5)" stroke-width="1.5"/>
+          <text x="210" y="102" text-anchor="middle" fill="#f2efe9" font-size="15" font-weight="700">Machine Learning</text>
+          <text x="210" y="121" text-anchor="middle" fill="#a8a196" font-size="11.5">le regole si ricavano dai dati</text>
+        </a>
+
+        <!-- DL -->
+        <a href="tipi-di-ai.html#t-dl">
+          <circle class="hit" cx="210" cy="248" r="118" fill="rgba(63,169,232,.1)" stroke="rgba(63,169,232,.65)" stroke-width="1.5"/>
+          <text x="210" y="166" text-anchor="middle" fill="#f2efe9" font-size="15" font-weight="700">Deep Learning</text>
+          <text x="210" y="185" text-anchor="middle" fill="#a8a196" font-size="11.5">reti neurali profonde</text>
+        </a>
+
+        <!-- GEN -->
+        <a href="tipi-di-ai.html#t-generativa">
+          <circle class="hit" cx="210" cy="272" r="80" fill="url(#g4)" stroke="#3fa9e8" stroke-width="2"/>
+          <text x="210" y="268" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="750">AI generativa</text>
+          <text x="210" y="288" text-anchor="middle" fill="#d3e9f8" font-size="11.5">produce contenuto nuovo</text>
+          <text x="210" y="306" text-anchor="middle" fill="#8fc4e6" font-size="10.5">← ChatGPT è qui</text>
+        </a>
+      </svg>
+
+      <div class="svg-note">
+        <h4>Come si legge</h4>
+        <p>Non sono alternative fra cui scegliere: sono <b>cerchi concentrici</b>. L'AI generativa è deep learning, che è machine learning, che è AI.</p>
+        <p>L'<b>AI simbolica</b> sta dentro il cerchio più esterno ma fuori da tutti gli altri: è AI che non impara, perché le regole gliele scrive una persona. Non è obsoleta — è la scelta giusta quando la logica è nota e deve essere ispezionabile.</p>
+      </div>
+    </div>
+
+    <a class="agent-pill" href="tipi-di-ai.html#t-agentica">
+      <span class="ar">↑</span>
+      <span>
+        <span class="nm">AI agentica</span>
+        <span class="ds">Non è un cerchio più interno: è uno <b>strato sopra</b> il generativo. Stesso motore, più il permesso di agire sul mondo — API, browser, pagamenti. →</span>
+      </span>
+    </a>
+  </div>
+</div>
+
+<!-- ========== ASSE 3 ========== -->
+<div class="axis">
+  <div class="axis-top"><span class="axis-num n3">Asse 3</span><h2>Filosofia</h2></div>
+  <p class="axis-q">Il sistema capisce davvero, o simula la comprensione? — John Searle, 1980</p>
+
+  <div class="stage">
+    <div class="split">
+      <a class="side side-w" href="tipi-di-ai.html#f-debole">
+        <div class="tag">● Tutto ciò che esiste</div>
+        <div class="nm">AI debole</div>
+        <div class="ds">Manipola simboli correttamente senza che nulla, al suo interno, significhi qualcosa. Comprensione «come se».</div>
+        <div class="q">Nella Stanza Cinese, chi sta dentro passa risposte perfette in cinese senza sapere una parola di cinese. →</div>
+      </a>
+
+      <div class="vs">contro</div>
+
+      <a class="side side-s" href="tipi-di-ai.html#f-forte">
+        <div class="tag">◌ Ipotetica e contestata</div>
+        <div class="nm">AI forte</div>
+        <div class="ds">Il computer opportunamente programmato non simula una mente: <b>è</b> una mente, e letteralmente comprende.</div>
+        <div class="q">Due sistemi con output identici potrebbero essere uno debole e uno forte. Nessun benchmark può distinguerli. →</div>
+      </a>
+    </div>
+    <p class="svg-note" style="margin-top:24px;max-width:none">
+      <b>Attenzione all'equivoco più costoso:</b> «debole» non vuol dire scarso e «forte» non vuol dire potente. Questi termini riguardano la <b>coscienza</b>, non la performance. Un sistema di AI debole può essere sovrumano.
+    </p>
+  </div>
+</div>
+
+<!-- ========== ASSE 4 ========== -->
+<div class="axis">
+  <div class="axis-top"><span class="axis-num n4">Asse 4</span><h2>Cognizione</h2></div>
+  <p class="axis-q">Cosa può ricordare, capire degli altri e sapere di sé? — Arend Hintze, 2016</p>
+
+  <div class="stage">
+    <div class="svg-row">
+      <svg viewBox="0 0 620 320" width="620" role="img" aria-label="Scala a quattro gradini: macchine reattive, memoria limitata, teoria della mente, autocoscienza">
+        <!-- gradino 1 -->
+        <a href="tipi-di-ai.html#k-reattive">
+          <rect class="hit" x="6" y="228" width="146" height="86" rx="9" fill="rgba(53,209,143,.16)" stroke="rgba(53,209,143,.55)" stroke-width="1.5"/>
+          <text x="79" y="258" text-anchor="middle" fill="#35d18f" font-size="10.5" font-weight="800" letter-spacing="1.4">TIPO 1</text>
+          <text x="79" y="279" text-anchor="middle" fill="#f2efe9" font-size="14" font-weight="700">Reattive</text>
+          <text x="79" y="298" text-anchor="middle" fill="#a8a196" font-size="11">nessuna memoria</text>
+        </a>
+        <!-- gradino 2 -->
+        <a href="tipi-di-ai.html#k-memoria">
+          <rect class="hit" x="158" y="160" width="146" height="154" rx="9" fill="rgba(53,209,143,.22)" stroke="#35d18f" stroke-width="2"/>
+          <text x="231" y="190" text-anchor="middle" fill="#35d18f" font-size="10.5" font-weight="800" letter-spacing="1.4">TIPO 2</text>
+          <text x="231" y="212" text-anchor="middle" fill="#ffffff" font-size="14.5" font-weight="750">Memoria limitata</text>
+          <text x="231" y="231" text-anchor="middle" fill="#a8a196" font-size="11">usa il passato recente</text>
+          <rect x="181" y="248" width="100" height="26" rx="13" fill="#35d18f"/>
+          <text x="231" y="266" text-anchor="middle" fill="#0e1a14" font-size="11.5" font-weight="800" letter-spacing=".8">SIAMO QUI</text>
+          <text x="231" y="295" text-anchor="middle" fill="#8fd9b8" font-size="10.5">LLM · guida autonoma</text>
+        </a>
+        <!-- gradino 3 -->
+        <a href="tipi-di-ai.html#k-teoria">
+          <rect class="hit" x="310" y="92" width="146" height="222" rx="9" fill="rgba(245,165,36,.08)" stroke="rgba(245,165,36,.5)" stroke-width="1.5" stroke-dasharray="6 5"/>
+          <text x="383" y="122" text-anchor="middle" fill="#f5a524" font-size="10.5" font-weight="800" letter-spacing="1.4">TIPO 3</text>
+          <text x="383" y="144" text-anchor="middle" fill="#f2efe9" font-size="14" font-weight="700">Teoria</text>
+          <text x="383" y="163" text-anchor="middle" fill="#f2efe9" font-size="14" font-weight="700">della mente</text>
+          <text x="383" y="185" text-anchor="middle" fill="#a8a196" font-size="11">modella ciò che</text>
+          <text x="383" y="200" text-anchor="middle" fill="#a8a196" font-size="11">l'altro crede</text>
+          <text x="383" y="228" text-anchor="middle" fill="#f5a524" font-size="10.5" font-weight="700">ricerca aperta</text>
+        </a>
+        <!-- gradino 4 -->
+        <a href="tipi-di-ai.html#k-autocoscienza">
+          <rect class="hit" x="462" y="24" width="146" height="290" rx="9" fill="rgba(176,107,245,.06)" stroke="rgba(176,107,245,.34)" stroke-width="1.5" stroke-dasharray="4 6"/>
+          <text x="535" y="54" text-anchor="middle" fill="#b06bf5" font-size="10.5" font-weight="800" letter-spacing="1.4">TIPO 4</text>
+          <text x="535" y="76" text-anchor="middle" fill="#e8e2ee" font-size="14" font-weight="700">Autocoscienza</text>
+          <text x="535" y="98" text-anchor="middle" fill="#a8a196" font-size="11">modella sé stesso</text>
+          <text x="535" y="126" text-anchor="middle" fill="#b06bf5" font-size="10.5" font-weight="700">puramente teorico</text>
+        </a>
+      </svg>
+
+      <div class="svg-note">
+        <h4>Come si legge</h4>
+        <p>Il sistema più avanzato oggi in produzione è al <b>secondo gradino su quattro</b>. E il divario tra il secondo e il terzo non si colma scalando il secondo.</p>
+        <p>Un modello linguistico ricorda l'inizio della conversazione perché è ancora <b>dentro l'input</b>, non perché abbia imparato. Chiusa la sessione, i pesi non sono cambiati.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== ASSE 5 ========== -->
+<div class="axis">
+  <div class="axis-top"><span class="axis-num n5">Asse 5</span><h2>Regolazione</h2></div>
+  <p class="axis-q">Quali obblighi di legge fa scattare questo sistema? — Regolamento UE sull'IA</p>
+
+  <div class="stage">
+    <div class="svg-row">
+      <svg viewBox="0 0 460 340" width="460" role="img" aria-label="Piramide del rischio dell'AI Act: inaccettabile, alto, limitato, minimo">
+        <!-- inaccettabile -->
+        <a href="tipi-di-ai.html#r-inaccettabile">
+          <path class="hit" d="M230 12 L288 84 L172 84 Z" fill="rgba(244,101,63,.34)" stroke="#f4653f" stroke-width="2"/>
+          <text x="230" y="62" text-anchor="middle" fill="#ffffff" font-size="12.5" font-weight="800">VIETATO</text>
+          <text x="316" y="58" fill="#f4653f" font-size="13" font-weight="700">Rischio inaccettabile</text>
+          <text x="316" y="76" fill="#a8a196" font-size="11.5">fino a 35 M€ o 7% del fatturato</text>
+        </a>
+        <!-- alto -->
+        <a href="tipi-di-ai.html#r-alto">
+          <path class="hit" d="M172 90 L288 90 L336 150 L124 150 Z" fill="rgba(244,101,63,.2)" stroke="rgba(244,101,63,.7)" stroke-width="1.6"/>
+          <text x="230" y="127" text-anchor="middle" fill="#ffd0c0" font-size="13" font-weight="750">ALTO RISCHIO</text>
+          <text x="352" y="118" fill="#ff8f6d" font-size="13" font-weight="700">Permesso, molto regolato</text>
+          <text x="352" y="136" fill="#a8a196" font-size="11.5">CV, credito, sanità, giustizia</text>
+        </a>
+        <!-- limitato -->
+        <a href="tipi-di-ai.html#r-limitato">
+          <path class="hit" d="M124 156 L336 156 L384 216 L76 216 Z" fill="rgba(245,165,36,.16)" stroke="rgba(245,165,36,.6)" stroke-width="1.6"/>
+          <text x="230" y="193" text-anchor="middle" fill="#f8dba4" font-size="13" font-weight="700">RISCHIO LIMITATO</text>
+          <text x="400" y="184" fill="#f5a524" font-size="13" font-weight="700">Trasparenza</text>
+          <text x="400" y="202" fill="#a8a196" font-size="11.5">art. 50 · dal 2 ago 2026</text>
+        </a>
+        <!-- minimo -->
+        <a href="tipi-di-ai.html#r-limitato">
+          <path class="hit" d="M76 222 L384 222 L432 300 L28 300 Z" fill="rgba(53,209,143,.12)" stroke="rgba(53,209,143,.5)" stroke-width="1.6"/>
+          <text x="230" y="258" text-anchor="middle" fill="#9fe3c4" font-size="13" font-weight="700">RISCHIO MINIMO</text>
+          <text x="230" y="278" text-anchor="middle" fill="#a8a196" font-size="11.5">la grande maggioranza dei casi d'uso</text>
+        </a>
+        <text x="230" y="326" text-anchor="middle" fill="#6e6961" font-size="11.5" font-style="italic">La classe dipende dall'uso, non dalla tecnologia</text>
+      </svg>
+
+      <div class="svg-note">
+        <h4>Come si legge</h4>
+        <p>È l'unico asse dove la posizione dipende da <b>come voi usate</b> il sistema.</p>
+        <p>Lo stesso modello che riassume verbali interni — rischio minimo — diventa <b>alto rischio</b> nel momento in cui filtra i CV dei candidati. Non è cambiata la tecnologia: è cambiato l'uso.</p>
+        <p>Ecco perché una classificazione tecnologica non vi dice nulla sui vostri obblighi.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MATRICE ========== -->
+<div class="axis">
+  <div class="axis-top"><span class="axis-num n1" style="background:rgba(242,239,233,.1);color:var(--ink)">La prova</span><h2>Otto sistemi reali, cinque etichette ciascuno</h2></div>
+  <p class="axis-q">Gli assi sono davvero indipendenti? Guardate quali colonne variano e quali no.</p>
+
+  <div class="matrix"><div class="mx-scroll">
+    <table>
+      <thead><tr>
+        <th>Sistema</th><th>Capacità</th><th>Tecnologia</th><th>Filosofia</th><th>Cognizione</th><th>Regolazione UE</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="sys">Motore antifrode a regole</td><td><span class="cell cst">Ristretta</span></td><td><span class="cell ctc">Simbolica</span></td><td><span class="cell cst">Debole</span></td><td><span class="cell ccg">Reattiva</span></td><td><span class="cell crg-hi">Alto rischio</span></td></tr>
+        <tr><td class="sys">Filtro antispam</td><td><span class="cell cst">Ristretta</span></td><td><span class="cell ctc">ML supervisionato</span></td><td><span class="cell cst">Debole</span></td><td><span class="cell ccg">Reattiva</span></td><td><span class="cell crg">Minimo</span></td></tr>
+        <tr><td class="sys">Deep Blue (1997)</td><td><span class="cell cst">Ristretta</span></td><td><span class="cell ctc">Ricerca simbolica</span></td><td><span class="cell cst">Debole</span></td><td><span class="cell ccg">Reattiva</span></td><td>—</td></tr>
+        <tr><td class="sys">AlphaFold</td><td><span class="cell cst">Ristretta</span></td><td><span class="cell ctc">Deep learning</span></td><td><span class="cell cst">Debole</span></td><td><span class="cell ccg">Reattiva</span></td><td><span class="cell crg">Minimo</span></td></tr>
+        <tr><td class="sys">Guida autonoma</td><td><span class="cell cst">Ristretta</span></td><td><span class="cell ctc">Deep learning + rinforzo</span></td><td><span class="cell cst">Debole</span></td><td><span class="cell ccg">Memoria limitata</span></td><td><span class="cell crg-hi">Alto rischio</span></td></tr>
+        <tr><td class="sys">ChatGPT / Claude</td><td><span class="cell cst">Ristretta</span></td><td><span class="cell ctc">Generativa</span></td><td><span class="cell cst">Debole</span></td><td><span class="cell ccg">Memoria limitata</span></td><td><span class="cell crg">GPAI + trasparenza</span></td></tr>
+        <tr><td class="sys">Agente per ordini d'acquisto</td><td><span class="cell cst">Ristretta</span></td><td><span class="cell ctc">Agentica</span></td><td><span class="cell cst">Debole</span></td><td><span class="cell ccg">Memoria limitata</span></td><td><span class="cell crg">Dipende dall'uso</span></td></tr>
+        <tr><td class="sys">Screening automatico dei CV</td><td><span class="cell cst">Ristretta</span></td><td><span class="cell ctc">Generativa o ML</span></td><td><span class="cell cst">Debole</span></td><td><span class="cell ccg">Memoria limitata</span></td><td><span class="cell crg-hi">Alto rischio</span></td></tr>
+      </tbody>
+    </table>
+  </div></div>
+
+  <div class="insight">
+    <b>Le due colonne che non cambiano mai.</b> Dal filtro antispam a ChatGPT, tutto ciò che esiste sul mercato è <b>ristretto</b> e <b>debole</b>. Quanto ad ampiezza e comprensione, nessun prodotto in commercio sta in una categoria diversa da quella dell'antispam. Ciò che è cambiato non è il tipo: è quanto sono diventati larghi e utili i sistemi ristretti.
+  </div>
+</div>
+
+<div class="cta">
+  <h3>La guida completa</h3>
+  <p>Definizioni rigorose, esempi concreti, implicazioni per il business, traduttore del linguaggio dei fornitori e sette domande da portare in riunione.</p>
+  <a class="btn" href="tipi-di-ai.html">Apri il documento →</a>
+</div>
+
+<footer>
+  Fonti: Searle 1980 · Bostrom 2014 · Vinge 1993 · Hintze 2016 · Russell &amp; Norvig · Regolamento UE sull'IA · Gartner / McKinsey 2026
+</footer>
+
+</div>
+</body>
+</html>

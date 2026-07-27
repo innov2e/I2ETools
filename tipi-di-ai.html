@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I tipi di Intelligenza Artificiale — Guida per decision maker</title>
+<style>
+  :root{
+    --bg:#f7f7f5;
+    --panel:#ffffff;
+    --ink:#1a1a1a;
+    --ink-soft:#4a4a4a;
+    --ink-faint:#767676;
+    --line:#e2e0db;
+    --accent:#b5502a;
+    --accent-soft:#f4e7e1;
+    --blue:#2a5fb5;
+    --blue-soft:#e3ebf7;
+    --green:#2f7a4f;
+    --green-soft:#e3f1e8;
+    --amber:#a67908;
+    --amber-soft:#faf0d6;
+    --purple:#6b3fa0;
+    --purple-soft:#efe7f7;
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.65;
+    font-size:16px;
+  }
+  .wrap{max-width:900px;margin:0 auto;padding:0 24px 100px}
+
+  /* ---------- header ---------- */
+  header{
+    padding:64px 0 40px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:40px;
+  }
+  .eyebrow{
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);font-weight:700;margin-bottom:14px;
+  }
+  h1{
+    font-size:44px;line-height:1.12;margin:0 0 20px;
+    letter-spacing:-.025em;font-weight:800;
+  }
+  .lede{font-size:19px;color:var(--ink-soft);max-width:680px;margin:0}
+
+  h2{
+    font-size:29px;line-height:1.2;margin:0 0 8px;
+    letter-spacing:-.02em;font-weight:750;
+  }
+  h3{font-size:21px;margin:34px 0 10px;letter-spacing:-.01em}
+  p{margin:0 0 16px}
+
+  section{margin-bottom:56px;scroll-margin-top:20px}
+  .section-kicker{
+    font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:700;margin-bottom:10px;
+  }
+
+  /* ---------- callout ---------- */
+  .callout{
+    background:var(--accent-soft);
+    border-left:3px solid var(--accent);
+    padding:20px 24px;border-radius:0 var(--radius) var(--radius) 0;
+    margin:24px 0;
+  }
+  .callout p:last-child{margin-bottom:0}
+  .callout strong{color:var(--accent)}
+
+  .note{
+    background:var(--panel);border:1px solid var(--line);
+    padding:18px 22px;border-radius:var(--radius);margin:22px 0;
+    font-size:15px;color:var(--ink-soft);
+  }
+  .note p:last-child{margin-bottom:0}
+
+  /* ---------- axis nav ---------- */
+  .axis-nav{
+    display:flex;flex-wrap:wrap;gap:8px;
+    margin:0 0 28px;padding:8px;
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:var(--radius);
+    position:sticky;top:0;z-index:20;
+  }
+  .axis-nav button{
+    flex:1 1 auto;
+    font:inherit;font-size:14px;font-weight:600;
+    padding:11px 14px;border:none;border-radius:7px;
+    background:transparent;color:var(--ink-soft);cursor:pointer;
+    transition:all .15s;white-space:nowrap;
+  }
+  .axis-nav button:hover{background:var(--bg)}
+  .axis-nav button[aria-selected="true"]{
+    background:var(--ink);color:#fff;
+  }
+  .axis-panel{display:none}
+  .axis-panel.active{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .axis-intro{
+    font-size:17px;color:var(--ink-soft);
+    padding-bottom:20px;margin-bottom:8px;
+    border-bottom:1px solid var(--line);
+  }
+  .axis-question{
+    display:inline-block;font-weight:700;color:var(--ink);
+    background:#fff;border:1px solid var(--line);
+    padding:6px 12px;border-radius:20px;font-size:14px;margin-bottom:14px;
+  }
+
+  /* ---------- cards ---------- */
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    margin-bottom:14px;
+    overflow:hidden;
+  }
+  .card-head{
+    display:flex;align-items:center;gap:14px;
+    padding:18px 22px;cursor:pointer;
+    user-select:none;transition:background .15s;
+  }
+  .card-head:hover{background:#fbfaf8}
+  .badge{
+    flex:0 0 auto;font-size:11px;font-weight:800;letter-spacing:.06em;
+    padding:5px 10px;border-radius:5px;text-transform:uppercase;
+  }
+  .b-real{background:var(--green-soft);color:var(--green)}
+  .b-partial{background:var(--amber-soft);color:var(--amber)}
+  .b-theory{background:var(--purple-soft);color:var(--purple)}
+  .b-info{background:var(--blue-soft);color:var(--blue)}
+  .card-title{flex:1;font-size:18px;font-weight:700;letter-spacing:-.01em}
+  .card-sub{font-size:14px;color:var(--ink-faint);font-weight:400;display:block;margin-top:2px}
+  .chev{flex:0 0 auto;color:var(--ink-faint);transition:transform .2s;font-size:13px}
+  .card.open .chev{transform:rotate(90deg)}
+  .card-body{
+    display:none;padding:0 22px 22px;
+    border-top:1px solid var(--line);
+  }
+  .card.open .card-body{display:block}
+  .card-body > *:first-child{margin-top:20px}
+
+  .field{margin-bottom:20px}
+  .field-label{
+    font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    font-weight:800;color:var(--ink-faint);margin-bottom:6px;
+  }
+  .field p{margin:0 0 8px}
+  .field p:last-child{margin-bottom:0}
+
+  .visualize{
+    background:var(--blue-soft);border-radius:8px;
+    padding:16px 18px;font-size:15px;
+  }
+  .visualize .field-label{color:var(--blue)}
+  .business{
+    background:var(--green-soft);border-radius:8px;
+    padding:16px 18px;font-size:15px;
+  }
+  .business .field-label{color:var(--green)}
+  .mistake{
+    background:#fdecec;border-radius:8px;
+    padding:16px 18px;font-size:15px;
+  }
+  .mistake .field-label{color:#b03535}
+
+  ul{margin:0 0 16px;padding-left:22px}
+  li{margin-bottom:7px}
+
+  /* ---------- table ---------- */
+  .table-scroll{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}
+  table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:640px}
+  th,td{padding:13px 16px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#faf9f7;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint)}
+  tr:last-child td{border-bottom:none}
+  td strong{font-weight:700}
+
+  /* ---------- translator ---------- */
+  .trans-row{
+    display:grid;grid-template-columns:1fr 1fr;gap:1px;
+    background:var(--line);
+  }
+  .trans-wrap{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin:22px 0}
+  .trans-head{background:#faf9f7;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;color:var(--ink-faint);padding:12px 18px}
+  .trans-row > div{background:var(--panel);padding:16px 18px;font-size:15px}
+  .trans-row .said{color:var(--ink-faint);font-style:italic}
+  .trans-row .means{color:var(--ink)}
+
+  /* ---------- checklist ---------- */
+  .check{
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:var(--radius);padding:8px 4px;margin:22px 0;
+  }
+  .check label{
+    display:flex;gap:13px;align-items:flex-start;
+    padding:12px 18px;cursor:pointer;font-size:15.5px;
+    border-radius:7px;transition:background .12s;
+  }
+  .check label:hover{background:#fbfaf8}
+  .check input{margin-top:5px;flex:0 0 auto;width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+  .check input:checked + span{color:var(--ink-faint);text-decoration:line-through}
+  .check span{transition:color .15s}
+
+  /* ---------- sources ---------- */
+  .sources{font-size:14.5px}
+  .sources li{margin-bottom:11px;color:var(--ink-soft)}
+  .sources a{color:var(--blue);text-decoration:none;border-bottom:1px solid var(--blue-soft)}
+  .sources a:hover{border-bottom-color:var(--blue)}
+
+  footer{
+    border-top:1px solid var(--line);padding-top:24px;margin-top:56px;
+    font-size:13.5px;color:var(--ink-faint);
+  }
+
+  @media(max-width:640px){
+    h1{font-size:32px}
+    h2{font-size:24px}
+    .wrap{padding:0 18px 60px}
+    header{padding:40px 0 30px}
+    .lede{font-size:17px}
+    .trans-row{grid-template-columns:1fr}
+    .axis-nav{position:static}
+    .axis-nav button{flex:1 1 100%}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Guida di orientamento · per decision maker</div>
+  <h1>I tipi di Intelligenza Artificiale:<br>una mappa che funziona davvero</h1>
+  <p class="lede">Le classificazioni che si trovano online mescolano categorie che non stanno sulla stessa scala. Questa guida le separa in cinque assi indipendenti, con esempi concreti e le implicazioni pratiche per chi deve decidere cosa comprare, cosa vietare e di cosa preoccuparsi.</p>
+</header>
+
+<section>
+  <h2>Il problema: nessuno ti dice che sono classificazioni diverse</h2>
+  <p>Se cerchi «tipi di intelligenza artificiale» ti troverai davanti un elenco più o meno così: <em>AI ristretta, machine learning, AI generativa, AI debole, AI forte, superintelligenza, singolarità</em>. Presentati in fila, come se fossero sette gradini della stessa scala.</p>
+  <p>Non lo sono. E questo è esattamente il motivo per cui quelle spiegazioni non chiariscono nulla: chiedere se il machine learning venga «prima» o «dopo» l'AI generativa è come chiedere se il motore diesel venga prima o dopo un'automobile familiare. Sono risposte a domande diverse — <em>come è fatto il motore</em> contro <em>a cosa serve il veicolo</em>.</p>
+
+  <div class="callout">
+    <p><strong>L'idea chiave di questa guida.</strong> Esistono cinque assi di classificazione indipendenti tra loro. Ogni sistema di AI reale occupa una posizione su <em>ciascuno</em> dei cinque contemporaneamente. Una volta separati, le confusioni del dibattito pubblico si sciolgono da sole.</p>
+  </div>
+
+  <p>Prendiamo un esempio che chiunque ha in tasca. ChatGPT è: <strong>AI ristretta</strong> sull'asse della capacità, <strong>generativa basata su deep learning</strong> sull'asse tecnologico, <strong>AI debole</strong> sull'asse filosofico, a <strong>memoria limitata</strong> sull'asse cognitivo, e <strong>modello per finalità generali con obblighi di trasparenza</strong> sull'asse regolatorio europeo. Cinque etichette, tutte corrette, nessuna in contraddizione con le altre. Chi le presenta come alternative sta sbagliando l'inquadramento.</p>
+
+  <p>Qui sotto trovi i cinque assi. Clicca sulle schede per aprirle: ognuna contiene la definizione rigorosa, un esempio che puoi <em>vedere</em>, cosa comporta per un'azienda e l'errore più comune associato.</p>
+</section>
+
+<!-- ================= ASSI ================= -->
+<section id="assi">
+  <div class="section-kicker">Le cinque domande</div>
+  <h2>I cinque assi, uno per volta</h2>
+
+  <div class="axis-nav" role="tablist">
+    <button role="tab" aria-selected="true" data-panel="p1">1 · Capacità</button>
+    <button role="tab" aria-selected="false" data-panel="p2">2 · Tecnologia</button>
+    <button role="tab" aria-selected="false" data-panel="p3">3 · Filosofia</button>
+    <button role="tab" aria-selected="false" data-panel="p4">4 · Cognizione</button>
+    <button role="tab" aria-selected="false" data-panel="p5">5 · Regolazione</button>
+  </div>
+
+  <!-- ---------- ASSE 1 ---------- -->
+  <div class="axis-panel active" id="p1">
+    <div class="axis-question">Domanda: quanto è ampio il dominio in cui il sistema è competente?</div>
+    <p class="axis-intro">Questo è l'asse più citato e il più frainteso. Non misura quanto un sistema è «bravo», ma quanto è <em>largo</em>. Un sistema può essere sovrumano in un compito e restare AI ristretta, perché fuori da quel compito non esiste. È l'asse su cui si collocano ANI, AGI e ASI.</p>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">AI ristretta (ANI — Artificial Narrow Intelligence)<span class="card-sub">Competenza altissima in un dominio delimitato, zero fuori da esso</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>Un sistema addestrato per una classe specifica di compiti, che non trasferisce la propria competenza al di fuori del perimetro per cui è stato costruito. <strong>Tutta l'AI in produzione nel mondo, senza eccezioni, è AI ristretta.</strong> Compreso ogni sistema che vi sembra «generale».</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>AlphaGo ha battuto il campione del mondo di Go nel 2016 con mosse che i maestri hanno definito aliene. Quello stesso sistema non sa dirti che ore sono. Non sa che esiste il tempo. Non sa di aver vinto. La sua competenza è un picco altissimo su un pilastro larghissimo un metro, con il vuoto tutto intorno.</p><p>Un modello linguistico moderno sembra un'eccezione — parla di tutto. In realtà il suo dominio è ampio ma è comunque uno solo: <em>predire la continuazione plausibile di una sequenza di testo</em>. Che quel dominio si sia rivelato utile per centinaia di compiti umani è una scoperta sorprendente, non un cambio di categoria.</p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>Ogni fornitore che vi vende AI vi sta vendendo AI ristretta. La domanda utile non è «è intelligente?» ma <strong>«qual è esattamente il perimetro del suo dominio, e cosa succede quando un input cade fuori?»</strong>. La maggior parte dei fallimenti in produzione non nasce da modelli deboli, ma da modelli usati oltre il bordo del loro perimetro.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Considerare «ristretta» un sinonimo di «limitata» o «poco potente». È una descrizione dell'<em>ampiezza</em>, non della <em>qualità</em>. AlphaFold è AI ristretta e ha risolto un problema aperto da cinquant'anni in biologia strutturale.</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-partial">Contesa</span><span class="card-title">AI generale (AGI — Artificial General Intelligence)<span class="card-sub">Competenza trasferibile a qualunque compito cognitivo umano</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>Un sistema capace di apprendere e svolgere qualunque compito intellettuale che un essere umano può svolgere, trasferendo competenza da un dominio all'altro senza essere riaddestrato da zero. Il punto critico non è la performance: è la <strong>generalità del trasferimento</strong>.</p><p>Non esiste una definizione operativa condivisa di AGI, e questa non è una nota a piè di pagina: è il motivo per cui il dibattito «l'AGI è vicina?» non converge mai. Le parti in causa misurano cose diverse.</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>Un neolaureato che assumete oggi in amministrazione: se tra sei mesi lo spostate al controllo qualità, non ricomincia da zero. Porta con sé il metodo, l'esperienza dell'ambiente, la capacità di capire quando una regola vecchia non si applica più. Nessun sistema odierno fa questo. Un modello addestrato sul customer care e messo davanti alla previsione della domanda non «si adatta»: va riaddestrato, o guidato passo per passo da un umano che ha già capito il problema.</p><p>Un secondo test rivelatore: un bambino di cinque anni impara a riconoscere una zebra dopo averne vista <em>una</em>. Il divario nell'efficienza di apprendimento — non nella conoscenza accumulata — è la distanza vera che separa i sistemi attuali dall'AGI.</p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>Nessuna decisione di budget dei prossimi tre anni dovrebbe dipendere dall'arrivo dell'AGI. Il rischio concreto è l'opposto: fermare investimenti utili in AI ristretta perché «tanto poi arriva l'AGI e si risolve tutto», oppure comprare oggi promesse di autonomia generale che nessun prodotto può mantenere. Quello che è verosimilmente in arrivo non è l'AGI ma sistemi ristretti sempre più larghi e più affidabili — che è già molto.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Trattare AGI e «AI forte» come sinonimi. Sono su assi diversi: AGI riguarda ciò che il sistema <em>sa fare</em>, AI forte riguarda se il sistema <em>capisce davvero</em> ciò che fa (vedi asse 3). Una AGI potrebbe in linea di principio essere AI debole: generalissima e completamente priva di comprensione.</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-theory">Ipotetica</span><span class="card-title">Superintelligenza (ASI — Artificial Superintelligence)<span class="card-sub">Prestazione cognitiva molto superiore a quella umana in quasi ogni dominio</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>Nick Bostrom, nel volume <em>Superintelligence</em> (Oxford University Press, 2014), la definisce come «qualunque intelletto che superi largamente la performance cognitiva degli esseri umani in virtualmente tutti i domini di interesse». Bostrom distingue tre forme: <strong>di velocità</strong> (fa quello che fa una mente umana, ma enormemente più in fretta), <strong>collettiva</strong> (moltissime menti coordinate che insieme superano qualunque sistema cognitivo esistente) e <strong>di qualità</strong> (pensa in modi che a noi sono semplicemente preclusi).</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>La superintelligenza di qualità è la più difficile da immaginare, ed è per questo che conviene ribaltare il punto di vista. Provate a spiegare a uno scimpanzé — animale intelligentissimo — perché il valore delle azioni della vostra azienda è sceso. Il problema non è il vocabolario: mancano proprio le categorie mentali. Un'entità superintelligente di qualità starebbe a noi come noi allo scimpanzé, e la nostra incapacità di prevedere cosa farebbe è strutturale, non un difetto di informazione.</p><p>La superintelligenza di velocità è invece perfettamente immaginabile, e per questo più utile in azienda: una mente esattamente come la vostra che lavora diecimila volte più veloce. Non serve genio alieno — basta il tempo — per rendere un'organizzazione umana non competitiva.</p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>Zero rilevanza operativa. Rilevanza reputazionale e di governance sì: se qualcuno nel vostro consiglio cita la superintelligenza in una discussione sul budget dell'anno prossimo, la conversazione ha perso l'aggancio con la realtà. È un tema legittimo di policy pubblica e di ricerca sulla sicurezza, non un fattore di pianificazione aziendale.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Assumere che la superintelligenza implichi coscienza, volontà o desiderio di sopravvivere. Bostrom è esplicito nel tenere la definizione neutrale su questo punto: è una tesi sulla <em>competenza</em>, non sull'esperienza soggettiva. Le preoccupazioni serie riguardano sistemi molto competenti con obiettivi mal specificati, non macchine che «si ribellano».</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-info">Non è un tipo di AI</span><span class="card-title">Singolarità tecnologica<span class="card-sub">Un evento ipotizzato, non una categoria di sistema</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>Qui va corretto l'errore di categoria più diffuso di tutta la lista: <strong>la singolarità non è un tipo di intelligenza artificiale.</strong> È l'ipotesi di un <em>momento storico</em> in cui il progresso tecnologico diventerebbe così rapido e profondo da rendere il futuro oltre quel punto non predicibile con le nostre categorie attuali.</p><p>Il termine risale a John von Neumann, riportato da Stanisław Ulam dopo la sua morte nel 1957: «l'accelerazione costante del progresso tecnologico dà l'apparenza di avvicinarsi a una singolarità essenziale nella storia della specie, oltre la quale le vicende umane come le conosciamo non potrebbero continuare». Vernor Vinge l'ha reso celebre nel saggio del 1993 <em>The Coming Technological Singularity</em>, presentato a un simposio NASA, legandolo esplicitamente alla creazione di entità con intelligenza superiore all'umana. Ray Kurzweil l'ha portato al grande pubblico nel 2005, indicando il 2045 come data.</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>La metafora è presa dalla fisica: in un buco nero, la singolarità è il punto in cui le equazioni che descrivono lo spazio-tempo smettono di dare risultati sensati. Non è che «lì succedono cose strane»: è che gli strumenti di previsione cessano di funzionare. Applicato alla storia: un cartografo del 1850 poteva sbagliare le previsioni sul 1900, ma le sue categorie — nazioni, commerci, eserciti — restavano valide. L'ipotesi della singolarità dice che oltre un certo punto persino le categorie diventerebbero inservibili.</p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>Nulla, direttamente. Ma serve saperla collocare: se in una presentazione la singolarità compare accanto a «machine learning» in un elenco di «tipi di AI», quella presentazione è inaffidabile anche su tutto il resto. È un ottimo indicatore rapido della qualità di una fonte.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Confonderla con l'ASI. La superintelligenza sarebbe la <em>causa</em> ipotizzata; la singolarità sarebbe l'<em>effetto</em> ipotizzato sulla storia umana. E l'ipotesi è tutt'altro che consensuale nella comunità scientifica: molti ricercatori di primo piano la considerano una proiezione infondata, tra cui Toby Walsh, che ne ha argomentato pubblicamente l'implausibilità.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- ASSE 2 ---------- -->
+  <div class="axis-panel" id="p2">
+    <div class="axis-question">Domanda: con quale tecnica è costruito il sistema?</div>
+    <p class="axis-intro">Questo asse è annidato: ogni voce è un sottoinsieme della precedente. Machine learning, deep learning e AI generativa non sono alternative tra cui scegliere — sono cerchi concentrici. Confonderli con l'asse della capacità è la causa numero uno del disorientamento generale.</p>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">AI simbolica (o basata su regole)<span class="card-sub">Il comportamento è scritto a mano da esseri umani</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>Il paradigma dominante dagli anni '50 agli anni '80: la conoscenza viene codificata esplicitamente in regole, alberi decisionali e ontologie da esperti umani. La macchina non impara nulla — esegue ciò che qualcuno ha scritto. È AI a tutti gli effetti, nella definizione classica del manuale di riferimento della disciplina (Russell &amp; Norvig, <em>Artificial Intelligence: A Modern Approach</em>).</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>Il motore antifrode della vostra banca che blocca la carta quando fate due prelievi in due continenti a un'ora di distanza. Dietro c'è una regola scritta da una persona: <em>se distanza / tempo > velocità massima plausibile, allora blocca</em>. Nessun apprendimento, nessun mistero, e — cosa preziosa — motivazione ispezionabile riga per riga.</p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>Non è tecnologia superata: è tecnologia <em>appropriata</em> in tutti i contesti dove la regola è nota, stabile e deve essere auditabile. Enorme quota di ciò che oggi viene venduto come «AI» in ambito compliance, fiscale e industriale è, correttamente, sistema a regole. Il segnale d'allarme è il contrario: pagare a prezzo di modello generativo qualcosa che sarebbe risolto meglio da duecento righe di regole deterministiche.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Chiamarla «non vera AI». È il ramo storicamente fondativo della disciplina. L'espressione «effetto AI» descrive proprio questo: appena un problema viene risolto, smettiamo di chiamare AI la soluzione.</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">Machine Learning<span class="card-sub">Il comportamento viene ricavato dai dati, non scritto</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>La svolta metodologica: invece di scrivere le regole, si mostrano al sistema molti esempi di input e output corretti, e un algoritmo di ottimizzazione ricava da solo la funzione che li collega. Il ML è un <strong>sottoinsieme</strong> dell'AI, non un'alternativa. Le tre famiglie classiche sono apprendimento supervisionato (esempi etichettati), non supervisionato (struttura nascosta nei dati) e per rinforzo (ricompensa e punizione).</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>Il filtro antispam. Nessuno ha scritto «se contiene la parola <em>vincita</em>, cestina» — sarebbe stato aggirato in una settimana. Il sistema ha visto qualche milione di email etichettate come spam o legittime e ha ricavato da solo migliaia di correlazioni deboli, molte delle quali nessun umano avrebbe pensato di codificare. Ecco il cambio di paradigma: <strong>la conoscenza si sposta dalla testa del programmatore ai dati.</strong></p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>Adottare ML significa che il vostro vantaggio competitivo si sposta sui dati: chi ne ha di più, di più puliti e di più specifici del proprio dominio, vince. Significa anche accettare tre conseguenze non negoziabili: il modello degrada quando la realtà cambia (<em>drift</em>), eredita i pregiudizi presenti nei dati storici, e produce un tasso di errore che va gestito, non eliminato. Un fornitore che promette il 100% di accuratezza sta descrivendo un sistema a regole o sta esagerando.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Contrapporre «AI» e «machine learning» come se fossero due cose. Il ML è la tecnica oggi dominante <em>dentro</em> l'AI. Praticamente tutto ciò che oggi si chiama AI è machine learning.</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">Deep Learning<span class="card-sub">Machine learning con reti neurali profonde</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>Sottoinsieme del ML che usa reti neurali artificiali con molti strati. La proprietà decisiva è il <strong>feature learning</strong>: il sistema impara da solo quali caratteristiche dei dati siano rilevanti, invece di riceverle predefinite da un ingegnere. È il motivo per cui dal 2012 in poi visione artificiale, riconoscimento vocale e linguaggio hanno fatto salti che vent'anni di lavoro precedente non avevano prodotto.</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>Per riconoscere un volto con il ML classico, un ingegnere doveva specificare a mano cosa guardare: distanza tra gli occhi, curvatura della mascella, rapporto tra le proporzioni. Con il deep learning si passano solo le immagini. Il sistema costruisce da sé la gerarchia: i primi strati imparano i bordi, quelli intermedi occhi e nasi, quelli profondi i volti interi. Nessuno gli ha detto che esistono gli occhi.</p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>Il deep learning porta prestazioni superiori e, in cambio, tre costi: fabbisogno di dati molto più alto, costo computazionale reale, e <strong>opacità</strong>. Le spiegazioni che un sistema deep learning fornisce sono ricostruzioni approssimate a posteriori, non la sua vera catena causale interna. In settori regolamentati questo non è un dettaglio: è il vincolo che determina se potete usarlo o no.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Credere che «rete neurale» implichi somiglianza al cervello. L'ispirazione biologica è remota e in gran parte storica; il funzionamento è algebra lineare e ottimizzazione del gradiente. La metafora neurale ha fatto più danni comunicativi che chiarezza.</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">AI generativa<span class="card-sub">Produce contenuto nuovo invece di classificare l'esistente</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>Sottoinsieme del deep learning i cui modelli generano output nello stesso spazio dei dati di addestramento — testo, immagini, audio, codice, strutture molecolari — invece di limitarsi a emettere un'etichetta o un numero. La distinzione operativa è netta: l'AI <em>discriminativa</em> risponde «questa email è spam?»; l'AI <em>generativa</em> risponde «scrivimi la risposta a questa email».</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>Come funziona davvero un modello linguistico l'avete visto nel simulatore: prende il testo, lo spezza in token, li trasforma in vettori, li fa interagire attraverso decine di strati e produce una <strong>distribuzione di probabilità sul token successivo</strong>. Poi ne pesca uno, lo riaccoda in fondo all'input e ricomincia.</p><p>Questo è il punto che cambia il modo di usarlo: il sistema non consulta una base di conoscenza per verificare se una cosa è vera. Genera la continuazione statisticamente più plausibile. Quando produce un'affermazione falsa non si è «rotto» — sta facendo esattamente ciò che fa sempre, solo che stavolta il testo plausibile non coincide con il testo vero. Le allucinazioni non sono un bug da correggere in una versione futura: sono la faccia sfortunata dello stesso meccanismo che genera le risposte utili.</p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>Il generativo sposta il collo di bottiglia aziendale dalla <em>produzione</em> alla <em>verifica</em>. Produrre una bozza costa ormai quasi zero; controllarla costa quanto prima. I casi d'uso che rendono sono quelli dove verificare è più veloce che scrivere (bozze, riassunti, traduzioni, codice con test automatici); quelli che bruciano valore sono dove l'output non verificato va direttamente al cliente o in un documento vincolante. Da agosto 2026 si aggiunge un vincolo normativo: l'articolo 50 dell'AI Act europeo impone obblighi di trasparenza sui contenuti generati artificialmente.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Usare «AI generativa» e «AI» come sinonimi. È una sottocategoria molto visibile, ma la maggior parte del valore economico prodotto oggi dall'AI viene ancora da sistemi non generativi: previsione della domanda, manutenzione predittiva, rilevamento frodi, ottimizzazione logistica, diagnostica per immagini.</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">AI agentica<span class="card-sub">Non produce solo output: compie azioni</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>Sistemi che usano un modello generativo come motore decisionale all'interno di un ciclo: ricevono un obiettivo, lo scompongono in passi, invocano strumenti esterni (API, database, browser, terminale), osservano il risultato e correggono la rotta. Il salto rispetto al generativo puro non è nella qualità del modello ma nel <strong>permesso di agire sul mondo</strong>.</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>Un modello generativo che «prenota un volo» scrive un bel testo che descrive la prenotazione. Un agente apre il sito, compila il form, usa la carta e vi manda la conferma. La differenza tra i due, in caso di errore, è la differenza tra un paragrafo sbagliato e un addebito sbagliato.</p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>È l'area di massimo scarto tra promesse e risultati. I dati del 2026 sono impietosi: Gartner riporta che circa l'89% dei pilot di agenti AI non arriva alla produzione, con evaluation gap, attrito di governance e affidabilità del modello come blocchi principali, e prevede che oltre il 40% dei progetti agentici sarà cancellato entro il 2027 per costi in crescita, ROI incerto e controlli di rischio deboli. Parallelamente la stessa Gartner rileva che circa l'80% delle applicazioni enterprise rilasciate o aggiornate nel primo trimestre 2026 incorpora almeno un agente — cioè il fenomeno è insieme reale e in larga parte fallimentare.</p><p>La lettura utile: il collo di bottiglia non è la capacità del modello, sono i permessi, l'auditabilità e la reversibilità delle azioni. Prima di autorizzare un agente, la domanda da porsi è <strong>«qual è l'azione peggiore che può compiere, e quanto costa annullarla?»</strong>.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Leggere «autonomia» come «affidabilità». Sono grandezze indipendenti: un sistema può essere estremamente autonomo e sbagliare regolarmente. L'autonomia moltiplica gli effetti degli errori, non li riduce.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- ASSE 3 ---------- -->
+  <div class="axis-panel" id="p3">
+    <div class="axis-question">Domanda: il sistema capisce davvero, o simula la comprensione?</div>
+    <p class="axis-intro">Questo è l'asse dove si annida l'equivoco più costoso. «AI debole» e «AI forte» sono termini di <strong>filosofia della mente</strong>, coniati da John Searle nel 1980. Non misurano quanto un sistema è potente. Molte fonti li usano come sinonimi sciatti di «ristretta» e «generale»: è un uso scorretto che rende impossibile capire il dibattito originale.</p>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">AI debole (Weak AI)<span class="card-sub">La macchina simula il pensiero — utile strumento, nessuna mente</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>Nella tesi dell'AI debole, il computer è uno strumento potentissimo per <em>studiare</em> e <em>simulare</em> la mente, ma la sua apparente comprensione non è comprensione reale: è comprensione «come se». Il sistema manipola simboli in modo corretto senza che nulla, al suo interno, significhi qualcosa. <strong>Ogni sistema oggi esistente è AI debole</strong> — è la posizione di consenso, non una posizione minoritaria.</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>È l'esperimento mentale che Searle propose nell'articolo <em>Minds, Brains, and Programs</em> (1980), la <strong>Stanza Cinese</strong>. Immaginate di essere chiuso in una stanza. Non sapete una parola di cinese. Dall'esterno vi passano fogli con ideogrammi. Avete un manuale enorme, in italiano, che dice: «quando vedi questa sequenza di simboli, ricopia quest'altra». Voi eseguite, e passate fuori il foglio.</p><p>Chi sta fuori vede risposte in cinese perfetto e conclude che nella stanza c'è qualcuno che capisce il cinese. Ma voi non avete capito nemmeno una parola. Avete manipolato forme.</p><p>L'argomento di Searle poggia su due premesse dichiarate: i cervelli causano le menti, e <strong>la sintassi non basta per la semantica</strong>. Manipolare simboli secondo regole formali, per quanto perfettamente, non produce significato.</p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>È il fondamento concettuale della responsabilità. Un sistema che non comprende non può assumersi la responsabilità di nulla — quindi ogni conseguenza di un suo output ricade su chi lo ha messo in produzione. Ha anche un valore pratico immediato: sapere che il sistema non «capisce» il vostro processo aziendale spiega perché fallisce in modi che a un umano competente non verrebbero in mente, e perché più è fluente più è pericoloso lasciarlo senza controllo. <strong>La fluidità linguistica è un pessimo indicatore dell'affidabilità.</strong></p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Leggere «debole» come «scarso». Un sistema di AI debole può essere sovrumano in prestazione: nella terminologia di Searle il termine dice solo che dentro non c'è nessuno.</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-theory">Ipotetica e contestata</span><span class="card-title">AI forte (Strong AI)<span class="card-sub">La macchina non simula una mente: è una mente</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>Nella formulazione di Searle, secondo la tesi dell'AI forte «il computer non è semplicemente uno strumento nello studio della mente; piuttosto, il computer opportunamente programmato <em>è</em> realmente una mente, nel senso che si può letteralmente dire che comprende e ha altri stati cognitivi». Searle formulò la Stanza Cinese proprio per <em>confutare</em> questa tesi, non per sostenerla.</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>La differenza sta interamente in un fatto non osservabile dall'esterno: se ci sia o meno un'esperienza soggettiva. Due sistemi che producono output identici, indistinguibili in qualunque test, potrebbero essere uno debole e uno forte. Ecco perché nessun benchmark potrà mai risolvere la questione — non è una domanda empirica sulla performance, è una domanda sulla natura della coscienza. Ed è il motivo per cui il dibattito è aperto da quarantacinque anni senza avvicinarsi a una conclusione.</p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>Nessuna rilevanza operativa, una rilevanza comunicativa notevole. Dipendenti e clienti attribuiscono spontaneamente intenzioni e comprensione ai sistemi conversazionali — è un riflesso umano, non ingenuità. Saper dire con chiarezza «questo strumento non capisce ciò che dice» è parte della formazione interna e della gestione delle aspettative, e previene sia l'eccesso di fiducia sia il panico.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Usare «AI forte» come sinonimo di AGI. Sono su assi ortogonali: AGI = ampiezza di competenza; AI forte = presenza di comprensione autentica. Le quattro combinazioni sono tutte concepibili. Le fonti divulgative che li equiparano stanno silenziosamente cancellando la domanda filosofica che Searle aveva posto.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- ASSE 4 ---------- -->
+  <div class="axis-panel" id="p4">
+    <div class="axis-question">Domanda: cosa può ricordare, capire degli altri e sapere di sé?</div>
+    <p class="axis-intro">Classificazione proposta da Arend Hintze (Michigan State University) in un articolo del 2016 su <em>The Conversation</em>. Invece di raggruppare i sistemi per dominio applicativo, li ordina per <strong>profondità cognitiva</strong>. È l'asse più utile per capire perché certi comportamenti che ci aspettiamo dalle macchine non arrivano mai.</p>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">Tipo 1 — Macchine reattive<span class="card-sub">Nessuna memoria, nessun passato: solo lo stato presente</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>Sistemi che percepiscono la situazione attuale e reagiscono, senza formare memorie e senza usare l'esperienza passata per informare la decisione presente.</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>Deep Blue, che nel 1997 batté Kasparov, è l'esempio canonico. Guardava la scacchiera, calcolava enormi alberi di mosse possibili, sceglieva la migliore. Non ricordava la partita precedente. Non aveva un modello di Kasparov come avversario. Non «imparava» durante il match. Era una funzione, non un soggetto: stessa posizione, stessa mossa, sempre.</p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>Sono i sistemi più prevedibili e più facili da certificare: stesso input, stesso output, comportamento riproducibile e testabile. In contesti safety-critical questa è una virtù, non un limite.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Pensare che sia una categoria estinta. Moltissimi sistemi di controllo industriale e classificatori in produzione sono, dal punto di vista cognitivo, perfettamente reattivi.</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">Tipo 2 — Memoria limitata<span class="card-sub">Usa il passato recente, ma non lo integra in un'esperienza duratura</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>Sistemi che usano osservazioni passate per informare le decisioni presenti, entro una finestra temporale delimitata. <strong>È qui che si trova tutta l'AI avanzata odierna</strong>, modelli linguistici e guida autonoma compresi.</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>Un veicolo a guida autonoma osserva la velocità e la traiettoria delle auto vicine negli ultimi secondi per decidere se cambiare corsia. Quei secondi però non diventano esperienza permanente: non «ricorda» il sorpasso di ieri.</p><p>Stesso schema in un modello linguistico. Ricorda quello che gli avete detto all'inizio della conversazione perché è ancora dentro la finestra di contesto — cioè è ancora <em>nell'input</em>. Chiusa la sessione, non è rimasto nulla: i pesi del modello non sono cambiati. La memoria persistente che alcuni prodotti offrono è un archivio esterno che viene reinserito nel prompt, non una modifica del modello. <strong>Il modello non impara da voi: gli viene ripassato il foglietto ogni volta.</strong></p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>Spiega concretamente perché un assistente AI non «migliora con l'uso» come farebbe un collaboratore. Ogni conoscenza aziendale che volete gli sia disponibile va progettata esplicitamente: nei documenti recuperati, nelle istruzioni di sistema, nel database. È lavoro di ingegneria dell'informazione, non un effetto collaterale gratuito dell'uso.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Interpretare la coerenza all'interno di una lunga conversazione come apprendimento. È lettura del contesto, non memoria acquisita.</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-partial">Ricerca aperta</span><span class="card-title">Tipo 3 — Teoria della mente<span class="card-sub">Comprendere che gli altri hanno credenze, intenzioni e stati mentali propri</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>Sistemi capaci di rappresentare gli stati mentali altrui — sapere che l'altro <em>crede</em> qualcosa, che quella credenza può essere falsa, e che questo influenza il suo comportamento. Alcuni ricercatori sostengono che i modelli linguistici di grandi dimensioni mostrino capacità proto-teoria-della-mente in contesti limitati; sono affermazioni contestate, e nessun sistema in produzione soddisfa la definizione piena di Hintze.</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>Il test classico dello sviluppo cognitivo: Sally mette una biglia in un cesto ed esce. Anne la sposta in una scatola. Sally rientra — dove cercherà? Un bambino sotto i quattro anni risponde «nella scatola», perché non distingue tra ciò che sa lui e ciò che sa Sally. Dopo i quattro anni risponde «nel cesto»: ha capito che nella testa di Sally esiste un modello del mondo diverso dal proprio, e che quel modello è sbagliato.</p><p>Un modello linguistico risolve questo test su carta — ha letto migliaia di esempi simili. La domanda aperta, e non risolta, è se stia rappresentando lo stato mentale di Sally o riproducendo il pattern testuale corretto. Non abbiamo un modo condiviso per distinguere le due cose dall'esterno.</p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>È il limite reale nelle applicazioni relazionali. Un sistema di customer care può produrre frasi empatiche perfette senza modellare cosa il cliente effettivamente crede, teme o ha frainteso. Funziona finché la conversazione resta nei binari; nei casi complessi o emotivamente carichi manca proprio l'operazione che serve — capire il malinteso dell'altro.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Prendere il superamento di un benchmark come prova dell'esistenza della capacità. Un test creato per distinguere bambini di tre e cinque anni non è progettato per distinguere comprensione e memorizzazione di pattern in un sistema che ha letto internet.</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-theory">Puramente teorico</span><span class="card-title">Tipo 4 — Autocoscienza<span class="card-sub">Il sistema forma una rappresentazione di sé stesso</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>Il livello finale della scala di Hintze: un sistema che non solo modella gli altri, ma modella sé stesso — la propria esistenza, le proprie capacità, i propri limiti e obiettivi. Puramente teorico. Non esiste né un prototipo né un percorso tecnico condiviso per arrivarci.</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>Attenzione a una trappola: un modello che scrive «come intelligenza artificiale, non ho un corpo» non sta dimostrando autocoscienza. Sta generando testo sulla base di descrizioni di sistemi AI presenti nei dati di addestramento, esattamente come genererebbe una descrizione di un frigorifero. La frase parla di sé, ma la sua produzione non richiede alcun accesso privilegiato a sé.</p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>Nulla operativamente. Ma è il punto dove si concentra la confusione emotiva del pubblico, ed è utile saper spiegare in una frase perché «l'AI ha detto di sentirsi triste» non è un dato sul suo stato interno ma un dato sul suo output.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Considerare la scala di Hintze una roadmap con date. È una tassonomia concettuale: non implica che i livelli 3 e 4 siano raggiungibili scalando il livello 2.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- ASSE 5 ---------- -->
+  <div class="axis-panel" id="p5">
+    <div class="axis-question">Domanda: quali obblighi di legge fa scattare questo sistema?</div>
+    <p class="axis-intro">È l'asse che manca in quasi tutte le classificazioni divulgative, ed è l'unico con conseguenze legali immediate. Il Regolamento europeo sull'intelligenza artificiale (AI Act) non classifica i sistemi per tecnologia né per capacità, ma per <strong>rischio d'uso</strong>. Lo stesso identico modello può ricadere in classi diverse a seconda di come lo impiegate.</p>
+
+    <div class="note"><p><strong>Perché conta la data.</strong> Il 2 agosto 2025 sono entrate in applicazione le regole sui modelli per finalità generali (GPAI). Il 2 agosto 2026 è la scadenza più rilevante del calendario residuo: si applica la maggior parte delle regole, incluse quelle sui sistemi ad alto rischio dell'Allegato III e gli obblighi di trasparenza dell'articolo 50, e le autorità nazionali di vigilanza acquisiscono pieni poteri di indagine e sanzione. Per i modelli GPAI immessi sul mercato prima del 2 agosto 2025 il termine di adeguamento è il 2 agosto 2027.</p></div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-info">Vietato</span><span class="card-title">Rischio inaccettabile<span class="card-sub">Pratiche proibite nell'Unione Europea</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>Usi considerati incompatibili con i diritti fondamentali e quindi vietati: manipolazione subliminale o sfruttamento di vulnerabilità che causino danno significativo, punteggio sociale generalizzato da parte di autorità pubbliche, identificazione biometrica remota in tempo reale in spazi pubblici a fini di law enforcement (salvo eccezioni strettamente definite), riconoscimento delle emozioni sul posto di lavoro e in ambito scolastico.</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>Un software che analizza le espressioni facciali dei dipendenti durante le riunioni per stimarne il coinvolgimento: tecnicamente banale, commercialmente offerto, e nell'Unione Europea vietato. Non «da usare con cautela»: vietato.</p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>È il primo controllo da fare, prima di ogni valutazione di ROI. Le sanzioni per le pratiche proibite arrivano fino a 35 milioni di euro o al 7% del fatturato mondiale annuo. Va verificato anche sui fornitori: acquistare una funzionalità vietata non trasferisce il problema a chi ve l'ha venduta.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Assumere che un prodotto in vendita sia per ciò stesso conforme. Il mercato globale offre ampiamente strumenti il cui uso in Europa è illecito.</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-info">Fortemente regolato</span><span class="card-title">Alto rischio<span class="card-sub">Permesso, ma con obblighi sostanziali</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p>Sistemi usati in ambiti elencati nell'Allegato III o come componenti di sicurezza di prodotti regolati: selezione del personale, accesso al credito, istruzione, servizi pubblici essenziali, giustizia, infrastrutture critiche, dispositivi medici. Sono ammessi, ma richiedono gestione del rischio documentata, qualità dei dati, documentazione tecnica, log, sorveglianza umana, robustezza e accuratezza dimostrate.</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>Ecco il punto che chiarisce tutto l'asse. Lo stesso modello linguistico che usate per riassumere verbali interni — rischio minimo, nessun obbligo particolare — diventa sistema ad alto rischio nel momento in cui lo mettete a filtrare i CV dei candidati. <strong>Non è cambiata la tecnologia: è cambiato l'uso.</strong> Questo è il motivo per cui una classificazione basata sulla tecnologia non vi dice nulla sui vostri obblighi.</p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>Se un vostro caso d'uso ricade qui, il costo di conformità va nel business case fin dall'inizio: documentazione, valutazione, sorveglianza umana reale (non una casella spuntata), tracciabilità. Molti progetti che appaiono redditizi in fase di pilot smettono di esserlo quando questi costi entrano nel conto — ed è meglio scoprirlo prima.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Credere che l'obbligo riguardi solo chi sviluppa il modello. Anche chi lo <em>utilizza</em> (il deployer) ha obblighi propri, in particolare sulla sorveglianza umana e sull'uso conforme alle istruzioni del fornitore.</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-info">Trasparenza</span><span class="card-title">Rischio limitato e rischio minimo<span class="card-sub">La grande maggioranza dei sistemi</span></span><span class="chev">▶</span></div>
+      <div class="card-body">
+        <div class="field"><div class="field-label">Definizione</div><p><strong>Rischio limitato</strong>: sistemi che interagiscono con persone o generano contenuti, soggetti a obblighi di trasparenza ai sensi dell'articolo 50 — l'utente deve sapere che sta parlando con una macchina, i contenuti sintetici devono essere identificabili come tali. <strong>Rischio minimo</strong>: tutto il resto, senza obblighi specifici, dai filtri antispam ai sistemi di raccomandazione alla manutenzione predittiva.</p></div>
+        <div class="field visualize"><div class="field-label">Visualizzalo così</div><p>Un chatbot sul sito che apre dichiarando di essere un assistente automatico: rischio limitato, obbligo assolto. Un'immagine promozionale generata da AI pubblicata senza indicazione: obbligo di trasparenza da verificare. Il modello che prevede quale macchinario si guasterà tra due settimane: rischio minimo, nessun adempimento specifico.</p></div>
+        <div class="field business"><div class="field-label">Cosa significa per l'azienda</div><p>Qui ricade la maggior parte dei vostri casi d'uso, ed è una buona notizia. Serve però un inventario aggiornato dei sistemi AI in uso, perché la classificazione dipende dall'impiego e l'impiego cambia — un sistema può migrare di classe senza che nessuno abbia toccato una riga di codice.</p></div>
+        <div class="field mistake"><div class="field-label">Errore comune</div><p>Considerare «rischio minimo» un'assoluzione generale. Restano pienamente applicabili GDPR, diritto del lavoro, tutela dei consumatori e proprietà intellettuale. L'AI Act si aggiunge, non sostituisce.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MATRICE ================= -->
+<section>
+  <div class="section-kicker">La verifica</div>
+  <h2>Sistemi reali, cinque etichette ciascuno</h2>
+  <p>Ecco la prova che gli assi sono indipendenti. Ogni riga è un sistema esistente; ogni colonna una delle cinque domande. Notate che la colonna «capacità» è costante e le altre variano: è esattamente per questo che elencare ANI, ML e AI debole in fila non ha senso.</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead>
+      <tr><th>Sistema</th><th>1 · Capacità</th><th>2 · Tecnologia</th><th>3 · Filosofia</th><th>4 · Cognizione</th><th>5 · Regolazione UE</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Motore antifrode<br>a regole</strong></td>
+        <td>Ristretta</td><td>Simbolica</td><td>Debole</td><td>Reattiva</td><td>Alto rischio (credito)</td>
+      </tr>
+      <tr>
+        <td><strong>Filtro antispam</strong></td>
+        <td>Ristretta</td><td>ML supervisionato</td><td>Debole</td><td>Reattiva</td><td>Minimo</td>
+      </tr>
+      <tr>
+        <td><strong>Deep Blue</strong> (1997)</td>
+        <td>Ristretta</td><td>Ricerca simbolica</td><td>Debole</td><td>Reattiva</td><td>—</td>
+      </tr>
+      <tr>
+        <td><strong>AlphaFold</strong></td>
+        <td>Ristretta</td><td>Deep learning</td><td>Debole</td><td>Reattiva</td><td>Minimo</td>
+      </tr>
+      <tr>
+        <td><strong>Guida autonoma</strong></td>
+        <td>Ristretta</td><td>Deep learning + rinforzo</td><td>Debole</td><td>Memoria limitata</td><td>Alto rischio</td>
+      </tr>
+      <tr>
+        <td><strong>ChatGPT / Claude</strong></td>
+        <td>Ristretta</td><td>Generativa (deep learning)</td><td>Debole</td><td>Memoria limitata</td><td>GPAI + trasparenza art. 50</td>
+      </tr>
+      <tr>
+        <td><strong>Agente che gestisce<br>ordini d'acquisto</strong></td>
+        <td>Ristretta</td><td>Agentica su generativo</td><td>Debole</td><td>Memoria limitata</td><td>Dipende dall'uso</td>
+      </tr>
+      <tr>
+        <td><strong>Screening automatico<br>dei CV</strong></td>
+        <td>Ristretta</td><td>Generativa o ML</td><td>Debole</td><td>Memoria limitata</td><td><strong>Alto rischio</strong></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="callout">
+    <p><strong>Leggete la prima colonna.</strong> «Ristretta» ovunque, e «debole» ovunque nella terza. Dal punto di vista della capacità generale e della comprensione, tutto ciò che esiste oggi sul mercato appartiene alla stessa identica categoria. Tutta la differenza che conta per una decisione aziendale sta nelle altre tre colonne.</p>
+  </div>
+</section>
+
+<!-- ================= TRADUTTORE ================= -->
+<section>
+  <div class="section-kicker">Applicazione pratica</div>
+  <h2>Traduttore: cosa dice il fornitore, cosa significa</h2>
+  <p>Il vantaggio concreto di avere gli assi in testa è che permette di decodificare il linguaggio commerciale in tempo reale. Ogni riga qui sotto è una formulazione ricorrente, con la sua traduzione e la domanda che la mette alla prova.</p>
+
+  <div class="trans-wrap">
+    <div class="trans-head" style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+      <div>Quello che sentite</div><div>Quello che significa</div>
+    </div>
+    <div class="trans-row"><div class="said">«La nostra AI capisce le esigenze del cliente»</div><div class="means">Il sistema è AI <strong>debole</strong>: correla input a output senza comprendere nulla. Chiedete: <em>su quali dati è stato addestrato, e con che tasso di errore misurato?</em></div></div>
+    <div class="trans-row"><div class="said">«Impara continuamente dal vostro business»</div><div class="means">Quasi certamente è <strong>memoria limitata</strong> con recupero di documenti esterni. Chiedete: <em>i pesi del modello vengono aggiornati o mi state reinserendo del contesto nel prompt?</em></div></div>
+    <div class="trans-row"><div class="said">«Siamo sulla strada verso l'AGI»</div><div class="means">Affermazione non verificabile su un concetto privo di definizione operativa condivisa. Non ha valore contrattuale. Ignoratela nella valutazione.</div></div>
+    <div class="trans-row"><div class="said">«Agente autonomo end-to-end»</div><div class="means">È <strong>AI agentica</strong>: agisce sul mondo. Chiedete: <em>quali permessi ha, cosa può fare senza approvazione umana, e ogni azione è annullabile?</em></div></div>
+    <div class="trans-row"><div class="said">«Accuratezza del 99%»</div><div class="means">Numero privo di senso senza il denominatore. Chiedete: <em>su quale dataset, con quale distribuzione, e qual è il tasso di falsi positivi sui casi che mi costano di più?</em></div></div>
+    <div class="trans-row"><div class="said">«Compliant con l'AI Act»</div><div class="means">La conformità dipende dall'<strong>uso</strong>, che è vostro, non loro. Chiedete: <em>quale documentazione tecnica mi fornite per i miei obblighi di deployer?</em></div></div>
+    <div class="trans-row"><div class="said">«Elimina l'errore umano»</div><div class="means">Lo <strong>sostituisce</strong> con l'errore algoritmico, che è sistematico anziché casuale — quindi meno frequente ma potenzialmente correlato su migliaia di casi in una volta sola.</div></div>
+  </div>
+</section>
+
+<!-- ================= CHECKLIST ================= -->
+<section>
+  <div class="section-kicker">Da portare in riunione</div>
+  <h2>Sette domande che qualificano qualunque proposta AI</h2>
+  <p>Ogni domanda deriva da uno degli assi. Spuntate quelle a cui avete già una risposta scritta e verificabile.</p>
+
+  <div class="check">
+    <label><input type="checkbox"><span><strong>Qual è il perimetro esatto del dominio?</strong> E cosa fa il sistema quando riceve un input fuori perimetro: sbaglia in silenzio o segnala? <em>(asse 1)</em></span></label>
+    <label><input type="checkbox"><span><strong>Serve davvero un modello, o basterebbero delle regole?</strong> Se la logica è nota, stabile e deve essere auditabile, un sistema simbolico è più economico e più difendibile. <em>(asse 2)</em></span></label>
+    <label><input type="checkbox"><span><strong>Chi verifica l'output, quanto costa verificarlo, e succede prima o dopo che raggiunge il cliente?</strong> <em>(asse 2, generativo)</em></span></label>
+    <label><input type="checkbox"><span><strong>Qual è l'azione peggiore che il sistema può compiere autonomamente, e quanto costa annullarla?</strong> <em>(asse 2, agentico)</em></span></label>
+    <label><input type="checkbox"><span><strong>Le persone che lo useranno sanno che non capisce ciò che produce?</strong> La fluidità genera fiducia non giustificata: va gestita con la formazione. <em>(asse 3)</em></span></label>
+    <label><input type="checkbox"><span><strong>La conoscenza aziendale che gli serve è progettata esplicitamente?</strong> Il sistema non la assorbe con l'uso: va fornita a ogni interazione. <em>(asse 4)</em></span></label>
+    <label><input type="checkbox"><span><strong>In quale classe di rischio ricade questo specifico impiego, e chi lo rivaluta se l'impiego cambia?</strong> <em>(asse 5)</em></span></label>
+  </div>
+</section>
+
+<!-- ================= CHIUSURA ================= -->
+<section>
+  <h2>In una pagina</h2>
+  <p>Le classificazioni dell'AI non sono in disaccordo tra loro: rispondono a domande diverse e vengono presentate come se rispondessero alla stessa. Separandole, si ottiene una mappa che regge:</p>
+  <ul>
+    <li><strong>Capacità</strong> — ristretta, generale, superintelligente. Oggi esiste solo la prima. La singolarità non appartiene a questa scala: è un evento ipotizzato, non un sistema.</li>
+    <li><strong>Tecnologia</strong> — cerchi concentrici: AI ⊃ machine learning ⊃ deep learning ⊃ generativa, con l'agentico come strato di azione sopra il generativo.</li>
+    <li><strong>Filosofia</strong> — debole contro forte, cioè simulazione contro comprensione. Riguarda la coscienza, non la potenza, e non è decidibile con un benchmark.</li>
+    <li><strong>Cognizione</strong> — reattivo, memoria limitata, teoria della mente, autocoscienza. Il meglio che abbiamo è al secondo gradino su quattro.</li>
+    <li><strong>Regolazione</strong> — inaccettabile, alto, limitato, minimo. L'unico asse dove la posizione dipende da come <em>voi</em> usate il sistema, non da com'è fatto.</li>
+  </ul>
+  <p>Il singolo fatto più utile da portarsi via, e quello che quasi nessuna classificazione dice a voce alta: <strong>ogni sistema di AI oggi in commercio nel mondo è, contemporaneamente, ristretto e debole.</strong> Non c'è nessun prodotto sul mercato che sia in una categoria diversa da quella del filtro antispam, quanto ad ampiezza e a comprensione. Ciò che è cambiato radicalmente negli ultimi anni non è la categoria: è quanto sono diventati larghi e utili i sistemi ristretti. E quella differenza, per un'azienda, è sufficiente a giustificare tutta l'attenzione che merita — senza bisogno di evocare l'AGI.</p>
+</section>
+
+<!-- ================= FONTI ================= -->
+<section class="sources">
+  <div class="section-kicker">Riferimenti</div>
+  <h2>Fonti</h2>
+  <h3>Fonti primarie e accademiche</h3>
+  <ul>
+    <li>Searle, J. (1980), <em>Minds, Brains, and Programs</em>, Behavioral and Brain Sciences — introduzione della distinzione AI debole / AI forte e dell'argomento della Stanza Cinese. Sintesi critica in <a href="https://plato.stanford.edu/entries/chinese-room/">Stanford Encyclopedia of Philosophy</a> e <a href="https://iep.utm.edu/chinese-room-argument/">Internet Encyclopedia of Philosophy</a>.</li>
+    <li>Bostrom, N. (2014), <em>Superintelligence: Paths, Dangers, Strategies</em>, Oxford University Press — definizione di superintelligenza e distinzione tra forme di velocità, collettiva e di qualità. Sintesi: <a href="https://en.wikipedia.org/wiki/Superintelligence">Superintelligence (Wikipedia)</a>.</li>
+    <li>Vinge, V. (1993), <a href="https://edoras.sdsu.edu/~vinge/misc/singularity.html"><em>The Coming Technological Singularity: How to Survive in the Post-Human Era</em></a>, VISION-21 Symposium, NASA Lewis Research Center.</li>
+    <li>Hintze, A. (2016), <a href="https://theconversation.com/understanding-the-four-types-of-ai-from-reactive-robots-to-self-aware-beings-67616"><em>Understanding the four types of AI, from reactive robots to self-aware beings</em></a>, The Conversation.</li>
+    <li>Russell, S. &amp; Norvig, P., <em>Artificial Intelligence: A Modern Approach</em> — manuale di riferimento della disciplina per le definizioni di agente, AI simbolica e apprendimento.</li>
+    <li>Kurzweil, R. (2005), <em>The Singularity Is Near</em> — divulgazione della tesi della singolarità e della data del 2045. Posizione critica: Walsh, T., <a href="https://medium.com/@tobywalsh/the-singularity-may-never-be-near-610988dbd34"><em>The Singularity May Never Be Near</em></a>.</li>
+  </ul>
+  <h3>Fonti normative</h3>
+  <ul>
+    <li><a href="https://artificialintelligenceact.eu/implementation-timeline/">EU AI Act — Implementation Timeline</a>: calendario di applicazione, scadenze del 2 agosto 2025, 2026 e 2027.</li>
+    <li><a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/timeline/timeline-implementation-eu-ai-act">Commissione Europea — AI Act Service Desk</a>: fonte istituzionale su tempistiche e obblighi.</li>
+  </ul>
+  <h3>Dati di mercato</h3>
+  <ul>
+    <li>Gartner, dati 2026 su tassi di fallimento dei pilot agentici e diffusione degli agenti nelle applicazioni enterprise, ripresi in <a href="https://www.beri.net/article/ai-agent-adoption-enterprise-2026-gartner-idc">questa rassegna</a> e in <a href="https://prefactor.tech/learn/ai-agent-adoption-statistics">questa raccolta di statistiche Gartner/McKinsey/PwC</a>.</li>
+    <li>McKinsey, <em>State of AI</em>, sull'adozione e la scalabilità dei sistemi agentici nelle funzioni aziendali.</li>
+  </ul>
+  <div class="note"><p>Nota sui dati di mercato: le percentuali su adozione e fallimento dei progetti AI variano sensibilmente tra fonti e metodologie e sono spesso riprese di seconda mano. Vanno usate come ordine di grandezza per orientare una discussione, non come cifre da citare in un documento formale senza risalire al report originale.</p></div>
+</section>
+
+<footer>
+  Documento di orientamento per decision maker · Luglio 2026<br>
+  Le classificazioni riportate sono quelle accademicamente riconosciute; dove il dibattito è aperto (AGI, teoria della mente nei modelli linguistici, singolarità) il testo lo segnala esplicitamente anziché presentare una posizione come consenso.
+</footer>
+
+</div>
+
+<script>
+  // tab switching
+  document.querySelectorAll('.axis-nav button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.axis-nav button').forEach(function(b){ b.setAttribute('aria-selected','false'); });
+      document.querySelectorAll('.axis-panel').forEach(function(p){ p.classList.remove('active'); });
+      btn.setAttribute('aria-selected','true');
+      document.getElementById(btn.dataset.panel).classList.add('active');
+    });
+  });
+
+  // accordion cards
+  document.querySelectorAll('.card-head').forEach(function(head){
+    head.addEventListener('click', function(){
+      head.parentElement.classList.toggle('open');
+    });
+  });
+</script>
+</body>
+</html>
