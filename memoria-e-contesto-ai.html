@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memoria e Contesto — dove vive ciò che un'AI "sa"</title>
+<style>
+:root{
+  --bg:#0d0f14; --bg-2:#141821; --bg-3:#1b2030;
+  --line:#262d3d; --line-2:#333c52;
+  --tx:#e6e9f0; --tx-2:#a2acc2; --tx-3:#6d7891;
+  --ac:#5eead4; --ac-2:#2dd4bf;
+  --ok:#4ade80; --no:#f87171; --info:#60a5fa; --vio:#c084fc; --amb:#ffb547;
+  --mono:'SF Mono',ui-monospace,'JetBrains Mono',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{background:var(--bg);color:var(--tx);
+  font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',Roboto,sans-serif;
+  line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased}
+::selection{background:var(--ac);color:#000}
+a{color:var(--ac);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.topbar{position:fixed;top:0;left:0;right:0;height:60px;z-index:100;
+  background:rgba(13,15,20,.88);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);display:flex;align-items:center;gap:20px;padding:0 22px}
+.brand{font-weight:700;font-size:15px;white-space:nowrap;letter-spacing:-.2px}
+.brand span{color:var(--ac)}
+.topnav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1}
+.topnav::-webkit-scrollbar{display:none}
+.topnav a{color:var(--tx-3);font-size:13px;padding:6px 10px;border-radius:7px;white-space:nowrap;transition:.15s;font-weight:500}
+.topnav a:hover{color:var(--tx);background:var(--bg-3);text-decoration:none}
+.topnav a.active{color:var(--ac);background:rgba(94,234,212,.1)}
+.progress{position:fixed;top:60px;left:0;height:2px;background:linear-gradient(90deg,var(--ac-2),var(--ac));z-index:101;width:0}
+
+.tech-toggle{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--tx-3);white-space:nowrap;cursor:pointer;user-select:none}
+.tt-sw{width:36px;height:20px;border-radius:100px;background:var(--bg-3);border:1px solid var(--line-2);position:relative;transition:.2s}
+.tt-sw::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--tx-3);transition:.2s}
+body.tech .tt-sw{background:rgba(94,234,212,.2);border-color:var(--ac)}
+body.tech .tt-sw::after{left:18px;background:var(--ac)}
+body.tech .tech-toggle{color:var(--ac)}
+.tech{display:none}
+body.tech .tech{display:block}
+
+main{max-width:1080px;margin:0 auto;padding:60px 28px 140px}
+section{padding:70px 0;border-top:1px solid var(--line)}
+section:first-of-type{border-top:none}
+h1{font-size:clamp(30px,5vw,52px);line-height:1.1;letter-spacing:-1.5px;font-weight:800}
+h2{font-size:clamp(24px,3.4vw,34px);letter-spacing:-.8px;font-weight:750;margin-bottom:10px;line-height:1.2}
+h3{font-size:19px;font-weight:700;margin:34px 0 12px;letter-spacing:-.3px}
+h4{font-size:15px;font-weight:700;margin:20px 0 8px}
+p{color:var(--tx-2);margin-bottom:14px;max-width:76ch}
+strong{color:var(--tx);font-weight:650}
+em{color:var(--ac);font-style:normal;font-weight:600}
+ul,ol{color:var(--tx-2);margin:0 0 16px 20px}
+li{margin-bottom:7px;max-width:74ch}
+code{font-family:var(--mono);font-size:.87em;background:var(--bg-3);padding:2px 6px;border-radius:4px;color:var(--ac)}
+.eyebrow{font-size:11px;letter-spacing:2.4px;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:12px}
+.lead{font-size:18px;color:var(--tx-2);max-width:70ch}
+.sub{color:var(--tx-3);font-size:15px;margin-bottom:30px;max-width:76ch}
+
+.hero{padding:76px 0 56px;position:relative}
+.hero::before{content:'';position:absolute;top:-80px;left:-20%;width:70%;height:420px;
+  background:radial-gradient(ellipse at center,rgba(94,234,212,.12),transparent 65%);pointer-events:none}
+.hero-tag{display:inline-block;font-size:12px;padding:5px 12px;border-radius:100px;border:1px solid var(--line-2);color:var(--tx-2);margin-bottom:22px}
+.hero p{font-size:19px;margin-top:20px}
+
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(232px,1fr))}
+.card{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:20px}
+.card h4{margin-top:0}
+.card p{font-size:14px;margin-bottom:0}
+
+.callout{border-left:3px solid var(--ac);background:rgba(94,234,212,.055);padding:16px 20px;border-radius:0 10px 10px 0;margin:24px 0}
+.callout p{margin-bottom:0;font-size:15px}
+.callout.blue{border-color:var(--info);background:rgba(96,165,250,.06)}
+.callout.red{border-color:var(--no);background:rgba(248,113,113,.06)}
+.callout.amb{border-color:var(--amb);background:rgba(255,181,71,.06)}
+.callout+.callout{margin-top:-8px}
+
+.tbl-wrap{overflow-x:auto;margin:22px 0;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:680px}
+th{background:var(--bg-3);text-align:left;padding:12px 14px;font-weight:650;font-size:12px;
+  text-transform:uppercase;letter-spacing:.6px;color:var(--tx-2);border-bottom:1px solid var(--line)}
+td{padding:11px 14px;border-bottom:1px solid var(--line);color:var(--tx-2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td b{color:var(--tx)}
+.yes{color:var(--ok);font-weight:700}.no-m{color:var(--tx-3)}.part{color:var(--amb)}
+
+.code{position:relative;background:#0a0c11;border:1px solid var(--line);border-radius:10px;margin:16px 0;overflow:hidden}
+.code-hd{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;
+  background:var(--bg-3);border-bottom:1px solid var(--line);font-size:11.5px;color:var(--tx-3);
+  letter-spacing:.4px;text-transform:uppercase;font-weight:600}
+.copy{background:transparent;border:1px solid var(--line-2);color:var(--tx-2);font-size:11px;
+  padding:3px 9px;border-radius:5px;cursor:pointer;transition:.15s;font-family:inherit;text-transform:none;letter-spacing:0}
+.copy:hover{border-color:var(--ac);color:var(--ac)}
+.copy.done{border-color:var(--ok);color:var(--ok)}
+pre{padding:16px;overflow-x:auto;font-family:var(--mono);font-size:12.6px;line-height:1.7;color:#cfd6e4;white-space:pre-wrap;word-break:break-word}
+
+.acc{border:1px solid var(--line);border-radius:11px;margin-bottom:9px;background:var(--bg-2);overflow:hidden}
+.acc-hd{display:flex;align-items:center;gap:13px;padding:15px 18px;cursor:pointer;transition:.15s;user-select:none}
+.acc-hd:hover{background:var(--bg-3)}
+.acc-n{width:34px;height:26px;flex-shrink:0;border-radius:7px;background:var(--bg-3);border:1px solid var(--line-2);
+  display:grid;place-items:center;font-size:11.5px;font-weight:700;color:var(--ac);font-family:var(--mono)}
+.acc-t{flex:1;font-weight:650;font-size:15.5px}
+.acc-t small{display:block;font-weight:400;font-size:12.5px;color:var(--tx-3);margin-top:1px}
+.chev{color:var(--tx-3);transition:.25s;font-size:12px}
+.acc.open .chev{transform:rotate(90deg)}
+.acc-bd{display:none;padding:0 18px 20px;border-top:1px solid var(--line)}
+.acc.open .acc-bd{display:block}
+.acc-bd>p:first-child,.acc-bd>*:first-child{margin-top:16px}
+.badge{display:inline-block;font-size:10.5px;padding:2px 8px;border-radius:100px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.b-perm{background:rgba(74,222,128,.15);color:#86efac}
+.b-sess{background:rgba(96,165,250,.15);color:#93c5fd}
+.b-fix{background:rgba(192,132,252,.15);color:#d8b4fe}
+.b-dyn{background:rgba(255,181,71,.15);color:var(--amb)}
+
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.tab{background:var(--bg-2);border:1px solid var(--line);color:var(--tx-2);padding:8px 15px;
+  border-radius:8px;cursor:pointer;font-size:13.5px;font-family:inherit;transition:.15s;font-weight:550}
+.tab:hover{border-color:var(--line-2);color:var(--tx)}
+.tab.on{background:var(--ac);border-color:var(--ac);color:#0b1a18;font-weight:700}
+.pane{display:none}
+.pane.on{display:block;animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.techbox{border:1px dashed var(--line-2);border-radius:10px;padding:14px 18px;margin:16px 0;background:rgba(96,165,250,.035)}
+.techbox::before{content:'Approfondimento tecnico';display:block;font-size:10.5px;letter-spacing:1.6px;
+  text-transform:uppercase;color:var(--info);font-weight:700;margin-bottom:8px}
+.techbox p:last-child,.techbox ul:last-child{margin-bottom:0}
+
+.ref{font-size:10.5px;vertical-align:super;color:var(--ac);font-weight:700;cursor:pointer;padding:0 1px}
+.ref:hover{text-decoration:underline}
+
+footer{border-top:1px solid var(--line);padding:36px 28px;text-align:center;color:var(--tx-3);font-size:13px}
+
+/* diagramma turno */
+.turn{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:20px;margin:22px 0}
+.turn-ctrl{display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.turn-btn{background:var(--bg-3);border:1px solid var(--line-2);color:var(--tx-2);padding:6px 13px;
+  border-radius:7px;cursor:pointer;font-family:inherit;font-size:13px;transition:.15s}
+.turn-btn:hover{border-color:var(--ac);color:var(--ac)}
+.turn-lbl{font-size:12.5px;color:var(--tx-3);font-family:var(--mono)}
+.stack{display:flex;flex-direction:column;gap:5px}
+.blk{border-radius:7px;padding:8px 13px;font-size:12.6px;display:flex;justify-content:space-between;
+  align-items:center;gap:10px;border:1px solid transparent;animation:fade .3s}
+.blk b{font-weight:650}
+.blk span{font-family:var(--mono);font-size:11.5px;opacity:.75;white-space:nowrap}
+.k-sys{background:rgba(192,132,252,.13);border-color:rgba(192,132,252,.3);color:#e9d5ff}
+.k-mem{background:rgba(74,222,128,.11);border-color:rgba(74,222,128,.28);color:#bbf7d0}
+.k-know{background:rgba(96,165,250,.11);border-color:rgba(96,165,250,.28);color:#bfdbfe}
+.k-turn{background:rgba(160,170,190,.09);border-color:var(--line);color:var(--tx-2)}
+.k-tool{background:rgba(255,181,71,.11);border-color:rgba(255,181,71,.28);color:#fde68a}
+.k-new{background:rgba(94,234,212,.13);border-color:rgba(94,234,212,.32);color:#99f6e4}
+.k-cut{background:repeating-linear-gradient(45deg,rgba(248,113,113,.07),rgba(248,113,113,.07) 6px,transparent 6px,transparent 12px);
+  border-color:rgba(248,113,113,.3);color:#fca5a5;text-decoration:line-through;opacity:.72}
+.meter{margin-top:14px;display:flex;align-items:center;gap:11px;font-size:12px;color:var(--tx-3)}
+.meter-tr{flex:1;height:8px;background:var(--bg-3);border-radius:100px;overflow:hidden}
+.meter-fl{height:100%;background:linear-gradient(90deg,var(--ac-2),var(--amb),var(--no));width:0;transition:.5s}
+
+.pill-row{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0}
+.pill{font-size:12px;padding:5px 12px;border-radius:100px;background:var(--bg-3);border:1px solid var(--line);color:var(--tx-2)}
+.src-list{counter-reset:s;list-style:none;margin:18px 0 0;padding:0}
+.src-list li{counter-increment:s;position:relative;padding:9px 0 9px 40px;border-bottom:1px solid var(--line);font-size:13.5px;max-width:none}
+.src-list li:last-child{border-bottom:none}
+.src-list li::before{content:'['counter(s)']';position:absolute;left:0;top:9px;font-family:var(--mono);font-size:11.5px;color:var(--ac)}
+.src-list span{display:block;color:var(--tx-3);font-size:12.3px}
+.matrix{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:22px 0}
+.mx{background:var(--bg-2);border:1px solid var(--line);border-radius:11px;padding:15px;transition:.2s}
+.mx:hover{border-color:var(--ac);transform:translateY(-2px)}
+.mx-n{font-family:var(--mono);font-size:11px;color:var(--ac);font-weight:700;letter-spacing:1px}
+.mx b{display:block;margin:5px 0 4px;font-size:14.5px}
+.mx p{font-size:12.4px;color:var(--tx-3);margin:0}
+</style>
+</head>
+<body>
+
+<div class="progress" id="prog"></div>
+<div class="topbar">
+  <div class="brand">Memoria &amp; <span>Contesto</span></div>
+  <nav class="topnav" id="nav">
+    <a href="#malinteso">1. Il malinteso</a>
+    <a href="#finestra">2. La finestra</a>
+    <a href="#livelli">3. I 7 livelli</a>
+    <a href="#piattaforme">4. Piattaforme</a>
+    <a href="#pilotare">5. Pilotare</a>
+    <a href="#scegliere">6. Scegliere</a>
+    <a href="#miti">7. Miti</a>
+    <a href="#fonti">Fonti</a>
+  </nav>
+  <div class="tech-toggle" id="ttog"><div class="tt-sw"></div>Tecnico</div>
+</div>
+
+<main>
+
+<section class="hero" style="border:none">
+  <div class="hero-tag">Corso di Prompt Engineering &nbsp;·&nbsp; Modulo 2</div>
+  <h1>Un'AI non ha<br>una memoria.<br><span style="color:var(--ac)">Ne ha sette.</span></h1>
+  <p class="lead">E nessuna delle sette funziona come la memoria umana. Il modello, di per sé, non ricorda nulla: è un sistema <strong>senza stato</strong> che riceve un testo e produce il testo successivo. Tutto ciò che sembra memoria — la chat che prosegue, il modello che ricorda il tuo nome, il progetto che conosce i tuoi documenti — è un pezzo di software che <em>ricostruisce e reinserisce testo</em> a ogni singolo turno.</p>
+  <p class="lead" style="margin-top:14px">Capire dove quel testo viene preso, chi decide cosa entra e cosa resta fuori, è la differenza fra subire lo strumento e pilotarlo.</p>
+  <div style="margin-top:26px;font-size:13px;color:var(--tx-3)">Attiva l'interruttore <strong style="color:var(--ac)">Tecnico</strong> in alto a destra per mostrare gli approfondimenti su API, architetture e parametri.</div>
+</section>
+
+<!-- ===== 1 ===== -->
+<section id="malinteso">
+  <div class="eyebrow">Parte 1 — Il punto di partenza</div>
+  <h2>Il modello non ricorda: rilegge</h2>
+  <p class="sub">La tua intuizione è già corretta al 90%. Manca solo il pezzo che spiega <em>perché</em> le informazioni dell'inizio si perdono.</p>
+
+  <p>Quando scrivi il decimo messaggio di una conversazione, non stai continuando un dialogo. Il software che gestisce la chat <strong>ricostruisce l'intera conversazione da capo</strong> — messaggio 1, risposta 1, messaggio 2, risposta 2… fino al tuo decimo — e la rispedisce al modello tutta insieme, come un unico blocco di testo. Il modello la legge come se fosse la prima volta, perché per lui <em>è</em> la prima volta.</p>
+
+  <p>Questo spiega tre cose che hai osservato:</p>
+  <ul>
+    <li><strong>Perché sembra che ricordi.</strong> Non ricorda: rilegge. La continuità è un'illusione prodotta dalla ripetizione.</li>
+    <li><strong>Perché costa di più andare avanti.</strong> Ogni turno rispedisce tutto il pregresso. Il decimo messaggio di una chat lunga costa molto più del primo.</li>
+    <li><strong>Perché si perde l'inizio.</strong> Il blocco ha una dimensione massima. Quando la supera, qualcosa deve uscire — e ciò che esce, di norma, è il più vecchio.</li>
+  </ul>
+
+  <div class="callout">
+    <p>La formulazione corretta non è "l'AI dimentica", ma: <em>a ogni turno qualcuno decide quale testo entra nella finestra</em>. La domanda operativa diventa quindi — chi è questo qualcuno, e quanto posso influenzarlo?</p>
+  </div>
+
+  <div class="techbox">
+    <p>Il termine tecnico è <strong>stateless</strong>. Le API dei modelli linguistici non mantengono stato fra una chiamata e l'altra: ogni richiesta include l'intero array di messaggi. Lo "stato" della conversazione vive interamente nel <em>client</em> (l'app di chat, il tuo codice), mai nel modello. Ne discende una conseguenza pratica importante: <strong>tutto ciò che chiamiamo memoria è un meccanismo lato client</strong> che decide cosa mettere nell'array prima di inviarlo — e come tale è ispezionabile, configurabile e, in molti casi, sostituibile con qualcosa di meglio.</p>
+  </div>
+
+  <h3>Due cose che vengono confuse: memoria e contesto</h3>
+  <div class="grid g2">
+    <div class="card">
+      <h4 style="color:var(--vio)">Memoria</h4>
+      <p style="margin-top:8px">Ciò che <strong>persiste</strong> fra una conversazione e l'altra. Vive fuori dal modello: in un database, in file, nei pesi. Risponde alla domanda: <em>cosa sopravvive alla chiusura della chat?</em></p>
+    </div>
+    <div class="card">
+      <h4 style="color:var(--info)">Contesto</h4>
+      <p style="margin-top:8px">Ciò che è <strong>presente in questo istante</strong> nella finestra inviata al modello. È volatile per definizione. Risponde alla domanda: <em>cosa sta effettivamente leggendo, adesso?</em></p>
+    </div>
+  </div>
+  <p style="margin-top:16px">La relazione fra le due è a senso unico e va tenuta a mente per tutto il resto: <strong>la memoria è inutile finché non diventa contesto</strong>. Un sistema può conservare mille fatti su di te; se al momento della domanda nessuno li inserisce nella finestra, il modello non li vedrà. Ogni meccanismo che vedremo è, in fondo, una strategia diversa per rispondere a una sola domanda: <em>cosa merita di occupare spazio nella finestra, adesso?</em></p>
+</section>
+
+<!-- ===== 2 ===== -->
+<section id="finestra">
+  <div class="eyebrow">Parte 2 — Il contenitore</div>
+  <h2>La finestra di contesto</h2>
+  <p class="sub">Lo spazio finito in cui deve entrare tutto: istruzioni, memoria, documenti, cronologia e domanda.</p>
+
+  <p>La finestra di contesto è la quantità massima di testo che il modello può leggere in una volta, misurata in <strong>token</strong> (frammenti di parola: in italiano, all'incirca 1 token ogni 3-4 caratteri). Nel 2026 i modelli di punta di Anthropic, OpenAI e Google si collocano sulla soglia di <strong>1 milione di token</strong> — indicativamente 700.000–750.000 parole<span class="ref" data-r="6">[6]</span>. Sembra tantissimo. E in effetti lo è, ma con due avvertenze che cambiano tutto.</p>
+
+  <h3>Avvertenza 1: la finestra si riempie di roba che non hai scritto tu</h3>
+  <p>Muovi il turno qui sotto per vedere cosa contiene realmente la finestra a ogni scambio. Il testo che digiti è quasi sempre la parte più piccola.</p>
+
+  <div class="turn">
+    <div class="turn-ctrl">
+      <button class="turn-btn" id="t-prev">&#8592; Indietro</button>
+      <button class="turn-btn" id="t-next">Avanti &#8594;</button>
+      <span class="turn-lbl" id="t-lbl"></span>
+    </div>
+    <div class="stack" id="t-stack"></div>
+    <div class="meter">
+      <span>occupazione finestra</span>
+      <div class="meter-tr"><div class="meter-fl" id="t-fill"></div></div>
+      <span class="turn-lbl" id="t-pct">0%</span>
+    </div>
+    <p style="font-size:13px;margin:14px 0 0;color:var(--tx-3)" id="t-note"></p>
+  </div>
+
+  <h3>Avvertenza 2: una finestra grande non è una memoria affidabile</h3>
+  <p>Il punto meno intuitivo di tutto il modulo. La dimensione dichiarata della finestra indica quanto testo il modello <em>accetta</em>, non quanto ne <em>usa bene</em>. Due fenomeni documentati:</p>
+
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card">
+      <h4 style="color:var(--amb)">Lost in the middle</h4>
+      <p style="margin-top:8px">I modelli prestano più attenzione all'inizio e alla fine dell'input che al centro. Nello studio che ha dato il nome al fenomeno (Liu et al., 2023), spostare l'informazione rilevante dalle estremità al centro fa calare l'accuratezza in modo marcato<span class="ref" data-r="7">[7]</span>.</p>
+    </div>
+    <div class="card">
+      <h4 style="color:var(--no)">Context rot</h4>
+      <p style="margin-top:8px">Le prestazioni degradano al crescere della lunghezza dell'input, indipendentemente dalla difficoltà del compito. Un'analisi del 2025 su 18 modelli di frontiera riporta il fenomeno in tutti quelli testati, a ogni incremento di lunghezza<span class="ref" data-r="8">[8]</span>.</p>
+    </div>
+  </div>
+
+  <div class="callout amb">
+    <p><strong>La conseguenza pratica.</strong> Riempire una finestra da 1M di token perché "tanto ci sta" è quasi sempre una cattiva idea. Più contesto non significa più prestazioni: oltre una certa soglia significa meno. L'obiettivo non è massimizzare il contesto — è <em>massimizzare la densità di segnale per token</em>. Poche informazioni giuste battono molte informazioni pertinenti.</p>
+  </div>
+
+  <div class="techbox">
+    <p>Il meccanismo sospettato dietro il "lost in the middle" è legato alle <strong>codifiche posizionali</strong>: RoPE, usata in gran parte dei modelli attuali, introduce un decadimento a lungo raggio che privilegia i token iniziali e finali della sequenza<span class="ref" data-r="8">[8]</span>. Non è un bug correggibile con un prompt migliore: è una proprietà dell'architettura, che si mitiga solo con la <em>selezione</em> di ciò che entra.</p>
+    <p style="margin-top:10px">Due implicazioni operative dirette: <strong>(a)</strong> collocare l'istruzione critica all'inizio <em>e</em> ripeterla alla fine sui prompt molto lunghi; <strong>(b)</strong> preferire il recupero mirato di 5 passaggi rilevanti all'inserimento di 300 pagine intere, anche quando le 300 pagine ci starebbero.</p>
+  </div>
+</section>
+
+<!-- ===== 3 ===== -->
+<section id="livelli">
+  <div class="eyebrow">Parte 3 — Tassonomia</div>
+  <h2>I sette livelli della memoria</h2>
+  <p class="sub">Ordinati da ciò che è più stabile e meno controllabile a ciò che è più dinamico e più pilotabile. Ogni livello è un modo diverso di rispondere alla stessa domanda: <em>cosa merita di entrare nella finestra?</em></p>
+
+  <div id="lev"></div>
+
+  <div class="callout" style="margin-top:26px">
+    <p><strong>Come leggere la scala.</strong> Salendo di livello aumenta il controllo che hai e diminuisce la persistenza. I pesi sono immutabili ma sanno tutto; la finestra è totalmente sotto il tuo controllo ma svanisce. I livelli intermedi — memoria persistente, fonti, retrieval, strumenti — sono <em>compromessi ingegneristici</em> fra questi due estremi. Nessuno è superiore agli altri: si scelgono in base a quanto l'informazione cambia e a quanto deve essere verificabile.</p>
+  </div>
+</section>
+
+<!-- ===== 4 ===== -->
+<section id="piattaforme">
+  <div class="eyebrow">Parte 4 — Il panorama</div>
+  <h2>Come lo implementano le varie piattaforme</h2>
+  <p class="sub">Stesse idee, nomi commerciali diversi. Quadro aggiornato a luglio 2026: è l'area del settore che cambia più in fretta, verifica sempre le impostazioni della tua versione.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th style="width:19%">Meccanismo</th><th style="width:27%">ChatGPT / OpenAI</th><th style="width:27%">Claude / Anthropic</th><th style="width:27%">Gemini / Google</th></tr></thead>
+      <tbody>
+        <tr><td><b>Istruzioni permanenti</b></td>
+          <td>Custom instructions a livello di account; istruzioni per singolo Project; Custom GPT</td>
+          <td>Preferenze di stile a livello account; istruzioni definite per ciascun Progetto<span class="ref" data-r="4">[4]</span></td>
+          <td>Istruzioni salvate; Gems (assistenti personalizzati)</td></tr>
+        <tr><td><b>Memoria fra chat<br>— esplicita</b></td>
+          <td><b>Saved memories</b>: fatti che chiedi di ricordare, visualizzabili e modificabili<span class="ref" data-r="2">[2]</span></td>
+          <td>Puoi chiedere esplicitamente di ricordare qualcosa; memoria consultabile e modificabile da Impostazioni &gt; Capabilities<span class="ref" data-r="22">[22]</span></td>
+          <td>Puoi chiedere di ricordare preferenze; gestibili dalle impostazioni<span class="ref" data-r="5">[5]</span></td></tr>
+        <tr><td><b>Memoria fra chat<br>— automatica</b></td>
+          <td><b>Reference chat history</b>: sintesi automatica delle conversazioni passate, attiva dal 2025<span class="ref" data-r="1">[1]</span></td>
+          <td>Sintesi automatica costruita in background dopo le conversazioni; <b>memoria separata per ogni Progetto</b><span class="ref" data-r="3">[3]</span></td>
+          <td><b>Personal context</b>: apprende dalle chat precedenti, attivo di default e disattivabile<span class="ref" data-r="12">[12]</span></td></tr>
+        <tr><td><b>Modalità senza memoria</b></td>
+          <td>Chat temporanea</td>
+          <td>Chat fuori dai progetti / disattivazione della memoria</td>
+          <td><b>Temporary Chat</b>: non salvata, non usata per personalizzare né per l'addestramento<span class="ref" data-r="12">[12]</span></td></tr>
+        <tr><td><b>Fonti caricate</b></td>
+          <td>File nei Projects; knowledge dei Custom GPT</td>
+          <td>Knowledge base di Progetto; sui piani a pagamento passa automaticamente in modalità RAG quando la conoscenza si avvicina ai limiti di contesto<span class="ref" data-r="4">[4]</span></td>
+          <td>File in Gemini; <b>NotebookLM</b>: ambiente interamente ancorato alle fonti caricate<span class="ref" data-r="13">[13]</span></td></tr>
+        <tr><td><b>Ancoraggio verificabile</b></td>
+          <td>Citazioni nella ricerca web; nei file dipende dal recupero</td>
+          <td>Citazioni con riferimento ai documenti del progetto</td>
+          <td><b>NotebookLM</b> è il caso limite: ogni affermazione ha una citazione cliccabile al passaggio esatto<span class="ref" data-r="14">[14]</span></td></tr>
+        <tr><td><b>Strumenti e connettori</b></td>
+          <td>Ricerca web, code interpreter, connettori, supporto MCP</td>
+          <td>Ricerca web, connettori, MCP (standard originato in Anthropic)<span class="ref" data-r="15">[15]</span></td>
+          <td>Ricerca Google, estensioni, supporto MCP</td></tr>
+        <tr><td><b>Memoria per agenti<br>(via API)</b></td>
+          <td>API con stato conversazionale lato server e strumenti di file</td>
+          <td><b>Memory tool</b> su directory dedicata + <b>context editing</b> lato server<span class="ref" data-r="17">[17]</span></td>
+          <td>Caching esplicito del contesto e API di file</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout blue">
+    <p><strong>NotebookLM merita una nota a parte.</strong> Non è un chatbot con dei file allegati: è un ambiente in cui il modello risponde <em>soltanto</em> a partire dalle fonti che carichi, con citazione puntuale al passaggio d'origine<span class="ref" data-r="13">[13]</span>. Il compromesso è dichiarato: rinunci alla conoscenza generale del modello in cambio di verificabilità. È la scelta giusta quando lavori su documenti che devono essere citati — normativa, contratti, letteratura, atti — e la scelta sbagliata quando ti serve che il modello ragioni <em>oltre</em> le fonti.</p>
+  </div>
+
+  <div class="techbox">
+    <p><strong>Sul confronto fra basi di conoscenza.</strong> "Numero di file caricabili" è la metrica sbagliata per confrontare le piattaforme. Ciò che determina la qualità è il <em>retriever</em>: come i documenti vengono spezzati in blocchi, come vengono indicizzati e quanti passaggi vengono selezionati per ogni domanda. Due sistemi con lo stesso limite di upload possono comportarsi in modo molto diverso — e nessuno dei due espone all'utente i parametri che contano.</p>
+    <p style="margin-top:10px">Test pratico da fare in aula per valutare una knowledge base: carica un documento e chiedi qualcosa che si trovi <strong>solo a pagina 40 su 60</strong>, formulato con parole diverse da quelle del testo. Se risponde, il retrieval è semantico e profondo. Se non trova, il sistema sta probabilmente pescando solo dall'inizio dei documenti o cercando per parole chiave.</p>
+  </div>
+</section>
+
+<!-- ===== 5 ===== -->
+<section id="pilotare">
+  <div class="eyebrow">Parte 5 — Controllo</div>
+  <h2>Le otto leve per pilotare il contesto</h2>
+  <p class="sub">Dal gesto quotidiano in chat alla configurazione di un agente in produzione. Le prime quattro le usi oggi, senza scrivere codice.</p>
+
+  <div id="leve"></div>
+
+  <div class="techbox" style="margin-top:24px">
+    <p>La letteratura recente organizza queste tecniche in quattro operazioni fondamentali<span class="ref" data-r="10">[10]</span>:</p>
+    <ul style="margin-bottom:0">
+      <li><strong>Write</strong> — scrivere fuori dalla finestra ciò che servirà dopo (scratchpad, file di memoria).</li>
+      <li><strong>Select</strong> — scegliere cosa reinserire, al momento giusto (retrieval, memoria, strumenti).</li>
+      <li><strong>Compress</strong> — ridurre ciò che occupa spazio senza perdere il significato (riassunti, compaction, svuotamento dei risultati già consumati).</li>
+      <li><strong>Isolate</strong> — separare i contesti perché non si contaminino (sotto-agenti, progetti distinti, sessioni separate).</li>
+    </ul>
+    <p style="margin:10px 0 0">Ogni funzionalità commerciale che hai visto nella tabella è un'istanza di una di queste quattro. Riconoscere di quale si tratta è il modo più rapido per capire cosa aspettarsi da uno strumento nuovo.</p>
+  </div>
+</section>
+
+<!-- ===== 6 ===== -->
+<section id="scegliere">
+  <div class="eyebrow">Parte 6 — Decidere</div>
+  <h2>Quale meccanismo, per quale bisogno</h2>
+  <p class="sub">Le domande da porsi in ordine. La prima a cui rispondi "sì" indica il livello giusto.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th style="width:34%">Se il tuo bisogno è…</th><th style="width:26%">Il meccanismo giusto</th><th style="width:40%">Perché, e cosa evitare</th></tr></thead>
+      <tbody>
+        <tr><td><b>"Deve sempre rispondermi in un certo modo"</b><br>tono, formato, lingua, ruolo</td>
+          <td>Istruzioni permanenti<br><span style="font-size:12px;color:var(--tx-3)">livello 1</span></td>
+          <td>È il posto più economico e prevedibile. Non usare la memoria automatica per questo: è meno affidabile e meno ispezionabile di un'istruzione scritta.</td></tr>
+        <tr><td><b>"Deve conoscere il mio contesto professionale"</b><br>ruolo, azienda, preferenze stabili</td>
+          <td>Memoria persistente<br><span style="font-size:12px;color:var(--tx-3)">livello 3</span></td>
+          <td>Comoda, ma controlla periodicamente cosa ha memorizzato: un fatto obsoleto lì dentro inquina ogni conversazione futura senza che tu te ne accorga.</td></tr>
+        <tr><td><b>"Deve lavorare su questi documenti"</b><br>corpus stabile, decine di file</td>
+          <td>Progetto con knowledge base<br><span style="font-size:12px;color:var(--tx-3)">livello 4</span></td>
+          <td>Se il corpus è piccolo e ci sta tutto nella finestra, incollarlo direttamente è più affidabile del retrieval. Il recupero serve quando il corpus supera la finestra.</td></tr>
+        <tr><td><b>"Ogni risposta deve essere citabile"</b><br>normativa, contratti, ricerca</td>
+          <td>Ambiente ancorato alle fonti<br><span style="font-size:12px;color:var(--tx-3)">livello 4-5</span></td>
+          <td>NotebookLM o un RAG con citazioni. Accetta il compromesso: il sistema sarà volutamente riluttante ad andare oltre le fonti.</td></tr>
+        <tr><td><b>"L'informazione cambia di continuo"</b><br>prezzi, disponibilità, stato dei sistemi</td>
+          <td>Strumenti e connettori<br><span style="font-size:12px;color:var(--tx-3)">livello 6</span></td>
+          <td>Non caricare mai come file un dato che cambia: diventa obsoleto senza segnalarlo. Un dato vecchio ben formattato è peggio di un dato assente.</td></tr>
+        <tr><td><b>"Deve migliorare col tempo su un compito ripetuto"</b></td>
+          <td>Memoria su file gestita dall'agente<br><span style="font-size:12px;color:var(--tx-3)">livello 7</span></td>
+          <td>Serve un agente con accesso a un archivio, non una chat. In una chat normale l'equivalente artigianale è un documento di "lezioni apprese" che rileggi all'inizio.</td></tr>
+        <tr><td><b>"Deve rispondere sempre con lo stesso stile, su milioni di richieste"</b></td>
+          <td>Fine-tuning<br><span style="font-size:12px;color:var(--tx-3)">livello 0</span></td>
+          <td>Il consenso del 2026 è netto: <b>lo stile nei pesi, i fatti nel retrieval</b><span class="ref" data-r="20">[20]</span>. Addestrare un modello su conoscenza che cambia è il modo più costoso di ottenere informazioni obsolete.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <p><strong>La regola che li riassume tutti.</strong> Scegli il livello in base a due variabili: <em>quanto spesso cambia l'informazione</em> e <em>quanto deve essere verificabile</em>. Informazione stabile e non verificabile → istruzioni o pesi. Informazione stabile e verificabile → fonti caricate. Informazione volatile → strumenti. Informazione che nasce dall'uso → memoria. Non esistono scelte giuste in astratto: esistono accoppiamenti giusti fra natura del dato e meccanismo.</p>
+  </div>
+</section>
+
+<!-- ===== 7 ===== -->
+<section id="miti">
+  <div class="eyebrow">Parte 7 — Chiarimenti</div>
+  <h2>Otto affermazioni da correggere</h2>
+  <p class="sub">Le confusioni più frequenti, incluse alcune che compaiono spesso in articoli divulgativi.</p>
+  <div id="miti-box"></div>
+</section>
+
+<!-- ===== FONTI ===== -->
+<section id="fonti">
+  <div class="eyebrow">Riferimenti</div>
+  <h2>Fonti</h2>
+  <p class="sub">Documentazione ufficiale dei fornitori (<span style="color:var(--ok)">P</span> = fonte primaria) e analisi di terze parti (<span style="color:var(--amb)">S</span> = fonte secondaria). Le cifre di performance dichiarate dai fornitori sono segnalate come tali nel testo: non sono state verificate in modo indipendente.</p>
+  <ol class="src-list" id="fonti-box"></ol>
+
+  <div class="callout amb" style="margin-top:26px">
+    <p><strong>Avvertenza sulla deperibilità.</strong> Le funzionalità di memoria sono l'area in cui i fornitori rilasciano modifiche più di frequente, spesso senza annuncio e con disponibilità differenziata per piano, regione e piattaforma. Le date e i nomi commerciali riportati qui valgono a <em>luglio 2026</em>. I <strong>principi</strong> descritti nelle parti 1, 2, 3 e 5 sono invece stabili: derivano da come funzionano i modelli, non da come sono confezionati i prodotti.</p>
+  </div>
+</section>
+
+<!-- MARKER -->
+
+</main>
+
+<footer>
+  Materiale didattico per corso di Prompt Engineering · Modulo 2: memoria e contesto<br>
+  <span style="color:var(--line-2)">Pagina autonoma — funziona offline. Ricerca aggiornata a luglio 2026.</span>
+</footer>
+
+<script>
+/* toggle tecnico */
+document.getElementById('ttog').addEventListener('click',()=>document.body.classList.toggle('tech'));
+
+/* nav + progress */
+(function(){
+  const links=[...document.querySelectorAll('#nav a')], prog=document.getElementById('prog');
+  function upd(){
+    const h=document.documentElement;
+    prog.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+    let cur=null;
+    document.querySelectorAll('section[id]').forEach(s=>{if(s.getBoundingClientRect().top<200)cur=s.id;});
+    links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+  }
+  window.addEventListener('scroll',upd,{passive:true}); upd();
+})();
+
+/* copy */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.copy'); if(!b)return;
+  const pre=b.closest('.code').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(()=>{
+    const o=b.textContent;b.textContent='Copiato';b.classList.add('done');
+    setTimeout(()=>{b.textContent=o;b.classList.remove('done')},1600);
+  });
+});
+
+/* riferimenti cliccabili */
+document.addEventListener('click',e=>{
+  const r=e.target.closest('.ref'); if(!r)return;
+  const el=document.getElementById('src-'+r.dataset.r);
+  if(el){el.scrollIntoView({behavior:'smooth',block:'center'});
+    el.style.background='rgba(94,234,212,.12)';setTimeout(()=>el.style.background='',1800);}
+});
+
+/* diagramma del turno */
+(function(){
+  const T=[
+    {l:'Turno 1 — apri una chat dentro un progetto', pct:9,
+     n:'Prima ancora che tu scriva, la finestra contiene già tre blocchi che non hai digitato in questa chat.',
+     b:[['k-sys','System prompt della piattaforma','~2.000 tok'],
+        ['k-sys','Istruzioni personalizzate + istruzioni del progetto','~600 tok'],
+        ['k-mem','Memoria persistente (ciò che ha imparato su di te)','~400 tok'],
+        ['k-new','Il tuo messaggio','~80 tok']]},
+    {l:'Turno 2 — la domanda tocca i documenti caricati', pct:26,
+     n:'Il sistema recupera dai file del progetto solo i passaggi giudicati pertinenti, non i file interi. Questa selezione la fa un retriever, non il modello.',
+     b:[['k-sys','System prompt + istruzioni','~2.600 tok'],
+        ['k-mem','Memoria persistente','~400 tok'],
+        ['k-know','Estratti recuperati dai documenti del progetto','~14.000 tok'],
+        ['k-turn','Turno 1 (domanda + risposta)','~1.200 tok'],
+        ['k-new','Il tuo messaggio','~120 tok']]},
+    {l:'Turno 6 — il modello ha usato degli strumenti', pct:52,
+     n:'Ogni chiamata a uno strumento (ricerca web, lettura file, query) lascia nella finestra sia la richiesta sia il risultato grezzo. È la voce che cresce più in fretta.',
+     b:[['k-sys','System prompt + istruzioni','~2.600 tok'],
+        ['k-mem','Memoria persistente','~400 tok'],
+        ['k-know','Estratti recuperati','~14.000 tok'],
+        ['k-tool','Risultati di 7 chiamate a strumenti','~48.000 tok'],
+        ['k-turn','Turni 1-5','~9.000 tok'],
+        ['k-new','Il tuo messaggio','~90 tok']]},
+    {l:'Turno 20 — la finestra è satura', pct:97,
+     n:'Qualcosa deve uscire. Il sistema sceglie: di solito comprime i turni più vecchi in un riassunto e scarta i risultati degli strumenti già consumati. È il momento in cui "si perde l\'inizio" — e non è un guasto, è una politica di gestione.',
+     b:[['k-sys','System prompt + istruzioni','~2.600 tok'],
+        ['k-mem','Memoria persistente','~400 tok'],
+        ['k-cut','Turni 1-9 originali','scartati'],
+        ['k-turn','Riassunto automatico dei turni 1-9','~1.500 tok'],
+        ['k-cut','Risultati strumenti già consumati','svuotati'],
+        ['k-know','Estratti recuperati (aggiornati)','~16.000 tok'],
+        ['k-tool','Risultati strumenti recenti','~62.000 tok'],
+        ['k-turn','Turni 10-19','~22.000 tok'],
+        ['k-new','Il tuo messaggio','~110 tok']]}
+  ];
+  let i=0;
+  const st=document.getElementById('t-stack'),lb=document.getElementById('t-lbl'),
+        fl=document.getElementById('t-fill'),pc=document.getElementById('t-pct'),nt=document.getElementById('t-note');
+  function draw(){
+    const t=T[i];
+    st.innerHTML=t.b.map(([k,a,b])=>'<div class="blk '+k+'"><b>'+a+'</b><span>'+b+'</span></div>').join('');
+    lb.textContent=t.l; fl.style.width=t.pct+'%'; pc.textContent=t.pct+'%'; nt.textContent=t.n;
+  }
+  document.getElementById('t-next').addEventListener('click',()=>{i=(i+1)%T.length;draw();});
+  document.getElementById('t-prev').addEventListener('click',()=>{i=(i-1+T.length)%T.length;draw();});
+  draw();
+})();
+
+/* helper accordion */
+function mkAcc(host,items){
+  const w=document.getElementById(host);
+  items.forEach(c=>{
+    const d=document.createElement('div'); d.className='acc';
+    d.innerHTML='<div class="acc-hd"><div class="acc-n">'+c.n+'</div><div class="acc-t">'+c.t+
+      '<small>'+c.s+'</small></div>'+(c.badge?'<span class="badge '+c.badge[0]+'">'+c.badge[1]+'</span>':'')+
+      '<span class="chev">&#9654;</span></div><div class="acc-bd">'+c.b+'</div>';
+    d.querySelector('.acc-hd').addEventListener('click',e=>{
+      if(e.target.closest('.copy'))return; d.classList.toggle('open');
+    });
+    w.appendChild(d);
+  });
+}
+
+/* ===== LIVELLI ===== */
+mkAcc('lev',[
+{n:'L0',t:'I pesi del modello',s:'La memoria parametrica — quella che non puoi toccare',badge:['b-fix','Immutabile'],
+ b:'<p><strong>Cos\'è.</strong> Tutto ciò che il modello ha assorbito durante l\'addestramento, compresso in miliardi di parametri numerici. Non è un archivio consultabile né un indice di documenti: è una distribuzione statistica su come le parole si susseguono. Il modello non "cerca" in questa memoria — la <em>ricostruisce</em> generando, ed è esattamente per questo che può produrre affermazioni plausibili e false.</p>'+
+ '<p><strong>Perché non è memoria nel senso utile del termine.</strong> Non ha date certe, non ha fonti, non è consultabile, non è aggiornabile e non è cancellabile selettivamente. Ha inoltre una <em>data di taglio</em>: oltre quella soglia il modello non sa nulla, e spesso non sa nemmeno di non sapere.</p>'+
+ '<p><strong>L\'unico modo di modificarla</strong> è il riaddestramento o il fine-tuning. Il consenso operativo del 2026 è netto e vale la pena impararlo a memoria: <em>lo stile e il comportamento nei pesi, i fatti nel recupero</em><span class="ref" data-r="20">[20]</span>. Mettere nei pesi conoscenza che cambia è il modo più costoso di ottenere informazioni obsolete.</p>'+
+ '<div class="techbox"><p>Il fine-tuning oggi si fa quasi sempre con adattatori leggeri (LoRA/QLoRA) su un modello base forte, <em>affiancati</em> al retrieval e non in sostituzione<span class="ref" data-r="20">[20]</span>. La sequenza consigliata è: prompt → retrieval → fine-tuning → distillazione, fermandosi al primo stadio che risolve il problema. La maggior parte dei progetti non arriva mai al terzo.</p></div>'},
+
+{n:'L1',t:'Istruzioni permanenti',s:'Ciò che viene reinserito identico a ogni turno',badge:['b-perm','Persistente'],
+ b:'<p><strong>Cos\'è.</strong> Il testo che il sistema antepone a ogni conversazione. Si sovrappongono più strati: il system prompt della piattaforma (che non controlli), le tue istruzioni di account, le istruzioni del progetto e — negli agenti — eventuali file di regole letti all\'avvio.</p>'+
+ '<p><strong>Perché è il livello più sottovalutato.</strong> È l\'unico completamente deterministico: ciò che scrivi lì è presente <em>ogni volta</em>, all\'inizio della finestra, cioè nella posizione di massima attenzione. Non c\'è retrieval che possa fallire, né sintesi che possa distorcere.</p>'+
+ '<p><strong>Precedenza.</strong> Quando gli strati sono più di uno, di norma il più specifico prevale sul più generale — le istruzioni di uno spazio di lavoro su quelle di account, quelle di account sul comportamento predefinito. La regola però non è uniforme fra piattaforme e non è sempre documentata: se dipendi da questo comportamento, <em>verificalo con un test</em> invece di darlo per scontato.</p>'+
+ '<p><strong>L\'errore ricorrente.</strong> Usarle per la conoscenza invece che per il comportamento. "Ecco i dati dei nostri 40 prodotti" nelle istruzioni permanenti è uno spreco: paghi quei token a ogni singolo turno, anche quando la domanda non c\'entra nulla. La conoscenza va ai livelli 4-6; qui ci vanno tono, formato, ruolo, divieti, lingua.</p>'},
+
+{n:'L2',t:'La finestra di contesto',s:'La conversazione in corso — massimo controllo, zero persistenza',badge:['b-sess','Volatile'],
+ b:'<p><strong>Cos\'è.</strong> Il livello che conoscevi già: quello che scrivi e quello che il modello risponde, riaccumulato e rispedito a ogni turno. Controllo totale, durata nulla.</p>'+
+ '<p><strong>La tecnica che quasi nessuno usa.</strong> Aprire una chat nuova non è una resa, è uno strumento. Quando una conversazione lunga inizia a peggiorare — risposte che ignorano vincoli già dati, ritorno a errori corretti — il problema è quasi sempre il rumore accumulato nella finestra, non il modello. La mossa corretta è un <em>passaggio di consegne</em>:</p>'+
+ '<div class="code"><div class="code-hd"><span>Handoff verso una chat nuova</span><button class="copy">Copia</button></div><pre>Prima di chiudere questa conversazione, scrivi il documento\ndi passaggio per riprendere il lavoro in una chat nuova:\n\n## Obiettivo\n[cosa stiamo cercando di ottenere]\n## Decisioni prese e non più in discussione\n[elenco]\n## Vincoli da rispettare\n[elenco]\n## Strade già escluse, e perché\n[elenco — serve a non riproporle]\n## Stato attuale\n[dove siamo]\n## Prossimo passo\n[uno solo]</pre></div>'+
+ '<p>Incolli questo in una chat nuova e riparti con il segnale senza il rumore. È la versione manuale di ciò che gli agenti fanno automaticamente con la <em>compaction</em>.</p>'},
+
+{n:'L3',t:'Memoria persistente fra chat',s:'Ciò che il sistema ricorda di te da una conversazione all\'altra',badge:['b-perm','Persistente'],
+ b:'<p><strong>Cos\'è.</strong> Il livello che hai intuito. Si divide in due tipi molto diversi, spesso confusi:</p>'+
+ '<ul><li><strong>Memoria esplicita</strong> — i fatti che chiedi di salvare. Elenco leggibile e modificabile. In ChatGPT sono le <em>saved memories</em>, consultabili e cancellabili una per una<span class="ref" data-r="2">[2]</span>.</li>'+
+ '<li><strong>Memoria automatica</strong> — una sintesi che il sistema costruisce da solo osservando le tue conversazioni. In ChatGPT è il riferimento alla cronologia chat<span class="ref" data-r="1">[1]</span>; in Claude una sintesi generata in background, con <em>memoria separata per ciascun Progetto</em><span class="ref" data-r="3">[3]</span>; in Gemini il <em>personal context</em>, attivo per impostazione predefinita e disattivabile<span class="ref" data-r="12">[12]</span>.</li></ul>'+
+ '<p><strong>Come arriva al modello.</strong> Non c\'è magia: all\'apertura della conversazione il sistema inserisce questo materiale nella finestra, in testa, insieme alle istruzioni. Da quel momento è contesto come tutto il resto.</p>'+
+ '<p><strong>I tre rischi da conoscere.</strong> <em>(a) Contaminazione</em>: preferenze nate in un ambito che si applicano a un ambito dove non c\'entrano. La separazione per progetto esiste proprio per questo<span class="ref" data-r="3">[3]</span>. <em>(b) Obsolescenza silenziosa</em>: un fatto memorizzato mesi fa e non più vero continua a influenzare ogni risposta, senza segnalarsi. <em>(c) Opacità</em>: la memoria automatica è una sintesi <em>interpretativa</em>, non una registrazione — può contenere inferenze su di te che non hai mai dichiarato.</p>'+
+ '<p><strong>Igiene consigliata.</strong> Rileggi l\'elenco delle memorie ogni tanto e cancella ciò che è scaduto; usa progetti o spazi separati per ambiti che non devono mescolarsi; usa le modalità temporanee — la <em>Temporary Chat</em> di Gemini non viene salvata, non personalizza e non alimenta l\'addestramento<span class="ref" data-r="12">[12]</span> — per tutto ciò che non vuoi che diventi parte del tuo profilo.</p>'},
+
+{n:'L4',t:'Fonti caricate',s:'I file che diventano la base di conoscenza di uno spazio di lavoro',badge:['b-fix','Stabile'],
+ b:'<p><strong>Cos\'è.</strong> I documenti che carichi in un Progetto, in un Custom GPT o in un notebook: il meccanismo che citavi tu. Il punto da chiarire è <em>come</em> quei file arrivano al modello.</p>'+
+ '<p><strong>Non entrano interi.</strong> Salvo che il corpus sia piccolo abbastanza da stare tutto nella finestra, i documenti vengono spezzati, indicizzati, e a ogni domanda ne vengono ripescati solo i passaggi ritenuti pertinenti. Il modello non "ha letto i tuoi file": legge i frammenti che un altro componente ha selezionato per lui. Da qui una conseguenza che spiazza molti — <strong>una risposta può essere sbagliata anche se l\'informazione giusta è nei file</strong>, perché il recupero non l\'ha pescata.</p>'+
+ '<p><strong>Il passaggio di modalità è documentato.</strong> Claude, ad esempio, dichiara esplicitamente che la knowledge base di un Progetto funziona in modo diverso a seconda della sua dimensione: finché il materiale rientra nei limiti di contesto viene usato direttamente, mentre quando li avvicina il sistema attiva automaticamente una modalità RAG per ampliare la capacità<span class="ref" data-r="4">[4]</span>. È la dimostrazione pratica del punto: <em>lo stesso progetto si comporta in due modi diversi a seconda di quanto ci hai caricato dentro</em> — e il secondo modo introduce un componente in più che può sbagliare.</p>'+
+ '<p><strong>Il caso puro: NotebookLM.</strong> È l\'esempio più didattico perché porta il principio all\'estremo. Il modello risponde <em>soltanto</em> a partire dalle fonti caricate, e ogni affermazione riporta una citazione cliccabile al passaggio esatto da cui proviene<span class="ref" data-r="13">[13]</span><span class="ref" data-r="14">[14]</span>. È un sistema di recupero deliberatamente chiuso: rinunci alla conoscenza generale in cambio di verificabilità.</p>'+
+ '<p><strong>Regola pratica.</strong> Se il materiale sta comodamente nella finestra, <em>incollarlo direttamente è più affidabile che caricarlo</em>: elimini un componente che può sbagliare. Il caricamento in knowledge base conviene quando il corpus supera la finestra, quando lo riusi su molte conversazioni, o quando ti serve la citazione automatica.</p>'},
+
+{n:'L5',t:'Recupero automatico',s:'RAG, ricerca semantica e i loro successori',badge:['b-dyn','Dinamico'],
+ b:'<p><strong>Cos\'è.</strong> Il meccanismo che sta sotto al livello 4 e che puoi anche costruire da solo. La sigla che cercavi è <strong>RAG</strong> — <em>Retrieval-Augmented Generation</em>, generazione aumentata dal recupero. Quattro passi:</p>'+
+ '<ol><li><strong>Frammentazione</strong> — i documenti vengono divisi in blocchi di dimensione gestibile.</li>'+
+ '<li><strong>Indicizzazione</strong> — ogni blocco viene convertito in un vettore numerico che ne rappresenta il significato.</li>'+
+ '<li><strong>Ricerca</strong> — la domanda viene convertita allo stesso modo e si recuperano i blocchi più vicini per significato, non per parole uguali.</li>'+
+ '<li><strong>Iniezione</strong> — i blocchi recuperati vengono inseriti nella finestra insieme alla domanda.</li></ol>'+
+ '<p><strong>Il punto che cambia il modo di ragionare.</strong> In un sistema RAG, la qualità della risposta dipende molto più dal <em>recupero</em> che dal modello. Se i tre frammenti giusti non vengono pescati, nessuna formulazione del prompt li farà comparire. È il motivo per cui, nel lavoro di produzione, la formulazione del prompt conta oggi meno di quali passaggi il retriever ha selezionato<span class="ref" data-r="21">[21]</span>.</p>'+
+ '<p><strong>L\'evoluzione in corso.</strong> Una linea alternativa sta guadagnando terreno: la <em>ricerca agentica</em>, in cui il modello non riceve frammenti preselezionati ma <strong>usa strumenti per cercare da solo</strong> — elencare cartelle, cercare stringhe, aprire file, affinare la ricerca in base a ciò che trova. Il caso più discusso è Claude Code, che nel 2025 ha rimosso l\'indice vettoriale sostituendolo con strumenti di ricerca testuale, riportando risultati migliori e un\'architettura più semplice, senza i problemi di indice obsoleto<span class="ref" data-r="19">[19]</span>.</p>'+
+ '<div class="techbox"><p>La lettura corretta nel 2026 non è "il RAG è morto". È che i due approcci coprono bisogni diversi: l\'indice semantico resta superiore per la <em>ricerca concettuale</em> su corpora molto grandi e su materiale non strutturato; la ricerca agentica vince quando il materiale ha una struttura navigabile, quando la freschezza conta e quando servono permessi granulari<span class="ref" data-r="19">[19]</span><span class="ref" data-r="24">[24]</span>. Le architetture più solide usano l\'agente come spina dorsale e l\'indice semantico dove serve davvero.</p></div>'},
+
+{n:'L6',t:'Strumenti e connettori',s:'Il contesto che il modello va a prendersi da solo',badge:['b-dyn','Dinamico'],
+ b:'<p><strong>Il cambio di paradigma.</strong> Fino a qui il contesto era qualcosa che <em>fornisci</em>. Con gli strumenti diventa qualcosa che il modello <em>recupera</em>: ricerca sul web, lettura di un file, interrogazione di un database, chiamata a un\'API, esecuzione di codice. Il contesto smette di essere un pacchetto preparato in anticipo e diventa il risultato di una serie di decisioni prese durante la risposta.</p>'+
+ '<p><strong>MCP, lo standard.</strong> Il <em>Model Context Protocol</em> è un protocollo aperto introdotto da Anthropic a fine 2024 per standardizzare il collegamento fra modelli e sistemi esterni — l\'analogia corrente è quella di una presa universale al posto di decine di adattatori proprietari. È stato successivamente adottato dagli altri principali fornitori ed è passato sotto la governance della Linux Foundation<span class="ref" data-r="15">[15]</span><span class="ref" data-r="16">[16]</span>. Per chi progetta sistemi, il significato pratico è che integrare uno strumento non richiede più un lavoro diverso per ogni modello.</p>'+
+ '<p><strong>Il costo che nessuno anticipa.</strong> Ogni risultato di strumento occupa spazio nella finestra, e sono blocchi grandi: una ricerca web restituisce migliaia di token, la lettura di un file anche di più. Nelle sessioni agentiche lunghe questa è la voce che cresce più in fretta, e il motivo principale per cui la finestra si satura prima del previsto. Torna il diagramma della Parte 2.</p>'+
+ '<div class="callout red" style="margin-bottom:0"><p><strong>Nota di sicurezza.</strong> Un contenuto recuperato da uno strumento entra nella finestra con lo stesso status del tuo testo. Se una pagina web o un documento contengono istruzioni, il modello può trattarle come tali: è la <em>prompt injection indiretta</em>. Con l\'aumentare dei connettori questa smette di essere una curiosità teorica e diventa una superficie di attacco reale — motivo per cui la maturità della sicurezza è ancora indicata come il punto debole dell\'ecosistema MCP<span class="ref" data-r="16">[16]</span>.</p></div>'},
+
+{n:'L7',t:'Memoria gestita dall\'agente',s:'Scrivere fuori dalla finestra e rileggere quando serve',badge:['b-perm','Persistente'],
+ b:'<p><strong>Cos\'è.</strong> Il livello più recente, e quello che risponde meglio alla tua domanda sul "ricordare fra le chat" in ambito professionale. Invece di affidarsi a una sintesi automatica generata dalla piattaforma, l\'agente <strong>scrive attivamente su file</strong> ciò che vuole conservare, e li rilegge quando servono. La memoria diventa un artefatto ispezionabile e modificabile a mano, non una scatola nera.</p>'+
+ '<p>Anthropic ha reso disponibile questo meccanismo come strumento apposito: una directory dedicata in cui il modello può creare, leggere e aggiornare file di memoria che persistono fra le sessioni<span class="ref" data-r="17">[17]</span>. Lo stesso pattern esiste in forma artigianale in qualunque agente che possa scrivere su disco.</p>'+
+ '<p><strong>Le tecniche che lo accompagnano.</strong></p>'+
+ '<ul><li><strong>Scratchpad</strong> — l\'agente annota il piano e i risultati intermedi fuori dalla finestra, così sopravvivono al troncamento<span class="ref" data-r="10">[10]</span>.</li>'+
+ '<li><strong>Compaction</strong> — la cronologia viene compressa in un riassunto strutturato quando ci si avvicina al limite.</li>'+
+ '<li><strong>Svuotamento dei risultati consumati</strong> — i risultati degli strumenti già utilizzati vengono rimossi dalla cronologia: è la forma più sicura di compressione, perché non tocca il ragionamento<span class="ref" data-r="9">[9]</span>.</li>'+
+ '<li><strong>Sotto-agenti</strong> — un compito viene delegato a un agente con finestra propria, che restituisce solo la conclusione. Il contesto di lavoro non inquina quello principale<span class="ref" data-r="10">[10]</span>.</li></ul>'+
+ '<div class="techbox"><p>Anthropic espone anche un <strong>context editing</strong> lato server che rimuove automaticamente le coppie richiesta/risultato più vecchie preservando il prefisso della cache — un dettaglio non ovvio ma importante, perché ripulire il contesto lato client invaliderebbe la cache e farebbe salire i costi invece di ridurli<span class="ref" data-r="17">[17]</span><span class="ref" data-r="9">[9]</span>.</p><p style="margin-top:10px">Il fornitore riporta miglioramenti sostanziali di prestazioni e forti risparmi di token combinando context editing e memory tool su compiti lunghi<span class="ref" data-r="17">[17]</span>. Sono <em>dati dichiarati dal fornitore su benchmark interni</em>: utili come indicazione della direzione, non come garanzia sul tuo caso d\'uso.</p><p style="margin-top:10px">Chi costruisce agenti trova questi meccanismi esposti come parametri di configurazione negli SDK, insieme alle politiche di compaction automatica<span class="ref" data-r="18">[18]</span>.</p></div>'}
+]);
+
+/* ===== LEVE ===== */
+mkAcc('leve',[
+{n:'01',t:'Ricominciare al momento giusto',s:'La leva più efficace e la meno usata',
+ b:'<p>Una conversazione lunga accumula rumore: tentativi scartati, correzioni, materiale non più pertinente. Tutto questo continua a essere rispedito al modello a ogni turno e compete per la sua attenzione con ciò che conta davvero.</p><p><strong>I segnali che è ora di ripartire:</strong> il modello ignora un vincolo che avevi già dato, riporta un errore che avevi già corretto, o risponde in modo più generico di prima. Non sono capricci: sono sintomi di saturazione.</p><p>Non chiudere la chat e basta — usa il passaggio di consegne descritto nel livello L2. Trasferisci le decisioni, non la cronologia.</p>'},
+{n:'02',t:'Posizionare e delimitare',s:'Dove metti il testo cambia quanto viene visto',
+ b:'<p>Discende direttamente dal "lost in the middle": inizio e fine della finestra sono le posizioni forti, il centro è la zona di attenzione più debole<span class="ref" data-r="7">[7]</span>.</p><ul><li>Obiettivo e vincoli critici <strong>in testa</strong>.</li><li>Materiale lungo <strong>al centro</strong>, sempre dentro tag espliciti.</li><li>Domanda operativa e formato dell\'output <strong>in coda</strong>.</li><li>Sui prompt molto lunghi, <strong>ripeti in una riga finale</strong> l\'istruzione che non deve andare persa.</li></ul>'},
+{n:'03',t:'Separare gli spazi',s:'Isolamento: la difesa contro la contaminazione',
+ b:'<p>Progetti distinti per ambiti distinti non è ordine formale: è una scelta di ingegneria del contesto. Separa le istruzioni permanenti, separa le fonti e — dove la piattaforma lo prevede — separa anche la memoria persistente, così le preferenze nate in un ambito non si applicano dove non c\'entrano<span class="ref" data-r="3">[3]</span>.</p><p>Corollario da tenere presente: se dividi il lavoro fra progetti e chat libere, <strong>dividi anche il contesto</strong>. Quello che il sistema impara nelle chat sciolte può non essere disponibile dentro il progetto, e viceversa.</p>'},
+{n:'04',t:'Fare igiene della memoria',s:'Un fatto scaduto inquina tutte le risposte future',
+ b:'<p>La memoria persistente non ha una data di scadenza e non ti avvisa quando un\'informazione non è più vera. Un ruolo cambiato, un cliente non più seguito, una preferenza superata restano lì e continuano a orientare ogni risposta.</p><p><strong>Pratica consigliata:</strong> apri l\'elenco delle memorie una volta al mese e leggilo. È rapido e quasi sempre istruttivo — nella memoria automatica si trovano spesso inferenze su di te che non hai mai dichiarato esplicitamente.</p><p>Per tutto ciò che non deve entrare nel profilo, usa le modalità temporanee<span class="ref" data-r="12">[12]</span>.</p>'},
+{n:'05',t:'Scegliere strumenti al posto dei file per i dati volatili',s:'Un dato vecchio ben formattato è peggio di un dato assente',
+ b:'<p>Regola secca: <strong>se il dato cambia più spesso di quanto tu sia disposto ad aggiornare il file, non deve stare in un file.</strong> Listini, disponibilità, stato dei sistemi, saldi, calendari vanno presi da uno strumento al momento della domanda.</p><p>Il rischio di un file obsoleto non è che il modello non sappia: è che risponda con sicurezza usando un dato scaduto, in un formato che non lascia trasparire nulla. È la modalità di errore più difficile da intercettare a valle.</p>'},
+{n:'06',t:'Comprimere invece di troncare',s:'Riassunti strutturati e svuotamento di ciò che è stato consumato',
+ b:'<p>Quando la finestra si riempie, la scelta ingenua è tagliare il più vecchio. La scelta migliore è comprimere conservando ciò che ha valore duraturo — decisioni, vincoli, strade escluse — e buttare ciò che era solo strumentale.</p><p>Negli agenti la forma più sicura di compressione è lo <em>svuotamento dei risultati di strumenti già consumati</em>: si rimuove il materiale grezzo dopo che è stato usato, lasciando intatto il ragionamento che ne è derivato<span class="ref" data-r="9">[9]</span>.</p><div class="techbox"><p>La compressione va fatta in modo che preservi la <em>provenienza</em>: un riassunto che perde l\'origine delle affermazioni impedisce all\'agente di verificarle in seguito, e trasforma informazione tracciabile in convinzione non verificabile.</p></div>'},
+{n:'07',t:'Isolare in sotto-agenti',s:'Un contesto sporco che non contamina quello principale',
+ b:'<p>Se un sotto-compito richiede di leggere molto materiale ma produce una conclusione breve — esplorare un archivio, verificare venti fonti, analizzare un log — conviene delegarlo a un agente con finestra propria, che restituisce solo il risultato.</p><p>Il contesto principale riceve la conclusione, non le cinquanta pagine lette per arrivarci. È il motivo per cui, nei sistemi multi-agente, la somma di più finestre piccole e mirate tende a battere una finestra unica molto grande<span class="ref" data-r="10">[10]</span>.</p>'},
+{n:'08',t:'Sfruttare la cache del prefisso',s:'Ordinare il prompt per pagarlo meno',
+ b:'<p>Una leva che riguarda i costi ma influenza il modo in cui si struttura il prompt. I fornitori memorizzano lo stato di elaborazione dei prefissi già visti: se una nuova richiesta inizia con lo stesso identico testo di una precedente, quella parte non viene rielaborata<span class="ref" data-r="11">[11]</span>.</p><p><strong>La conseguenza pratica è una regola di ordinamento:</strong> il contenuto <em>stabile</em> (istruzioni, esempi, documenti di riferimento) va in testa; il contenuto <em>variabile</em> (la domanda dell\'utente) va in coda. Invertire l\'ordine non cambia il significato del prompt ma azzera i vantaggi della cache.</p><div class="techbox"><p>Gli ordini di grandezza riportati dai fornitori sono considerevoli — riduzioni marcate del costo dei token in ingresso ripetuti e della latenza sui prompt lunghi<span class="ref" data-r="11">[11]</span><span class="ref" data-r="23">[23]</span>. La condizione è la corrispondenza <em>esatta</em> del prefisso: basta un carattere diverso all\'inizio, o un timestamp inserito in testa, per perdere il riscontro in cache.</p></div>'}
+]);
+
+/* ===== MITI ===== */
+mkAcc('miti-box',[
+{n:'✕',t:'"Il modello impara dalle nostre conversazioni e migliora"',s:'Confonde apprendimento e contesto',
+ b:'<p>I pesi non cambiano mentre lo usi. Ciò che migliora, quando migliora, è il <em>contesto</em> che il sistema gli fornisce: memoria, istruzioni, fonti. È una differenza sostanziale — significa che il miglioramento è reversibile, ispezionabile e sotto il tuo controllo, non un processo opaco di apprendimento.</p><p>Le conversazioni possono essere usate per addestrare versioni <em>future</em>, ma è un processo separato, differito e soggetto alle impostazioni sulla privacy: non è quello che stai osservando durante l\'uso.</p>'},
+{n:'✕',t:'"Con un milione di token di contesto il recupero non serve più"',s:'Confonde capienza e prestazione',
+ b:'<p>Tre ragioni per cui non regge: le prestazioni degradano al crescere della lunghezza dell\'input<span class="ref" data-r="8">[8]</span>; il costo e la latenza crescono con i token elaborati; e la maggior parte dei corpora aziendali reali eccede comunque qualunque finestra. I confronti recenti non indicano un vincitore universale fra contesto lungo e recupero: il modello dominante è ibrido<span class="ref" data-r="20">[20]</span>.</p>'},
+{n:'✕',t:'"Se carico i file, il modello li ha letti tutti"',s:'Confonde caricamento e lettura',
+ b:'<p>Salvo che il corpus sia piccolo, il modello vede solo i frammenti che il recupero ha selezionato per quella specifica domanda. Ne discende il fenomeno più contro-intuitivo del livello 4: <strong>l\'informazione può essere nei tuoi file e la risposta essere comunque sbagliata</strong>, perché il retriever non l\'ha pescata. Se un dato è cruciale, verificalo chiedendolo in modo mirato invece di dare per scontato che sia stato considerato.</p>'},
+{n:'✕',t:'"La memoria è un database di fatti su di me"',s:'Confonde registrazione e sintesi',
+ b:'<p>Solo la parte esplicita lo è. La memoria automatica è una <em>sintesi in linguaggio naturale</em> prodotta da un modello che osserva le tue conversazioni: contiene interpretazioni, generalizzazioni e talvolta inferenze che non hai mai dichiarato. È utile, ma va trattata come un riassunto scritto da qualcun altro, non come un archivio di dati.</p>'},
+{n:'✕',t:'"Se cancello la chat, cancello anche la memoria"',s:'Confonde due archivi separati',
+ b:'<p>Sono depositi distinti. Cancellare una conversazione non rimuove necessariamente ciò che il sistema ne aveva già estratto e salvato: la memoria si gestisce dal suo pannello, separatamente<span class="ref" data-r="2">[2]</span>. Vale anche il contrario: disattivare la memoria non cancella quella già accumulata.</p>'},
+{n:'✕',t:'"Sa che giorno è oggi e cosa è successo ieri"',s:'Confonde pesi e strumenti',
+ b:'<p>Un modello, da solo, non ha accesso all\'orologio né alle notizie. Sa la data se il sistema gliela inserisce nel contesto — cosa che la maggior parte delle piattaforme fa — e conosce l\'attualità solo se dispone di uno strumento di ricerca e lo usa. Sono informazioni che arrivano dai livelli 1 e 6, mai dal livello 0.</p>'},
+{n:'✕',t:'"Più contesto fornisco, meglio risponde"',s:'La curva non è monotona',
+ b:'<p>Cresce fino a un punto, poi scende. Oltre la soglia, il materiale in più diluisce quello rilevante e sposta informazioni importanti nella zona centrale a bassa attenzione<span class="ref" data-r="7">[7]</span><span class="ref" data-r="8">[8]</span>. L\'obiettivo dichiarato nella disciplina che se ne occupa è trovare <em>il più piccolo insieme di token ad alto segnale</em><span class="ref" data-r="10">[10]</span>, non il più grande insieme possibile.</p>'},
+{n:'✕',t:'"Il RAG è superato, ormai si fa tutto con la ricerca agentica"',s:'Semplifica un quadro che resta ibrido',
+ b:'<p>Lo spostamento è reale e documentato — rimuovere l\'indice vettoriale a favore di strumenti di ricerca ha dato risultati migliori in contesti dove il materiale è navigabile e strutturato<span class="ref" data-r="19">[19]</span>. Ma l\'indice semantico resta superiore nella ricerca concettuale su grandi corpora non strutturati. Le architetture solide del 2026 combinano i due<span class="ref" data-r="24">[24]</span>, e la scelta si fa in base alla natura del materiale, non alla moda del momento.</p>'}
+]);
+
+/* ===== FONTI ===== */
+(function(){
+  const S=[
+    ['P','OpenAI — Memory and new controls for ChatGPT','Annuncio ufficiale del sistema di memoria e dei relativi controlli.','https://openai.com/index/memory-and-new-controls-for-chatgpt/'],
+    ['P','OpenAI Help Center — How does "Reference saved memories" work?','Funzionamento e gestione delle memorie salvate.','https://help.openai.com/en/articles/11146739-how-does-reference-saved-memories-work'],
+    ['P','Anthropic / Claude — Bringing memory to teams','Memoria di Claude e separazione per progetto.','https://claude.com/blog/memory'],
+    ['P','Claude Help Center — What are projects?','Knowledge base di progetto, istruzioni personalizzate e loro precedenza.','https://support.claude.com/en/articles/9517075-what-are-projects'],
+    ['P','Google — Personalizzazione con la memoria delle chat passate (Gemini)','Documentazione ufficiale sulla memoria di Gemini.','https://support.google.com/gemini/answer/16598469'],
+    ['S','Morph — LLM Context Window Comparison (2026)','Confronto delle finestre di contesto dei modelli attuali.','https://www.morphllm.com/llm-context-window-comparison'],
+    ['S','Liu et al. — Lost in the Middle: How Language Models Use Long Contexts','Studio originale sul calo di accuratezza per le informazioni collocate al centro del contesto.','https://www.researchgate.net/publication/378284067_Lost_in_the_Middle_How_Language_Models_Use_Long_Contexts'],
+    ['S','Morph — Context Rot: Why LLMs Degrade as Context Grows','Sintesi dello studio Chroma su 18 modelli di frontiera e sui meccanismi posizionali.','https://www.morphllm.com/context-rot'],
+    ['P','Claude Cookbook — Context engineering: memory, compaction and tool clearing','Ricettario ufficiale su compaction, svuotamento dei risultati e memoria.','https://platform.claude.com/cookbook/tool-use-context-engineering-context-engineering-tools'],
+    ['S','LangChain — Context engineering for agents','Framework write / select / compress / isolate e pattern di scratchpad e sotto-agenti.','https://www.langchain.com/blog/context-engineering-for-agents'],
+    ['P','OpenAI API — Prompt caching','Meccanismo della cache di prefisso e regole di ordinamento del prompt.','https://developers.openai.com/api/docs/guides/prompt-caching'],
+    ['S','9to5Google — Gemini personal context e Temporary Chat','Introduzione delle due funzionalità e loro comportamento predefinito.','https://9to5google.com/2025/08/13/gemini-personal-context/'],
+    ['S','Learn Prompting — A Complete How-To Guide to NotebookLM','Funzionamento dell\'ancoraggio alle fonti e delle citazioni.','https://learnprompting.org/blog/notebooklm-guide'],
+    ['S','KZ Softworks — NotebookLM: grounded in your documents','Il modello del sistema RAG chiuso e le sue implicazioni.','https://www.kzsoftworks.com/blog/notebooklm-this-ai-is-grounded-in-your-documents-not-the-whole-internet'],
+    ['S','SitePoint — Model Context Protocol (MCP): Complete 2026 Guide','Origine, architettura e adozione del protocollo.','https://www.sitepoint.com/model-context-protocol-mcp/'],
+    ['S','Digital Applied — MCP Adoption Statistics 2026','Dati di adozione, governance e criticità di sicurezza.','https://www.digitalapplied.com/blog/mcp-adoption-statistics-2026-model-context-protocol'],
+    ['S','L. Monigatti — Exploring Anthropic\'s Memory Tool','Analisi del memory tool e del context editing, con le cifre dichiarate dal fornitore.','https://www.leoniemonigatti.com/blog/claude-memory-tool.html'],
+    ['S','Claude Agent SDK — Memory and context management','Documentazione tecnica su gestione della memoria e del contesto negli agenti.','https://github.com/bgauryy/open-docs/blob/main/docs/claude-agent-sdk/memory-and-context.md'],
+    ['S','SmartScope — Why Claude Code dropped vector-DB RAG for agentic search','Ricostruzione del passaggio dalla ricerca vettoriale alla ricerca agentica.','https://smartscope.blog/en/ai-development/practices/rag-debate-agentic-search-code-exploration/'],
+    ['S','Winder.ai — RAG vs Fine-Tuning: a 2026 decision framework','Criteri di scelta fra pesi, recupero e contesto lungo.','https://winder.ai/rag-vs-fine-tuning-2026-decision-framework/'],
+    ['S','deepset — Context Engineering: the next frontier beyond prompt engineering','Rapporto fra formulazione del prompt e ingegneria del contesto.','https://www.deepset.ai/blog/context-engineering-the-next-frontier-beyond-prompt-engineering'],
+    ['S','The AI Corner — Everything Claude has shipped in 2026','Panoramica delle funzionalità di memoria e loro gestione dalle impostazioni.','https://www.the-ai-corner.com/p/everything-claude-shipped-2026-complete-guide'],
+    ['S','Redis — What is prompt caching?','Meccanismo della cache KV e ordini di grandezza dei risparmi.','https://redis.io/blog/what-is-prompt-caching/'],
+    ['S','Unblocked — Context engine vs RAG: retrieval isn\'t enough','Quando il recupero semantico basta e quando serve un livello di contesto più ricco.','https://getunblocked.com/blog/context-engine-vs-rag/']
+  ];
+  const w=document.getElementById('fonti-box');
+  S.forEach(([k,t,d,u],i)=>{
+    const li=document.createElement('li'); li.id='src-'+(i+1); li.style.transition='background .4s';
+    li.innerHTML='<span style="display:inline;color:'+(k==='P'?'var(--ok)':'var(--amb)')+
+      ';font-family:var(--mono);font-size:10.5px;font-weight:700;margin-right:7px">'+k+'</span>'+
+      '<a href="'+u+'" target="_blank" rel="noopener">'+t+'</a><span>'+d+'</span>';
+    w.appendChild(li);
+  });
+})();
+</script>
+</body>
+</html>
