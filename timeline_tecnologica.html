@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Le tappe che hanno cambiato il mondo</title>
+<style>
+  :root{
+    --bg:#0f1117;
+    --panel:#171a23;
+    --line:#3a3f52;
+    --accent:#6ea8fe;
+    --accent2:#ff9f6e;
+    --text:#e8e9ee;
+    --muted:#9aa0b4;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    padding:40px 24px 80px;
+  }
+  h1{
+    font-size:1.5rem;
+    margin:0 0 4px;
+    text-align:center;
+  }
+  p.sub{
+    text-align:center;
+    color:var(--muted);
+    margin:0 0 32px;
+    font-size:0.9rem;
+  }
+  .controls{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:14px;
+    margin-bottom:70px;
+  }
+  .controls span{
+    font-size:0.85rem;
+    color:var(--muted);
+    transition:color .2s;
+  }
+  .controls span.active{
+    color:var(--text);
+    font-weight:600;
+  }
+  .switch{
+    position:relative;
+    width:52px;
+    height:28px;
+    background:var(--line);
+    border-radius:20px;
+    cursor:pointer;
+    border:none;
+    padding:0;
+  }
+  .switch .knob{
+    position:absolute;
+    top:3px;
+    left:3px;
+    width:22px;
+    height:22px;
+    background:var(--accent);
+    border-radius:50%;
+    transition:left .25s ease;
+  }
+  .switch.log .knob{
+    left:27px;
+    background:var(--accent2);
+  }
+  .timeline-wrap{
+    position:relative;
+    max-width:1100px;
+    margin:0 auto;
+    height:460px;
+  }
+  .axis{
+    position:absolute;
+    top:230px;
+    left:0;
+    right:0;
+    height:2px;
+    background:var(--line);
+  }
+  .axis::before,.axis::after{
+    content:"";
+    position:absolute;
+    top:-4px;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:var(--line);
+  }
+  .axis::before{left:-5px;}
+  .axis::after{right:-5px;}
+
+  .event{
+    position:absolute;
+    top:230px;
+    transform:translateX(-50%);
+    transition:left .6s cubic-bezier(.4,0,.2,1);
+  }
+  .event .stem{
+    position:absolute;
+    left:50%;
+    width:1px;
+    background:var(--line);
+    transform:translateX(-50%);
+  }
+  .event.above .stem{ bottom:0; }
+  .event.below .stem{ top:0; }
+
+  .dot{
+    position:absolute;
+    left:50%;
+    top:-5px;
+    transform:translate(-50%,-50%);
+    width:11px;
+    height:11px;
+    border-radius:50%;
+    background:var(--accent);
+    border:2px solid var(--bg);
+    box-shadow:0 0 0 2px var(--accent);
+    z-index:2;
+  }
+
+  .label-btn{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    background:var(--panel);
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:6px 10px;
+    border-radius:8px;
+    font-size:0.8rem;
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .2s,border-color .2s;
+  }
+
+  .label-btn:hover{ border-color:var(--accent); }
+  .label-btn.open{ background:var(--accent); color:#0f1117; border-color:var(--accent); }
+
+  .desc{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    width:220px;
+    background:var(--panel);
+    border:1px solid var(--accent);
+    border-radius:10px;
+    padding:12px 14px;
+    font-size:0.78rem;
+    line-height:1.4;
+    color:var(--text);
+    box-shadow:0 8px 24px rgba(0,0,0,.4);
+    z-index:5;
+    display:none;
+  }
+  .desc.show{ display:block; }
+  .desc .title{
+    color:var(--accent2);
+    font-weight:700;
+    margin-bottom:4px;
+    font-size:0.8rem;
+  }
+
+  .scale-caption{
+    text-align:center;
+    color:var(--muted);
+    font-size:0.75rem;
+    margin-top:60px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Le tappe che hanno cambiato il mondo</h1>
+<p class="sub">Clicca su una data per leggere i dettagli</p>
+
+<div class="controls">
+  <span id="lbl-linear" class="active">Lineare</span>
+  <button class="switch" id="scaleSwitch" aria-label="Cambia scala asse temporale">
+    <div class="knob"></div>
+  </button>
+  <span id="lbl-log">Logaritmica</span>
+</div>
+
+<div class="timeline-wrap">
+  <div class="axis"></div>
+  <div id="events"></div>
+</div>
+
+<p class="scale-caption">
+  Scala logaritmica calcolata sugli "anni fa" rispetto a oggi: comprime gli eventi lontani ed espande quelli recenti,
+  mettendo in evidenza l'accelerazione del progresso tecnologico.
+</p>
+
+<script>
+const CURRENT_YEAR = 2026;
+
+const events = [
+  {
+    year: -250,
+    title: "Automa di Filone di Bisanzio",
+    desc: "Nel III secolo a.C. l'ingegnere greco Filone di Bisanzio descrive la \"serva automatica\", una figura meccanica capace di versare vino e acqua: uno dei primi automi conosciuti nella storia."
+  },
+  {
+    year: 100,
+    title: "Invenzione della carriola",
+    desc: "Nel II secolo d.C., durante la dinastia Han, in Cina compaiono le prime carriole a una ruota: uno strumento che rivoluziona il trasporto di carichi pesanti su terreni difficili, oltre mille anni prima di arrivare in Europa."
+  },
+  {
+    year: 1860,
+    title: "Primo motore a scoppio",
+    desc: "Étienne Lenoir brevetta e costruisce il primo motore a combustione interna funzionante, un motore a gas a due tempi: la base da cui nasceranno tutti i motori endotermici moderni."
+  },
+  {
+    year: 1956,
+    title: "Primo sistema di Intelligenza Artificiale",
+    desc: "Al workshop di Dartmouth nasce ufficialmente il campo dell'IA e viene coniato il termine \"Artificial Intelligence\". Nello stesso anno Newell, Simon e Shaw completano il \"Logic Theorist\", considerato il primo programma di IA della storia."
+  },
+  {
+    year: 1969,
+    title: "Primo uomo sulla Luna",
+    desc: "Il 20 luglio, con la missione Apollo 11, Neil Armstrong diventa il primo essere umano a camminare sulla Luna, pronunciando la celebre frase \"un piccolo passo per l'uomo...\"."
+  },
+  {
+    year: 2007,
+    title: "Annuncio del primo iPhone",
+    desc: "Il 9 gennaio Steve Jobs presenta il primo iPhone al Macworld di San Francisco, descrivendolo come un iPod, un telefono e un dispositivo internet riuniti in un solo prodotto rivoluzionario."
+  },
+  {
+    year: 2022,
+    title: "Disponibilità di ChatGPT",
+    desc: "Il 30 novembre OpenAI rilascia gratuitamente al pubblico ChatGPT, basato su GPT-3.5: diventerà il prodotto consumer a crescita più rapida della storia."
+  }
+];
+
+events.sort((a, b) => a.year - b.year);
+
+function labelFor(year){
+  if(year < 0) return Math.abs(year) + ' a.C.';
+  if(year < 1000) return year + ' d.C.';
+  return String(year);
+}
+
+const container = document.getElementById('events');
+
+events.forEach((ev, i) => {
+  const el = document.createElement('div');
+  el.className = 'event ' + (i % 2 === 0 ? 'above' : 'below');
+  el.innerHTML = `
+    <div class="stem"></div>
+    <div class="dot"></div>
+    <button class="label-btn" data-i="${i}">${labelFor(ev.year)}</button>
+    <div class="desc" data-i="${i}">
+      <div class="title">${ev.title}</div>
+      <div>${ev.desc}</div>
+    </div>
+  `;
+  container.appendChild(el);
+});
+
+const eventEls = Array.from(document.querySelectorAll('.event'));
+const wrapEl = document.querySelector('.timeline-wrap');
+
+const allYears = events.map(e => e.year);
+const YEAR_MIN = Math.min(...allYears);
+const YEAR_MAX = Math.max(...allYears);
+
+function linearPos(year){
+  return (year - YEAR_MIN) / (YEAR_MAX - YEAR_MIN);
+}
+
+function logPos(year){
+  const yearsAgo = Math.max(CURRENT_YEAR - year, 0.5);
+  const logVals = events.map(e => Math.log10(Math.max(CURRENT_YEAR - e.year, 0.5)));
+  const maxLog = Math.max(...logVals);
+  const minLog = Math.min(...logVals);
+  const v = Math.log10(yearsAgo);
+  // more "years ago" (older) -> smaller x ; more recent -> larger x
+  return 1 - (v - minLog) / (maxLog - minLog);
+}
+
+// Layout constants for vertical stacking of labels to avoid overlap
+const STEM_BASE = 60;   // stem length for tier 0
+const TIER_STEP = 40;   // extra stem length per tier
+const LABEL_GAP = 6;    // gap between stem end and label box
+const DESC_GAP = 44;    // gap between label and description box
+const MARGIN = 12;      // minimum horizontal gap required between adjacent labels
+
+function render(mode){
+  const pad = 6, span = 100 - pad*2;
+  const containerWidth = wrapEl.offsetWidth;
+
+  // 1. compute x position (% and px) for every event
+  const items = eventEls.map((el, i) => {
+    const p = mode === 'log' ? logPos(events[i].year) : linearPos(events[i].year);
+    const leftPercent = pad + p * span;
+    const xPx = (leftPercent / 100) * containerWidth;
+    return { el, i, leftPercent, xPx, side: i % 2 === 0 ? 'above' : 'below' };
+  });
+
+  // 2. assign a vertical tier per side, avoiding horizontal label overlap
+  ['above', 'below'].forEach(side => {
+    const sideItems = items.filter(it => it.side === side); // already in ascending x order
+    const tierRightEdge = []; // last right edge (px) occupied at each tier
+    sideItems.forEach(it => {
+      const labelWidth = it.el.querySelector('.label-btn').offsetWidth;
+      const left = it.xPx - labelWidth / 2;
+      const right = it.xPx + labelWidth / 2;
+      let tier = 0;
+      while (tierRightEdge[tier] !== undefined && left < tierRightEdge[tier] + MARGIN) {
+        tier++;
+      }
+      tierRightEdge[tier] = right;
+      it.tier = tier;
+    });
+  });
+
+  // 3. apply positions and offsets
+  items.forEach(it => {
+    const stemHeight = STEM_BASE + it.tier * TIER_STEP;
+    const labelOffset = stemHeight + LABEL_GAP;
+    const descOffset = labelOffset + DESC_GAP;
+    it.el.style.left = it.leftPercent + '%';
+
+    const stem = it.el.querySelector('.stem');
+    const label = it.el.querySelector('.label-btn');
+    const desc = it.el.querySelector('.desc');
+
+    stem.style.height = stemHeight + 'px';
+    if (it.side === 'above') {
+      label.style.bottom = labelOffset + 'px';
+      desc.style.bottom = descOffset + 'px';
+    } else {
+      label.style.top = labelOffset + 'px';
+      desc.style.top = descOffset + 'px';
+    }
+  });
+}
+
+render('linear');
+window.addEventListener('resize', () => render(currentMode));
+
+const sw = document.getElementById('scaleSwitch');
+const lblLinear = document.getElementById('lbl-linear');
+const lblLog = document.getElementById('lbl-log');
+let currentMode = 'linear';
+
+sw.addEventListener('click', () => {
+  currentMode = currentMode === 'linear' ? 'log' : 'linear';
+  sw.classList.toggle('log', currentMode === 'log');
+  lblLinear.classList.toggle('active', currentMode === 'linear');
+  lblLog.classList.toggle('active', currentMode === 'log');
+  render(currentMode);
+});
+
+document.querySelectorAll('.label-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const i = btn.dataset.i;
+    const desc = document.querySelector(`.desc[data-i="${i}"]`);
+    const isOpen = desc.classList.contains('show');
+    document.querySelectorAll('.desc').forEach(d => d.classList.remove('show'));
+    document.querySelectorAll('.label-btn').forEach(b => b.classList.remove('open'));
+    if(!isOpen){
+      desc.classList.add('show');
+      btn.classList.add('open');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
