@@ -1,382 +1,223 @@
+<!-- ============================================================ -->
+<!-- INDEX.HTML — pagina di ingresso del repository su GitHub Pages -->
+<!-- Elenca in forma di schede tutte le pagine HTML pubblicate.     -->
+<!-- Per aggiungere una nuova pagina: cerca il blocco "SCHEDA" più  -->
+<!-- in basso, copialo, incollalo, e modifica solo i punti indicati -->
+<!-- con [DA MODIFICARE]. Non serve toccare altro.                  -->
+<!-- ============================================================ -->
 <!DOCTYPE html>
+<!-- lang="it": lingua del documento, per screen reader e SEO -->
 <html lang="it">
 <head>
+<!-- charset UTF-8: obbligatorio per accenti e caratteri italiani -->
 <meta charset="UTF-8">
-<title>Le tappe che hanno cambiato il mondo</title>
+<!-- viewport: rende la pagina leggibile su mobile senza zoom forzato -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- title: testo mostrato nella scheda del browser -->
+<!-- [DA MODIFICARE se cambiate il nome del repository/progetto] -->
+<title>I2ETools — indice dei documenti</title>
 <style>
+  /* ---------- palette colori ---------- */
+  /* Stessa palette scura usata in tipi-di-ai-index.html, per coerenza visiva */
   :root{
-    --bg:#0f1117;
-    --panel:#171a23;
-    --line:#3a3f52;
-    --accent:#6ea8fe;
-    --accent2:#ff9f6e;
-    --text:#e8e9ee;
-    --muted:#9aa0b4;
+    --bg:#100f0d;          /* sfondo pagina */
+    --bg2:#171512;         /* sfondo secondario, usato nei gradienti */
+    --panel:#1c1a17;       /* sfondo delle schede */
+    --panel2:#232019;      /* sfondo leggermente più chiaro, per hover/badge */
+    --line:#332f28;        /* colore dei bordi sottili */
+    --ink:#f2efe9;         /* colore testo principale (quasi bianco) */
+    --ink-soft:#a8a196;    /* colore testo secondario (descrizioni) */
+    --ink-faint:#6e6961;   /* colore testo terziario (etichette piccole) */
+
+    /* Colori "accento" — uno per ciascuna scheda/categoria. */
+    /* Potete aggiungerne altri (--a6, --a7...) se servono più categorie. */
+    --a1:#f5a524;  /* arancio  — usato per: mappe visuali */
+    --a2:#3fa9e8;  /* azzurro  — usato per: documenti di approfondimento */
+    --a3:#b06bf5;  /* viola    — usato per: timeline / storia */
+    --a4:#35d18f;  /* verde    — libero per nuove categorie */
+    --a5:#f4653f;  /* rosso    — libero per nuove categorie */
   }
-  *{box-sizing:border-box;}
+
+  /* ---------- reset di base ---------- */
+  *{box-sizing:border-box}                 /* padding/bordo inclusi nella larghezza dichiarata */
+  html{scroll-behavior:smooth}              /* scorrimento morbido se in futuro si usano ancore */
   body{
-    margin:0;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    padding:40px 24px 80px;
+    margin:0;background:var(--bg);color:var(--ink);   /* nessun margine, sfondo scuro, testo chiaro */
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif; /* font di sistema, niente da scaricare */
+    line-height:1.6;-webkit-font-smoothing:antialiased;  /* interlinea comoda da leggere, testo più nitido su Mac */
+  }
+  a{color:inherit;text-decoration:none}     /* i link ereditano il colore del testo, niente sottolineatura di default */
+  .wrap{max-width:1060px;margin:0 auto;padding:0 26px 110px}  /* contenitore centrato, larghezza massima leggibile */
+
+  /* ---------- intestazione (hero) ---------- */
+  .hero{
+    padding:80px 0 46px;position:relative;overflow:hidden;   /* spazio sopra/sotto, contiene il glow senza farlo debordare */
+  }
+  .hero:before{
+    /* bagliore decorativo dietro il titolo, puramente estetico */
+    content:'';position:absolute;top:-160px;left:50%;transform:translateX(-50%);
+    width:900px;height:420px;pointer-events:none;
+    background:radial-gradient(ellipse at center,rgba(245,165,36,.13),transparent 65%);
+  }
+  .eyebrow{
+    /* piccola etichetta sopra il titolo principale */
+    position:relative;font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--a1);font-weight:700;margin-bottom:18px;
   }
   h1{
-    font-size:1.5rem;
-    margin:0 0 4px;
-    text-align:center;
+    /* titolo principale della pagina */
+    position:relative;font-size:clamp(34px,6vw,62px);line-height:1.04;margin:0 0 22px;
+    letter-spacing:-.035em;font-weight:800;
   }
-  p.sub{
-    text-align:center;
-    color:var(--muted);
-    margin:0 0 32px;
-    font-size:0.9rem;
+  h1 em{
+    /* parola evidenziata nel titolo, con sfumatura multicolore */
+    font-style:normal;
+    background:linear-gradient(100deg,var(--a1),var(--a5) 45%,var(--a3) 78%,var(--a2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
   }
-  .controls{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:14px;
-    margin-bottom:70px;
-  }
-  .controls span{
-    font-size:0.85rem;
-    color:var(--muted);
-    transition:color .2s;
-  }
-  .controls span.active{
-    color:var(--text);
-    font-weight:600;
-  }
-  .switch{
-    position:relative;
-    width:52px;
-    height:28px;
-    background:var(--line);
-    border-radius:20px;
-    cursor:pointer;
-    border:none;
-    padding:0;
-  }
-  .switch .knob{
-    position:absolute;
-    top:3px;
-    left:3px;
-    width:22px;
-    height:22px;
-    background:var(--accent);
-    border-radius:50%;
-    transition:left .25s ease;
-  }
-  .switch.log .knob{
-    left:27px;
-    background:var(--accent2);
-  }
-  .timeline-wrap{
-    position:relative;
-    max-width:1100px;
-    margin:0 auto;
-    height:460px;
-  }
-  .axis{
-    position:absolute;
-    top:230px;
-    left:0;
-    right:0;
-    height:2px;
-    background:var(--line);
-  }
-  .axis::before,.axis::after{
-    content:"";
-    position:absolute;
-    top:-4px;
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background:var(--line);
-  }
-  .axis::before{left:-5px;}
-  .axis::after{right:-5px;}
+  .lede{position:relative;font-size:18px;color:var(--ink-soft);max-width:620px;margin:0}  /* sottotitolo descrittivo */
 
-  .event{
-    position:absolute;
-    top:230px;
-    transform:translateX(-50%);
-    transition:left .6s cubic-bezier(.4,0,.2,1);
-  }
-  .event .stem{
-    position:absolute;
-    left:50%;
-    width:1px;
-    background:var(--line);
-    transform:translateX(-50%);
-  }
-  .event.above .stem{ bottom:0; }
-  .event.below .stem{ top:0; }
-
-  .dot{
-    position:absolute;
-    left:50%;
-    top:-5px;
-    transform:translate(-50%,-50%);
-    width:11px;
-    height:11px;
-    border-radius:50%;
-    background:var(--accent);
-    border:2px solid var(--bg);
-    box-shadow:0 0 0 2px var(--accent);
-    z-index:2;
+  /* ---------- griglia delle schede ---------- */
+  .grid{
+    /* contenitore che dispone le schede in colonne responsive */
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));  /* colonne che si adattano allo spazio disponibile */
+    gap:22px;
+    margin-top:46px;
   }
 
-  .label-btn{
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%);
-    background:var(--panel);
-    border:1px solid var(--line);
-    color:var(--text);
-    padding:6px 10px;
-    border-radius:8px;
-    font-size:0.8rem;
-    font-weight:600;
-    cursor:pointer;
-    white-space:nowrap;
-    transition:background .2s,border-color .2s;
+  /* ---------- singola scheda (card) ---------- */
+  .card{
+    /* aspetto generico della scheda: bordo colorato a sinistra dato dalla variabile --accent */
+    display:flex;flex-direction:column;gap:14px;
+    background:linear-gradient(160deg,var(--panel),var(--bg2));  /* leggero gradiente di sfondo */
+    border:1px solid var(--line);border-left:3px solid var(--accent, var(--a1));  /* bordo sinistro colorato, personalizzabile per scheda */
+    border-radius:14px;padding:28px 26px;
+    transition:transform .18s,box-shadow .18s;   /* animazione morbida su hover */
+  }
+  .card:hover{
+    transform:translateY(-4px);                              /* la scheda "si solleva" al passaggio del mouse */
+    box-shadow:0 14px 34px -14px rgba(0,0,0,.55);
+  }
+  .card .tag{
+    /* etichetta categoria in alto nella scheda (es. "Mappa visuale") */
+    display:inline-block;align-self:flex-start;
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
+    padding:5px 11px;border-radius:6px;
+    background:rgba(255,255,255,.06);color:var(--accent, var(--a1));  /* stesso colore del bordo, per coerenza */
+  }
+  .card h3{
+    /* titolo della singola pagina collegata */
+    margin:0;font-size:21px;font-weight:750;letter-spacing:-.015em;color:var(--ink);
+  }
+  .card p{
+    /* descrizione breve della pagina collegata */
+    margin:0;font-size:14.5px;color:var(--ink-soft);flex:1;   /* flex:1 spinge il link sempre in fondo alla scheda */
+  }
+  .card .links{
+    /* riga dei pulsanti/link in fondo alla scheda */
+    display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;
+  }
+  .card .go{
+    /* stile del singolo link cliccabile dentro la scheda */
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:13.5px;font-weight:700;color:var(--ink);
+    background:var(--panel2);border:1px solid var(--line);border-radius:8px;
+    padding:8px 14px;transition:border-color .15s,color .15s;
+  }
+  .card .go:hover{border-color:var(--accent, var(--a1));color:var(--accent, var(--a1))}  /* al passaggio del mouse il link si colora */
+
+  /* ---------- piè di pagina ---------- */
+  footer{
+    margin-top:70px;padding-top:24px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--ink-faint);text-align:center;
   }
 
-  .label-btn:hover{ border-color:var(--accent); }
-  .label-btn.open{ background:var(--accent); color:#0f1117; border-color:var(--accent); }
-
-  .desc{
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%);
-    width:220px;
-    background:var(--panel);
-    border:1px solid var(--accent);
-    border-radius:10px;
-    padding:12px 14px;
-    font-size:0.78rem;
-    line-height:1.4;
-    color:var(--text);
-    box-shadow:0 8px 24px rgba(0,0,0,.4);
-    z-index:5;
-    display:none;
-  }
-  .desc.show{ display:block; }
-  .desc .title{
-    color:var(--accent2);
-    font-weight:700;
-    margin-bottom:4px;
-    font-size:0.8rem;
-  }
-
-  .scale-caption{
-    text-align:center;
-    color:var(--muted);
-    font-size:0.75rem;
-    margin-top:60px;
+  /* ---------- adattamento schermi piccoli ---------- */
+  @media(max-width:640px){
+    .hero{padding:52px 0 34px}     /* meno spazio verticale su mobile */
+    .wrap{padding:0 18px 70px}     /* meno margine laterale su mobile */
   }
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<h1>Le tappe che hanno cambiato il mondo</h1>
-<p class="sub">Clicca su una data per leggere i dettagli</p>
+  <!-- ============ INTESTAZIONE ============ -->
+  <!-- [DA MODIFICARE] testo del cappello, titolo e sottotitolo, se cambia il tema del repository -->
+  <div class="hero">
+    <div class="eyebrow">I2ETools · raccolta documenti</div>
+    <h1>Tutti i documenti,<br>in <em>un solo posto</em>.</h1>
+    <p class="lede">Ogni scheda qui sotto apre una pagina pubblicata su questo sito. Cliccate un link per andare al documento.</p>
+  </div>
 
-<div class="controls">
-  <span id="lbl-linear" class="active">Lineare</span>
-  <button class="switch" id="scaleSwitch" aria-label="Cambia scala asse temporale">
-    <div class="knob"></div>
-  </button>
-  <span id="lbl-log">Logaritmica</span>
-</div>
+  <!-- ============ GRIGLIA DELLE SCHEDE ============ -->
+  <!-- Ogni pagina .html del repository ha qui la sua scheda. -->
+  <!-- Per aggiungere una nuova pagina: copiate un blocco <div class="card">...</div> -->
+  <!-- completo (compreso il commento "SCHEDA" sopra e sotto) e modificate solo i punti -->
+  <!-- marcati con [DA MODIFICARE]. -->
+  <div class="grid">
 
-<div class="timeline-wrap">
-  <div class="axis"></div>
-  <div id="events"></div>
-</div>
-
-<p class="scale-caption">
-  Scala logaritmica calcolata sugli "anni fa" rispetto a oggi: comprime gli eventi lontani ed espande quelli recenti,
-  mettendo in evidenza l'accelerazione del progresso tecnologico.
-</p>
-
-<script>
-const CURRENT_YEAR = 2026;
-
-const events = [
-  {
-    year: -250,
-    title: "Automa di Filone di Bisanzio",
-    desc: "Nel III secolo a.C. l'ingegnere greco Filone di Bisanzio descrive la \"serva automatica\", una figura meccanica capace di versare vino e acqua: uno dei primi automi conosciuti nella storia."
-  },
-  {
-    year: 100,
-    title: "Invenzione della carriola",
-    desc: "Nel II secolo d.C., durante la dinastia Han, in Cina compaiono le prime carriole a una ruota: uno strumento che rivoluziona il trasporto di carichi pesanti su terreni difficili, oltre mille anni prima di arrivare in Europa."
-  },
-  {
-    year: 1860,
-    title: "Primo motore a scoppio",
-    desc: "Étienne Lenoir brevetta e costruisce il primo motore a combustione interna funzionante, un motore a gas a due tempi: la base da cui nasceranno tutti i motori endotermici moderni."
-  },
-  {
-    year: 1956,
-    title: "Primo sistema di Intelligenza Artificiale",
-    desc: "Al workshop di Dartmouth nasce ufficialmente il campo dell'IA e viene coniato il termine \"Artificial Intelligence\". Nello stesso anno Newell, Simon e Shaw completano il \"Logic Theorist\", considerato il primo programma di IA della storia."
-  },
-  {
-    year: 1969,
-    title: "Primo uomo sulla Luna",
-    desc: "Il 20 luglio, con la missione Apollo 11, Neil Armstrong diventa il primo essere umano a camminare sulla Luna, pronunciando la celebre frase \"un piccolo passo per l'uomo...\"."
-  },
-  {
-    year: 2007,
-    title: "Annuncio del primo iPhone",
-    desc: "Il 9 gennaio Steve Jobs presenta il primo iPhone al Macworld di San Francisco, descrivendolo come un iPod, un telefono e un dispositivo internet riuniti in un solo prodotto rivoluzionario."
-  },
-  {
-    year: 2022,
-    title: "Disponibilità di ChatGPT",
-    desc: "Il 30 novembre OpenAI rilascia gratuitamente al pubblico ChatGPT, basato su GPT-3.5: diventerà il prodotto consumer a crescita più rapida della storia."
-  }
-];
-
-events.sort((a, b) => a.year - b.year);
-
-function labelFor(year){
-  if(year < 0) return Math.abs(year) + ' a.C.';
-  if(year < 1000) return year + ' d.C.';
-  return String(year);
-}
-
-const container = document.getElementById('events');
-
-events.forEach((ev, i) => {
-  const el = document.createElement('div');
-  el.className = 'event ' + (i % 2 === 0 ? 'above' : 'below');
-  el.innerHTML = `
-    <div class="stem"></div>
-    <div class="dot"></div>
-    <button class="label-btn" data-i="${i}">${labelFor(ev.year)}</button>
-    <div class="desc" data-i="${i}">
-      <div class="title">${ev.title}</div>
-      <div>${ev.desc}</div>
+    <!-- ========== SCHEDA: DUPLICARE QUESTO BLOCCO PER AGGIUNGERE UNA VOCE ========== -->
+    <!-- style="--accent:..." sceglie il colore della scheda: usate una delle variabili -->
+    <!-- definite sopra (--a1 arancio, --a2 azzurro, --a3 viola, --a4 verde, --a5 rosso) -->
+    <!-- [DA MODIFICARE] colore della scheda -->
+    <div class="card" style="--accent:var(--a1)">
+      <!-- [DA MODIFICARE] etichetta categoria, breve (2-3 parole) -->
+      <span class="tag">Mappa visuale</span>
+      <!-- [DA MODIFICARE] titolo della pagina collegata -->
+      <h3>Tipi di Intelligenza Artificiale</h3>
+      <!-- [DA MODIFICARE] descrizione breve, una o due frasi -->
+      <p>Cinque assi indipendenti per orientarsi tra ANI/AGI/ASI, machine learning, AI debole/forte e il Regolamento UE sull'IA. Schede cliccabili con link diretti alla guida completa.</p>
+      <!-- riga dei link: potete mettere uno o più link per la stessa scheda -->
+      <div class="links">
+        <!-- [DA MODIFICARE] href = nome file .html della mappa visuale, testo = etichetta del pulsante -->
+        <a class="go" href="tipi-di-ai-index.html">Apri la mappa →</a>
+        <!-- [DA MODIFICARE] href = nome file .html del documento esteso (opzionale, cancellare la riga se non serve) -->
+        <a class="go" href="tipi-di-ai.html">Guida completa →</a>
+      </div>
     </div>
-  `;
-  container.appendChild(el);
-});
+    <!-- ========== FINE SCHEDA ========== -->
 
-const eventEls = Array.from(document.querySelectorAll('.event'));
-const wrapEl = document.querySelector('.timeline-wrap');
+    <!-- ========== SCHEDA: DUPLICARE QUESTO BLOCCO PER AGGIUNGERE UNA VOCE ========== -->
+    <!-- [DA MODIFICARE] colore della scheda -->
+    <div class="card" style="--accent:var(--a3)">
+      <!-- [DA MODIFICARE] etichetta categoria -->
+      <span class="tag">Timeline</span>
+      <!-- [DA MODIFICARE] titolo della pagina collegata -->
+      <h3>Le tappe che hanno cambiato il mondo</h3>
+      <!-- [DA MODIFICARE] descrizione breve -->
+      <p>Linea del tempo interattiva, dagli automi dell'antichità a ChatGPT, con vista lineare o logaritmica per mettere in evidenza l'accelerazione del progresso.</p>
+      <div class="links">
+        <!-- [DA MODIFICARE] href = nome file .html, testo del pulsante -->
+        <a class="go" href="timeline_tecnologica.html">Apri la timeline →</a>
+      </div>
+    </div>
+    <!-- ========== FINE SCHEDA ========== -->
 
-const allYears = events.map(e => e.year);
-const YEAR_MIN = Math.min(...allYears);
-const YEAR_MAX = Math.max(...allYears);
+    <!--
+      ========== MODELLO VUOTO DA COPIARE PER UNA NUOVA PAGINA ==========
+      Incollate questo blocco (togliendo i simboli di commento HTML <!-- -->)
+      dentro <div class="grid"> ... </div> qui sopra, poi compilate i campi:
 
-function linearPos(year){
-  return (year - YEAR_MIN) / (YEAR_MAX - YEAR_MIN);
-}
+      <div class="card" style="--accent:var(--a4)">
+        <span class="tag">CATEGORIA</span>
+        <h3>TITOLO DELLA PAGINA</h3>
+        <p>Descrizione breve della pagina, una o due frasi.</p>
+        <div class="links">
+          <a class="go" href="nome-file.html">Apri →</a>
+        </div>
+      </div>
+    -->
 
-function logPos(year){
-  const yearsAgo = Math.max(CURRENT_YEAR - year, 0.5);
-  const logVals = events.map(e => Math.log10(Math.max(CURRENT_YEAR - e.year, 0.5)));
-  const maxLog = Math.max(...logVals);
-  const minLog = Math.min(...logVals);
-  const v = Math.log10(yearsAgo);
-  // more "years ago" (older) -> smaller x ; more recent -> larger x
-  return 1 - (v - minLog) / (maxLog - minLog);
-}
+  </div>
 
-// Layout constants for vertical stacking of labels to avoid overlap
-const STEM_BASE = 60;   // stem length for tier 0
-const TIER_STEP = 40;   // extra stem length per tier
-const LABEL_GAP = 6;    // gap between stem end and label box
-const DESC_GAP = 44;    // gap between label and description box
-const MARGIN = 12;      // minimum horizontal gap required between adjacent labels
+  <!-- ============ PIÈ DI PAGINA ============ -->
+  <!-- [DA MODIFICARE] testo del footer, se cambia la fonte o l'anno -->
+  <footer>
+    Repository pubblicato con GitHub Pages · aggiornato 2026
+  </footer>
 
-function render(mode){
-  const pad = 6, span = 100 - pad*2;
-  const containerWidth = wrapEl.offsetWidth;
-
-  // 1. compute x position (% and px) for every event
-  const items = eventEls.map((el, i) => {
-    const p = mode === 'log' ? logPos(events[i].year) : linearPos(events[i].year);
-    const leftPercent = pad + p * span;
-    const xPx = (leftPercent / 100) * containerWidth;
-    return { el, i, leftPercent, xPx, side: i % 2 === 0 ? 'above' : 'below' };
-  });
-
-  // 2. assign a vertical tier per side, avoiding horizontal label overlap
-  ['above', 'below'].forEach(side => {
-    const sideItems = items.filter(it => it.side === side); // already in ascending x order
-    const tierRightEdge = []; // last right edge (px) occupied at each tier
-    sideItems.forEach(it => {
-      const labelWidth = it.el.querySelector('.label-btn').offsetWidth;
-      const left = it.xPx - labelWidth / 2;
-      const right = it.xPx + labelWidth / 2;
-      let tier = 0;
-      while (tierRightEdge[tier] !== undefined && left < tierRightEdge[tier] + MARGIN) {
-        tier++;
-      }
-      tierRightEdge[tier] = right;
-      it.tier = tier;
-    });
-  });
-
-  // 3. apply positions and offsets
-  items.forEach(it => {
-    const stemHeight = STEM_BASE + it.tier * TIER_STEP;
-    const labelOffset = stemHeight + LABEL_GAP;
-    const descOffset = labelOffset + DESC_GAP;
-    it.el.style.left = it.leftPercent + '%';
-
-    const stem = it.el.querySelector('.stem');
-    const label = it.el.querySelector('.label-btn');
-    const desc = it.el.querySelector('.desc');
-
-    stem.style.height = stemHeight + 'px';
-    if (it.side === 'above') {
-      label.style.bottom = labelOffset + 'px';
-      desc.style.bottom = descOffset + 'px';
-    } else {
-      label.style.top = labelOffset + 'px';
-      desc.style.top = descOffset + 'px';
-    }
-  });
-}
-
-render('linear');
-window.addEventListener('resize', () => render(currentMode));
-
-const sw = document.getElementById('scaleSwitch');
-const lblLinear = document.getElementById('lbl-linear');
-const lblLog = document.getElementById('lbl-log');
-let currentMode = 'linear';
-
-sw.addEventListener('click', () => {
-  currentMode = currentMode === 'linear' ? 'log' : 'linear';
-  sw.classList.toggle('log', currentMode === 'log');
-  lblLinear.classList.toggle('active', currentMode === 'linear');
-  lblLog.classList.toggle('active', currentMode === 'log');
-  render(currentMode);
-});
-
-document.querySelectorAll('.label-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const i = btn.dataset.i;
-    const desc = document.querySelector(`.desc[data-i="${i}"]`);
-    const isOpen = desc.classList.contains('show');
-    document.querySelectorAll('.desc').forEach(d => d.classList.remove('show'));
-    document.querySelectorAll('.label-btn').forEach(b => b.classList.remove('open'));
-    if(!isOpen){
-      desc.classList.add('show');
-      btn.classList.add('open');
-    }
-  });
-});
-</script>
-
+</div>
 </body>
 </html>
