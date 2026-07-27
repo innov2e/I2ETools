@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Act, Omnibus, L. 132/2025 e decreto attuativo — obblighi, scadenze, obbligati</title>
+<style>
+:root{
+  --bg:#0d0f14; --bg-2:#141821; --bg-3:#1b2030;
+  --line:#262d3d; --line-2:#333c52;
+  --tx:#e6e9f0; --tx-2:#a2acc2; --tx-3:#6d7891;
+  --ac:#7dd3fc; --ac-2:#38bdf8;
+  --ok:#4ade80; --no:#f87171; --amb:#fbbf24; --vio:#c084fc; --org:#fb923c;
+  --mono:'SF Mono',ui-monospace,'JetBrains Mono',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{background:var(--bg);color:var(--tx);
+  font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',Roboto,sans-serif;
+  line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased}
+::selection{background:var(--ac);color:#000}
+a{color:var(--ac);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.topbar{position:fixed;top:0;left:0;right:0;height:60px;z-index:100;
+  background:rgba(13,15,20,.88);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;padding:0 20px}
+.brand{font-weight:700;font-size:14.5px;white-space:nowrap;letter-spacing:-.2px}
+.brand span{color:var(--ac)}
+.topnav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1}
+.topnav::-webkit-scrollbar{display:none}
+.topnav a{color:var(--tx-3);font-size:12.5px;padding:6px 9px;border-radius:7px;white-space:nowrap;transition:.15s;font-weight:500}
+.topnav a:hover{color:var(--tx);background:var(--bg-3);text-decoration:none}
+.topnav a.active{color:var(--ac);background:rgba(125,211,252,.1)}
+.progress{position:fixed;top:60px;left:0;height:2px;background:linear-gradient(90deg,var(--ac-2),var(--ac));z-index:101;width:0}
+
+main{max-width:1120px;margin:0 auto;padding:60px 28px 140px}
+section{padding:70px 0;border-top:1px solid var(--line)}
+section:first-of-type{border-top:none}
+h1{font-size:clamp(28px,4.6vw,48px);line-height:1.1;letter-spacing:-1.4px;font-weight:800}
+h2{font-size:clamp(23px,3.3vw,33px);letter-spacing:-.8px;font-weight:750;margin-bottom:10px;line-height:1.2}
+h3{font-size:19px;font-weight:700;margin:34px 0 12px;letter-spacing:-.3px}
+h4{font-size:15px;font-weight:700;margin:20px 0 8px}
+p{color:var(--tx-2);margin-bottom:14px;max-width:78ch}
+strong{color:var(--tx);font-weight:650}
+em{color:var(--ac);font-style:normal;font-weight:600}
+ul,ol{color:var(--tx-2);margin:0 0 16px 20px}
+li{margin-bottom:7px;max-width:76ch}
+code{font-family:var(--mono);font-size:.87em;background:var(--bg-3);padding:2px 6px;border-radius:4px;color:var(--ac)}
+.eyebrow{font-size:11px;letter-spacing:2.4px;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:12px}
+.lead{font-size:18px;color:var(--tx-2);max-width:72ch}
+.sub{color:var(--tx-3);font-size:15px;margin-bottom:30px;max-width:78ch}
+
+.hero{padding:74px 0 54px;position:relative}
+.hero::before{content:'';position:absolute;top:-80px;left:-20%;width:70%;height:420px;
+  background:radial-gradient(ellipse at center,rgba(125,211,252,.11),transparent 65%);pointer-events:none}
+.hero-tag{display:inline-block;font-size:12px;padding:5px 12px;border-radius:100px;border:1px solid var(--line-2);color:var(--tx-2);margin-bottom:22px}
+.hero p{font-size:18.5px;margin-top:20px}
+
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.card{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:19px}
+.card h4{margin-top:0}
+.card p{font-size:13.7px;margin-bottom:0}
+.card .tagline{font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;font-weight:700;margin-bottom:7px}
+
+.callout{border-left:3px solid var(--ac);background:rgba(125,211,252,.055);padding:16px 20px;border-radius:0 10px 10px 0;margin:24px 0}
+.callout p{margin-bottom:0;font-size:15px}
+.callout p+p{margin-top:10px}
+.callout.red{border-color:var(--no);background:rgba(248,113,113,.06)}
+.callout.amb{border-color:var(--amb);background:rgba(251,191,36,.06)}
+.callout.green{border-color:var(--ok);background:rgba(74,222,128,.06)}
+.callout.vio{border-color:var(--vio);background:rgba(192,132,252,.06)}
+
+.tbl-wrap{overflow-x:auto;margin:22px 0;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:13.3px;min-width:700px}
+th{background:var(--bg-3);text-align:left;padding:11px 13px;font-weight:650;font-size:11.5px;
+  text-transform:uppercase;letter-spacing:.6px;color:var(--tx-2);border-bottom:1px solid var(--line)}
+td{padding:10px 13px;border-bottom:1px solid var(--line);color:var(--tx-2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td b{color:var(--tx)}
+.yes{color:var(--ok);font-weight:700}.no-m{color:var(--tx-3)}.part{color:var(--amb)}
+
+.acc{border:1px solid var(--line);border-radius:11px;margin-bottom:9px;background:var(--bg-2);overflow:hidden}
+.acc-hd{display:flex;align-items:center;gap:13px;padding:15px 18px;cursor:pointer;transition:.15s;user-select:none}
+.acc-hd:hover{background:var(--bg-3)}
+.acc-n{min-width:40px;height:26px;padding:0 7px;flex-shrink:0;border-radius:7px;background:var(--bg-3);border:1px solid var(--line-2);
+  display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--ac);font-family:var(--mono)}
+.acc-t{flex:1;font-weight:650;font-size:15.5px}
+.acc-t small{display:block;font-weight:400;font-size:12.5px;color:var(--tx-3);margin-top:1px}
+.chev{color:var(--tx-3);transition:.25s;font-size:12px}
+.acc.open .chev{transform:rotate(90deg)}
+.acc-bd{display:none;padding:0 18px 20px;border-top:1px solid var(--line)}
+.acc.open .acc-bd{display:block}
+.acc-bd>*:first-child{margin-top:16px}
+.badge{display:inline-block;font-size:10.5px;padding:2px 8px;border-radius:100px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.b-now{background:rgba(248,113,113,.16);color:#fca5a5}
+.b-soon{background:rgba(251,191,36,.16);color:var(--amb)}
+.b-later{background:rgba(125,211,252,.14);color:var(--ac)}
+.b-draft{background:rgba(192,132,252,.16);color:#d8b4fe}
+
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.tab{background:var(--bg-2);border:1px solid var(--line);color:var(--tx-2);padding:8px 14px;
+  border-radius:8px;cursor:pointer;font-size:13.3px;font-family:inherit;transition:.15s;font-weight:550}
+.tab:hover{border-color:var(--line-2);color:var(--tx)}
+.tab.on{background:var(--ac);border-color:var(--ac);color:#0a1620;font-weight:700}
+.pane{display:none}
+.pane.on{display:block;animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* RUOLI */
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:11px;margin:20px 0}
+.role{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:17px;cursor:pointer;transition:.18s;text-align:left;font-family:inherit}
+.role:hover{border-color:var(--line-2);transform:translateY(-2px)}
+.role.on{border-color:var(--ac);background:rgba(125,211,252,.07)}
+.role b{display:block;font-size:15.5px;color:var(--tx);margin-bottom:4px}
+.role span{font-size:12.6px;color:var(--tx-3);line-height:1.5;display:block}
+.role-out{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:22px;margin-top:6px;min-height:120px}
+.role-out h4{margin-top:0;font-size:17px;color:var(--ac)}
+.ro-list{margin:14px 0 0 0;padding:0;list-style:none}
+.ro-list li{padding:9px 0 9px 26px;position:relative;border-bottom:1px solid var(--line);font-size:14px;max-width:none}
+.ro-list li:last-child{border-bottom:none}
+.ro-list li::before{content:'▸';position:absolute;left:4px;top:9px;color:var(--ac)}
+.ro-list li b{color:var(--tx)}
+.ro-list li i{font-style:normal;color:var(--tx-3);font-size:12.3px;display:block;margin-top:2px}
+
+/* PIRAMIDE */
+.pyr{display:flex;flex-direction:column;gap:8px;margin:22px 0}
+.pyr-row{border-radius:11px;padding:15px 19px;cursor:pointer;transition:.18s;border:1px solid transparent;position:relative}
+.pyr-row:hover{transform:translateX(4px)}
+.pyr-hd{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.pyr-hd b{font-size:16px}
+.pyr-hd span{font-size:11.5px;font-family:var(--mono);opacity:.85}
+.pyr-bd{display:none;margin-top:12px;font-size:13.8px;line-height:1.65}
+.pyr-row.on .pyr-bd{display:block;animation:fade .25s}
+.pyr-bd ul{margin:8px 0 0 18px}
+.pyr-bd li{font-size:13.5px;margin-bottom:5px}
+.p1{background:rgba(248,113,113,.12);border-color:rgba(248,113,113,.35);color:#fecaca;width:100%}
+.p2{background:rgba(251,146,60,.11);border-color:rgba(251,146,60,.32);color:#fed7aa}
+.p3{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.3);color:#fde68a}
+.p4{background:rgba(74,222,128,.09);border-color:rgba(74,222,128,.28);color:#bbf7d0}
+.pyr-bd b{color:#fff}
+
+/* TIMELINE */
+.tl-ctrl{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px;align-items:center}
+.chip{background:var(--bg-2);border:1px solid var(--line);color:var(--tx-2);padding:6px 13px;border-radius:100px;
+  cursor:pointer;font-size:12.5px;font-family:inherit;transition:.15s}
+.chip:hover{border-color:var(--line-2);color:var(--tx)}
+.chip.on{background:var(--ac);border-color:var(--ac);color:#0a1620;font-weight:650}
+.tl{position:relative;padding-left:34px}
+.tl::before{content:'';position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;margin-bottom:16px;animation:fade .3s}
+.tl-item::before{content:'';position:absolute;left:-30px;top:16px;width:11px;height:11px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--line-2)}
+.tl-item.past::before{background:var(--tx-3);border-color:var(--tx-3)}
+.tl-item.hot::before{background:var(--no);border-color:var(--no);box-shadow:0 0 0 4px rgba(248,113,113,.15)}
+.tl-item.next::before{background:var(--amb);border-color:var(--amb);box-shadow:0 0 0 4px rgba(251,191,36,.15)}
+.tl-item.fut::before{background:var(--ac);border-color:var(--ac)}
+.tl-card{background:var(--bg-2);border:1px solid var(--line);border-radius:11px;padding:15px 18px}
+.tl-item.hot .tl-card{border-color:rgba(248,113,113,.35)}
+.tl-item.next .tl-card{border-color:rgba(251,191,36,.3)}
+.tl-date{font-family:var(--mono);font-size:12px;color:var(--ac);font-weight:700;letter-spacing:.5px;display:flex;
+  justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:5px}
+.tl-date .src{font-weight:500;color:var(--tx-3);letter-spacing:0}
+.tl-card b{display:block;font-size:15.5px;margin-bottom:5px}
+.tl-card p{font-size:13.6px;margin-bottom:0;color:var(--tx-2)}
+.tl-who{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.who{font-size:10.5px;padding:2px 9px;border-radius:100px;background:var(--bg-3);border:1px solid var(--line-2);color:var(--tx-3);letter-spacing:.3px}
+.tl-empty{color:var(--tx-3);font-size:14px;padding:20px 0}
+
+.ref{font-size:10.5px;vertical-align:super;color:var(--ac);font-weight:700;cursor:pointer;padding:0 1px}
+.ref:hover{text-decoration:underline}
+.src-list{counter-reset:s;list-style:none;margin:18px 0 0;padding:0}
+.src-list li{counter-increment:s;position:relative;padding:10px 0 10px 40px;border-bottom:1px solid var(--line);font-size:13.5px;max-width:none;transition:background .4s}
+.src-list li:last-child{border-bottom:none}
+.src-list li::before{content:'['counter(s)']';position:absolute;left:0;top:10px;font-family:var(--mono);font-size:11.5px;color:var(--ac)}
+.src-list span{display:block;color:var(--tx-3);font-size:12.3px}
+
+.chk{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:6px 4px}
+.chk-i{display:flex;gap:12px;padding:11px 16px;border-bottom:1px solid var(--line);cursor:pointer;transition:.15s}
+.chk-i:last-child{border-bottom:none}
+.chk-i:hover{background:var(--bg-3)}
+.chk-box{width:19px;height:19px;flex-shrink:0;border:1.5px solid var(--line-2);border-radius:5px;margin-top:2px;
+  display:grid;place-items:center;font-size:11px;color:transparent;transition:.15s}
+.chk-i.done .chk-box{background:var(--ok);border-color:var(--ok);color:#06240f}
+.chk-i.done .chk-tx{color:var(--tx-3);text-decoration:line-through}
+.chk-tx{font-size:14px;color:var(--tx-2)}
+.chk-tx small{display:block;color:var(--tx-3);font-size:12.3px;margin-top:1px;text-decoration:none}
+
+.q{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:13px}
+.q-q{font-weight:650;margin-bottom:14px;font-size:15px}
+.q-q i{color:var(--ac);font-style:normal;font-family:var(--mono);font-size:13px;margin-right:6px}
+.opt{display:block;width:100%;text-align:left;background:var(--bg);border:1px solid var(--line);color:var(--tx-2);
+  padding:11px 14px;border-radius:9px;margin-bottom:7px;cursor:pointer;font-family:inherit;font-size:13.8px;transition:.15s;line-height:1.5}
+.opt:hover:not(:disabled){border-color:var(--line-2);color:var(--tx)}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--ok);background:rgba(74,222,128,.1);color:#bbf7d0}
+.opt.wrong{border-color:var(--no);background:rgba(248,113,113,.1);color:#fecaca}
+.q-ex{display:none;margin-top:11px;padding:12px 15px;border-radius:9px;background:var(--bg-3);
+  font-size:13.3px;color:var(--tx-2);border-left:3px solid var(--ac)}
+.q-ex.show{display:block;animation:fade .25s}
+
+footer{border-top:1px solid var(--line);padding:36px 28px;text-align:center;color:var(--tx-3);font-size:13px}
+.law-chip{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:5px;
+  background:var(--bg-3);border:1px solid var(--line-2);color:var(--tx-2);margin-right:5px}
+</style>
+</head>
+<body>
+
+<div class="progress" id="prog"></div>
+<div class="topbar">
+  <div class="brand">Normativa <span>IA</span></div>
+  <nav class="topnav" id="nav">
+    <a href="#mappa">1. La mappa</a>
+    <a href="#ruolo">2. Che ruolo hai</a>
+    <a href="#rischio">3. Che rischio</a>
+    <a href="#scadenze">4. Scadenze</a>
+    <a href="#omnibus">5. Omnibus</a>
+    <a href="#legge132">6. L. 132/2025</a>
+    <a href="#ag418">7. Decreto AG 418</a>
+    <a href="#sanzioni">8. Sanzioni</a>
+    <a href="#checklist">9. Checklist</a>
+    <a href="#quiz">10. Quiz</a>
+    <a href="#fonti">Fonti</a>
+  </nav>
+</div>
+
+<main>
+
+<section class="hero" style="border:none">
+  <div class="hero-tag">Corso di Prompt Engineering &nbsp;·&nbsp; Modulo 3 &nbsp;·&nbsp; aggiornato al 27 luglio 2026</div>
+  <h1>Quattro testi.<br>Una sola domanda:<br><span style="color:var(--ac)">cosa devo fare, entro quando.</span></h1>
+  <p class="lead">L'AI Act non è un adempimento unico con una data unica. È un sistema che assegna <strong>obblighi diversi a soggetti diversi in momenti diversi</strong>, e che negli ultimi mesi è stato riscritto nelle date da un regolamento di semplificazione, integrato in Italia da una legge nazionale e sta per essere completato da un decreto legislativo che cambia il calcolo del rischio per le imprese.</p>
+  <p class="lead" style="margin-top:14px">Questa pagina ricostruisce il quadro in ordine operativo: prima <em>chi sei</em>, poi <em>cosa usi</em>, poi <em>entro quando</em>. Il resto è conseguenza.</p>
+
+  <div class="callout red" style="margin-top:32px">
+    <p><strong>Avvertenza necessaria.</strong> Questo è materiale didattico, non un parere legale, e chi lo ha scritto non è un avvocato. I riferimenti sono tratti direttamente dai testi normativi citati in fondo, ma la qualificazione di un sistema concreto — <em>è ad alto rischio? sono fornitore o deployer?</em> — è un giudizio tecnico-giuridico che va fatto sul caso specifico. Per decisioni che espongono a sanzioni o responsabilità, serve un professionista.</p>
+  </div>
+</section>
+
+<!-- ===== 1. MAPPA ===== -->
+<section id="mappa">
+  <div class="eyebrow">Parte 1 — Orientamento</div>
+  <h2>I quattro testi, e cosa fa ciascuno</h2>
+  <p class="sub">Non sono quattro discipline parallele: sono quattro strati sovrapposti, e solo uno dei quattro crea davvero obblighi nuovi per le imprese.</p>
+
+  <div class="grid g4">
+    <div class="card" style="border-color:rgba(125,211,252,.3)">
+      <div class="tagline" style="color:var(--ac)">Lo strato base</div>
+      <h4>AI Act</h4>
+      <div style="margin:6px 0 10px"><span class="law-chip">Reg. UE 2024/1689</span></div>
+      <p>Il regolamento europeo. <strong>Direttamente applicabile</strong>: non serve una legge italiana per obbligarti. Definisce i ruoli, classifica i sistemi per rischio, impone gli obblighi e fissa le sanzioni. È qui che vive il 90% di ciò che devi fare.</p>
+    </div>
+    <div class="card" style="border-color:rgba(74,222,128,.3)">
+      <div class="tagline" style="color:var(--ok)">La riscrittura delle date</div>
+      <h4>Omnibus digitale sull'IA</h4>
+      <div style="margin:6px 0 10px"><span class="law-chip">Reg. UE 2026/1744</span></div>
+      <p>Modifica l'AI Act per semplificarne l'attuazione. <strong>Sposta in avanti le scadenze sui sistemi ad alto rischio</strong>, alleggerisce alcuni obblighi per le PMI, e introduce due nuovi divieti. È il testo che rende obsolete quasi tutte le timeline in circolazione.</p>
+    </div>
+    <div class="card" style="border-color:rgba(251,191,36,.3)">
+      <div class="tagline" style="color:var(--amb)">Il livello nazionale</div>
+      <h4>Legge 132/2025</h4>
+      <div style="margin:6px 0 10px"><span class="law-chip">L. 23 set. 2025, n. 132</span></div>
+      <p>La legge italiana sull'IA. Dichiara espressamente di <strong>non creare obblighi nuovi</strong> rispetto all'AI Act (art. 3, c. 5). Aggiunge principi settoriali, designa le autorità, tocca il penale e il diritto d'autore, e delega il Governo a scrivere i decreti attuativi.</p>
+    </div>
+    <div class="card" style="border-color:rgba(192,132,252,.3)">
+      <div class="tagline" style="color:var(--vio)">In arrivo</div>
+      <h4>Schema AG 418</h4>
+      <div style="margin:6px 0 10px"><span class="law-chip">Atto del Governo n. 418</span></div>
+      <p>Schema di decreto legislativo, trasmesso alle Camere il 24 giugno 2026. Non è ancora legge. Introduce <strong>un nuovo reato, un nuovo illecito 231, e regole civili che rovesciano l'onere della prova</strong> a favore del danneggiato. È il pezzo che alza davvero la posta.</p>
+    </div>
+  </div>
+
+  <h3>Chi comanda su cosa — la gerarchia in una riga</h3>
+  <div class="callout">
+    <p>Il <strong>regolamento europeo</strong> è la fonte degli obblighi e delle sanzioni amministrative; si applica a te direttamente, oggi, senza intermediazione dello Stato italiano. La <strong>legge italiana</strong> non può aggiungere obblighi sui sistemi di IA (e infatti dichiara di non farlo), ma può fare tre cose che l'Unione le lascia: <em>designare le autorità</em>, <em>disciplinare settori di competenza nazionale</em> (sanità, lavoro, giustizia, professioni, PA), e <em>introdurre norme penali e civili</em>, che restano materia degli Stati membri. Il <strong>decreto attuativo</strong> esercita proprio quest'ultimo spazio: ed è per questo che, pur essendo l'ultimo arrivato, è quello che può cambiare di più la valutazione del rischio d'impresa.</p>
+  </div>
+
+  <div class="callout amb">
+    <p><strong>Il malinteso più diffuso.</strong> Si legge spesso che la legge 132/2025 avrebbe introdotto l'obbligo di etichettare i contenuti generati con IA. Il testo definitivo della legge <strong>non contiene un obbligo di marcatura</strong>: quella previsione, presente in una versione precedente del disegno di legge, non è sopravvissuta. L'obbligo di rendere riconoscibili i contenuti sintetici esiste — ma sta nell'<em>articolo 50 dell'AI Act</em>, cioè in una fonte europea, con una sua data e un suo perimetro. Attribuirlo alla legge italiana porta a cercarlo nel posto sbagliato e a sbagliare la scadenza.</p>
+  </div>
+</section>
+
+<!-- ===== 2. RUOLO ===== -->
+<section id="ruolo">
+  <div class="eyebrow">Parte 2 — Primo passo</div>
+  <h2>Che ruolo hai nella catena</h2>
+  <p class="sub">È la domanda che viene prima di ogni altra: gli obblighi dell'AI Act non dipendono da cosa fai come azienda, ma da <em>che posizione occupi</em> rispetto a quel singolo sistema. La stessa impresa può essere fornitore per un sistema e deployer per un altro.</p>
+
+  <div class="roles" id="roles"></div>
+  <div class="role-out" id="role-out"></div>
+
+  <div class="callout vio" style="margin-top:24px">
+    <p><strong>La trappola che coglie più imprese di tutte.</strong> Puoi diventare <em>fornitore</em> di un sistema che hai solo comprato. Succede in tre casi previsti dall'articolo 25 dell'AI Act: se apponi il tuo nome o marchio su un sistema ad alto rischio già immesso sul mercato; se ne modifichi sostanzialmente la finalità; oppure se lo modifichi in modo tale da farlo diventare ad alto rischio. In tutti e tre i casi ti assumi gli obblighi pesanti del fornitore, mentre il fornitore originario esce di scena. Chi integra modelli di terzi dentro il proprio prodotto e lo rivende con il proprio marchio dovrebbe leggere quell'articolo prima di firmare il contratto, non dopo.</p>
+  </div>
+</section>
+
+<!-- ===== 3. RISCHIO ===== -->
+<section id="rischio">
+  <div class="eyebrow">Parte 3 — Secondo passo</div>
+  <h2>Che rischio ha il sistema che usi</h2>
+  <p class="sub">L'AI Act non regola "l'intelligenza artificiale": regola <em>usi specifici</em>. Lo stesso modello può essere irrilevante in un contesto e ad alto rischio in un altro. Clicca ogni livello per aprirlo.</p>
+
+  <div class="pyr" id="pyr"></div>
+
+  <div class="callout">
+    <p><strong>Il test in tre domande</strong>, da fare per ogni sistema, non per l'azienda nel suo insieme: <em>(1)</em> ricade in uno degli usi vietati dell'art. 5? Allora è fuori, punto. <em>(2)</em> È un componente di sicurezza di un prodotto già soggetto a normativa UE con valutazione di terzi — macchine, dispositivi medici, giocattoli, ascensori — oppure ricade in uno degli otto settori dell'allegato III? Allora è ad alto rischio. <em>(3)</em> Interagisce con le persone o genera contenuti? Allora scattano gli obblighi di trasparenza dell'art. 50, anche se il sistema non è ad alto rischio.</p>
+  </div>
+
+  <div class="callout green">
+    <p><strong>La valvola di sfogo dell'art. 6, § 3.</strong> Un sistema che rientra nell'allegato III <em>non</em> è ad alto rischio se non presenta un rischio significativo per salute, sicurezza o diritti fondamentali — per esempio perché svolge un compito procedurale ristretto, migliora il risultato di un'attività umana già completata, o si limita a fare da supporto preparatorio. Ma attenzione a due cose: la deroga <strong>non vale mai</strong> se il sistema effettua profilazione di persone fisiche, e chi se ne avvale deve <strong>documentare la valutazione</strong> prima dell'immissione sul mercato e registrarsi comunque nella banca dati UE. Non è un'autoassoluzione: è un onere documentale in più.</p>
+  </div>
+
+  <div class="callout amb">
+    <p><strong>Novità dell'Omnibus sul concetto di "componente di sicurezza".</strong> Il Reg. UE 2026/1744 chiarisce che i sistemi di IA usati <em>esclusivamente</em> per aspetti non attinenti alla sicurezza — assistenza agli utenti, ottimizzazione delle prestazioni, efficienza dei servizi, automazione, praticità, controllo qualità — non sono componenti di sicurezza, e quindi non diventano ad alto rischio per quella via. Resta però la deroga alla deroga: se il guasto o il malfunzionamento metterebbe comunque a rischio salute o sicurezza, il sistema torna a essere componente di sicurezza. Per molte imprese manifatturiere questa singola precisazione vale più di tutto il resto del regolamento di semplificazione.</p>
+  </div>
+</section>
+
+<!-- ===== 4. SCADENZE ===== -->
+<section id="scadenze">
+  <div class="eyebrow">Parte 4 — Il cuore</div>
+  <h2>Tutte le scadenze, in ordine</h2>
+  <p class="sub">Date aggiornate al Reg. UE 2026/1744, in vigore dal 27 luglio 2026. Filtra per il profilo che ti interessa: quasi nessuno deve occuparsi di tutte le righe.</p>
+
+  <div class="tl-ctrl" id="tl-filters"></div>
+  <div class="tl" id="tl"></div>
+
+  <div class="callout red">
+    <p><strong>Due date da non confondere mai.</strong> <em>2 agosto 2026</em> è la data di applicazione generale dell'AI Act: da lì valgono gli obblighi di trasparenza dell'art. 50, che toccano chiunque usi chatbot, generi contenuti sintetici o pubblichi deepfake — cioè quasi tutti. <em>2 dicembre 2027</em> è invece la data degli obblighi pesanti sui sistemi ad alto rischio dell'allegato III. Molte imprese hanno letto il rinvio dell'Omnibus come "tutto slitta al 2027": non è così. Il rinvio riguarda il capo III, sezioni 1, 2 e 3 — non l'articolo 50, non i divieti, non le sanzioni, che sono applicabili dal 2 agosto 2025.</p>
+  </div>
+</section>
+
+<!-- ===== 5. OMNIBUS ===== -->
+<section id="omnibus">
+  <div class="eyebrow">Parte 5 — La riscrittura</div>
+  <h2>Cosa è cambiato con il Reg. UE 2026/1744</h2>
+  <p class="sub">Pubblicato in GUUE il 24 luglio 2026 ed entrato in vigore il 27 luglio. Non tocca l'impianto dell'AI Act: sposta date, alleggerisce oneri documentali e aggiunge due divieti.</p>
+
+  <h3>Le date, prima e dopo</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th style="width:34%">Obbligo</th><th style="width:22%">AI Act, testo originario</th><th style="width:22%">Dopo l'Omnibus</th><th style="width:22%">Effetto pratico</th></tr></thead>
+      <tbody>
+        <tr><td><b>Sistemi ad alto rischio dell'allegato III</b><br><span style="font-size:12px;color:var(--tx-3)">biometria, istruzione, lavoro, credito, servizi essenziali…</span></td>
+          <td>2 agosto 2026</td><td class="yes">2 dicembre 2027</td><td>Sedici mesi in più per costruire risk management, data governance e documentazione tecnica.</td></tr>
+        <tr><td><b>Sistemi ad alto rischio dell'allegato I</b><br><span style="font-size:12px;color:var(--tx-3)">IA come componente di sicurezza di prodotti regolati</span></td>
+          <td>2 agosto 2027</td><td class="yes">2 agosto 2028</td><td>Un anno in più, allineato ai cicli di certificazione di prodotto.</td></tr>
+        <tr><td><b>Sistemi ad alto rischio della PA già in uso</b></td>
+          <td>2 agosto 2030</td><td>2 agosto 2030</td><td>Invariata, ma ora ancorata alla nuova data di applicazione del capo III.</td></tr>
+        <tr><td><b>Nuovi divieti: nudificazione e materiale pedopornografico sintetico</b></td>
+          <td class="no-m">non previsti</td><td class="part">2 dicembre 2026</td><td>Due fattispecie nuove nell'art. 5, con la sanzione più alta del regolamento.</td></tr>
+        <tr><td><b>Marcatura leggibile dalla macchina dei contenuti sintetici</b><br><span style="font-size:12px;color:var(--tx-3)">per sistemi già sul mercato prima del 2 agosto 2026</span></td>
+          <td class="no-m">nessun regime transitorio</td><td class="part">2 dicembre 2026</td><td>Quattro mesi di respiro per adeguare i prodotti generativi già in commercio.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Le semplificazioni sostanziali</h3>
+  <div id="omni-acc"></div>
+
+  <div class="callout amb">
+    <p><strong>Come leggere il rinvio.</strong> Il considerando che lo giustifica è insolitamente esplicito: le norme tecniche armonizzate, le specifiche comuni e gli orientamenti non erano pronti, e diversi Stati membri non avevano ancora costituito le autorità nazionali competenti. In altre parole, il rinvio non nasce da un ripensamento sul merito, ma dalla constatazione che mancavano gli strumenti per conformarsi. Per un'impresa questo significa una cosa precisa: <em>il tempo guadagnato non è tempo libero</em>, è il tempo in cui arriveranno gli standard su cui poi bisognerà allinearsi in fretta.</p>
+  </div>
+</section>
+
+<!-- ===== 6. LEGGE 132 ===== -->
+<section id="legge132">
+  <div class="eyebrow">Parte 6 — Il livello italiano</div>
+  <h2>Legge 132/2025: cosa aggiunge davvero</h2>
+  <p class="sub">In vigore dal 10 ottobre 2025. Il suo articolo 3, comma 5, contiene la frase che ne definisce il perimetro: <em>«La presente legge non produce nuovi obblighi rispetto a quelli previsti dal regolamento (UE) 2024/1689»</em>. Detto questo, alcune cose le fa — e a qualcuna bisogna badare subito.</p>
+
+  <div id="l132"></div>
+</section>
+
+<!-- ===== 7. AG 418 ===== -->
+<section id="ag418">
+  <div class="eyebrow">Parte 7 — Quello che sta arrivando</div>
+  <h2>Schema AG 418: il decreto che cambia il calcolo</h2>
+  <p class="sub">Schema di decreto legislativo trasmesso al Senato il 24 giugno 2026, in attesa dei pareri parlamentari. <strong>Non è ancora diritto vigente</strong> e il testo può cambiare — ma la direzione è chiara e vale la pena prepararsi.</p>
+
+  <div class="callout vio">
+    <p><strong>Perché per un'impresa è il testo più rilevante dei quattro.</strong> L'AI Act minaccia sanzioni amministrative, che sono spiacevoli ma prevedibili. Questo decreto fa tre cose di natura diversa: introduce <em>un reato</em> che può colpire chi progetta, addestra, produce, immette sul mercato o usa professionalmente un sistema ad alto rischio; aggiunge quel reato al <em>catalogo 231</em>, con sanzioni pecuniarie nella fascia alta e sanzioni interdittive; e rende la <em>documentazione di conformità</em> prodotta per l'AI Act direttamente esibibile in giudizio civile, con l'onere della prova spostato a sfavore di chi la detiene. Il rischio smette di essere una voce di bilancio e diventa un rischio personale, d'impresa e organizzativo.</p>
+  </div>
+
+  <div id="ag"></div>
+</section>
+
+<!-- ===== 8. SANZIONI ===== -->
+<section id="sanzioni">
+  <div class="eyebrow">Parte 8 — Le conseguenze</div>
+  <h2>Cosa si rischia, e da quando</h2>
+  <p class="sub">Le sanzioni amministrative dell'AI Act sono applicabili dal 2 agosto 2025. In Italia la designazione delle autorità è già fatta; l'attribuzione dei poteri sanzionatori passa dai decreti delegati.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th style="width:30%">Violazione</th><th style="width:24%">Massimo edittale</th><th style="width:22%">Fonte</th><th style="width:24%">Note</th></tr></thead>
+      <tbody>
+        <tr><td><b>Pratiche vietate</b> (art. 5)</td>
+          <td><b style="color:var(--no)">35 M€ o 7%</b> del fatturato mondiale annuo, se superiore</td>
+          <td>AI Act, art. 99, § 3</td><td>La fascia più alta. Dal 2 dicembre 2026 include nudificazione e materiale pedopornografico sintetico.</td></tr>
+        <tr><td><b>Altri obblighi</b> di fornitori, deployer, importatori, distributori, organismi notificati</td>
+          <td><b style="color:var(--org)">15 M€ o 3%</b> del fatturato mondiale annuo, se superiore</td>
+          <td>AI Act, art. 99, § 4</td><td>È la fascia che riguarda la stragrande maggioranza degli inadempimenti reali.</td></tr>
+        <tr><td><b>Informazioni false, incomplete o fuorvianti</b> a organismi notificati o autorità</td>
+          <td><b style="color:var(--amb)">7,5 M€ o 1%</b> del fatturato mondiale annuo, se superiore</td>
+          <td>AI Act, art. 99, § 5</td><td>Riguarda anche le risposte alle richieste istruttorie in fase ispettiva.</td></tr>
+        <tr><td><b>PMI e start-up</b></td>
+          <td>Si applica <b>il minore</b> fra percentuale e importo fisso</td>
+          <td>AI Act, art. 99, § 6</td><td>Attenuazione strutturale, non discrezionale.</td></tr>
+        <tr><td><b>Piccole imprese a media capitalizzazione</b></td>
+          <td>Si applica <b>il minore</b> fra percentuale e importo fisso</td>
+          <td>Novità del Reg. UE 2026/1744</td><td>Estende alle <i>small mid-cap</i> il trattamento già previsto per le PMI.</td></tr>
+        <tr><td><b>Nuovo reato ex art. 437-bis c.p.</b><br><span style="font-size:12px;color:var(--tx-3)">omessa adozione di misure di sicurezza / alterazione</span></td>
+          <td>Reclusione da <b>1 a 5 anni</b>, fino a <b>3-10 anni</b> nei casi più gravi</td>
+          <td class="part">Schema AG 418 — non ancora vigente</td><td>Responsabilità penale personale, non sanzione d'impresa.</td></tr>
+        <tr><td><b>Responsabilità dell'ente ex d.lgs. 231/2001</b></td>
+          <td><b>600-1.000 quote</b> per il 437-bis; <b>200-700 quote</b> per il deepfake dannoso; più sanzioni interdittive</td>
+          <td class="part">Schema AG 418 — non ancora vigente</td><td>La forbice del 437-bis si colloca nella fascia alta del catalogo 231.</td></tr>
+        <tr><td><b>Illecita diffusione di deepfake dannosi</b> (art. 612-quater c.p.)</td>
+          <td>Reclusione da <b>1 a 5 anni</b></td>
+          <td class="yes">Già in vigore — L. 132/2025</td><td>Procedibile a querela, salvo i casi di procedibilità d'ufficio previsti dalla norma.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <p><strong>Chi vigila, in Italia.</strong> La legge 132/2025 designa <em>AgID</em> come autorità di notifica e <em>ACN</em> come autorità di vigilanza del mercato e punto di contatto unico con le istituzioni europee, comprese le attività ispettive e sanzionatorie. Restano autorità di vigilanza del mercato, per i rispettivi settori, <em>Banca d'Italia</em>, <em>CONSOB</em> e <em>IVASS</em>. Restano inoltre pienamente ferme le competenze del <em>Garante privacy</em> e dell'<em>AGCOM</em>: un singolo sistema può quindi essere valutato contemporaneamente sotto AI Act, GDPR e DSA, da autorità diverse, con conseguenze cumulabili.</p>
+  </div>
+</section>
+
+<!-- ===== 9. CHECKLIST ===== -->
+<section id="checklist">
+  <div class="eyebrow">Parte 9 — Operativo</div>
+  <h2>Cosa fare, per profilo</h2>
+  <p class="sub">Cinque situazioni tipiche. Spunta le voci: la lista si adatta a ciò che serve davvero a quel profilo, senza gli obblighi che non lo riguardano.</p>
+
+  <div class="tabs" data-tabs="ck">
+    <button class="tab on" data-t="ck1">PMI che usa IA generativa</button>
+    <button class="tab" data-t="ck2">Software house / integratore</button>
+    <button class="tab" data-t="ck3">HR e selezione</button>
+    <button class="tab" data-t="ck4">Studio professionale</button>
+    <button class="tab" data-t="ck5">Banca / assicurazione</button>
+  </div>
+  <div class="pane on" id="ck1"><div class="chk" id="chk1"></div></div>
+  <div class="pane" id="ck2"><div class="chk" id="chk2"></div></div>
+  <div class="pane" id="ck3"><div class="chk" id="chk3"></div></div>
+  <div class="pane" id="ck4"><div class="chk" id="chk4"></div></div>
+  <div class="pane" id="ck5"><div class="chk" id="chk5"></div></div>
+
+  <div class="callout green" style="margin-top:26px">
+    <p><strong>La cosa più utile che puoi fare oggi, se non hai ancora fatto nulla.</strong> Non è nominare un responsabile né comprare uno strumento di compliance: è compilare l'<em>inventario dei sistemi di IA</em>. Un foglio con una riga per sistema e cinque colonne: quale sistema, chi lo fornisce, chi lo usa e per cosa, che ruolo abbiamo noi, quale livello di rischio. Senza quell'inventario ogni altra attività di conformità è cieca — e con esso l'80% delle domande di questa pagina si risponde da solo.</p>
+  </div>
+</section>
+
+<!-- ===== 10. QUIZ ===== -->
+<section id="quiz">
+  <div class="eyebrow">Parte 10 — Verifica</div>
+  <h2>Otto domande</h2>
+  <p class="sub">Le confusioni che si incontrano più spesso, comprese alcune che circolano in articoli divulgativi.</p>
+  <div id="quizbox"></div>
+  <div id="quizres" style="margin-top:20px;padding:18px 22px;border-radius:12px;background:var(--bg-2);border:1px solid var(--line);display:none">
+    <div style="font-size:22px;font-weight:800;color:var(--ac)" id="qr-t"></div>
+    <p style="margin:6px 0 0" id="qr-s"></p>
+  </div>
+</section>
+
+<!-- ===== FONTI ===== -->
+<section id="fonti">
+  <div class="eyebrow">Riferimenti</div>
+  <h2>Fonti</h2>
+  <p class="sub">I contenuti di questa pagina sono ricavati direttamente dai testi normativi forniti. Le fonti giornalistiche e professionali sono usate solo per la conferma di date di pubblicazione e numerazione.</p>
+  <ol class="src-list" id="fonti-box"></ol>
+
+  <div class="callout red" style="margin-top:26px">
+    <p><strong>Limiti di questo materiale.</strong> Tre in particolare. <em>Primo</em>: lo schema AG 418 è un atto in itinere — il testo definitivo può differire, e finché non è pubblicato in Gazzetta non produce effetti. <em>Secondo</em>: la delega dell'art. 24 della legge 132/2025 copre anche materie non trattate da questo schema — poteri di vigilanza, adeguamento sanzionatorio, alfabetizzazione — che arriveranno con uno o più decreti separati. <em>Terzo</em>: la qualificazione concreta di un sistema resta un giudizio da fare caso per caso. Questa pagina serve a farsi le domande giuste, non a chiudere le risposte.</p>
+  </div>
+</section>
+
+<!-- MARKER -->
+
+</main>
+
+<footer>
+  Materiale didattico · Modulo 3: quadro normativo europeo e italiano sull'intelligenza artificiale<br>
+  <span style="color:var(--line-2)">Aggiornato al 27 luglio 2026 · Non costituisce parere legale · Pagina autonoma, funziona offline</span>
+</footer>
+
+<script>
+/* nav + progress */
+(function(){
+  const links=[...document.querySelectorAll('#nav a')], prog=document.getElementById('prog');
+  function upd(){
+    const h=document.documentElement;
+    prog.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+    let cur=null;
+    document.querySelectorAll('section[id]').forEach(s=>{if(s.getBoundingClientRect().top<200)cur=s.id;});
+    links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+  }
+  window.addEventListener('scroll',upd,{passive:true}); upd();
+})();
+
+/* riferimenti */
+document.addEventListener('click',e=>{
+  const r=e.target.closest('.ref'); if(!r)return;
+  const el=document.getElementById('src-'+r.dataset.r);
+  if(el){el.scrollIntoView({behavior:'smooth',block:'center'});
+    el.style.background='rgba(125,211,252,.12)';setTimeout(()=>el.style.background='',1800);}
+});
+
+/* accordion helper */
+function mkAcc(host,items){
+  const w=document.getElementById(host); if(!w)return;
+  items.forEach(c=>{
+    const d=document.createElement('div'); d.className='acc';
+    d.innerHTML='<div class="acc-hd"><div class="acc-n">'+c.n+'</div><div class="acc-t">'+c.t+
+      '<small>'+c.s+'</small></div>'+(c.badge?'<span class="badge '+c.badge[0]+'">'+c.badge[1]+'</span>':'')+
+      '<span class="chev">&#9654;</span></div><div class="acc-bd">'+c.b+'</div>';
+    d.querySelector('.acc-hd').addEventListener('click',()=>d.classList.toggle('open'));
+    w.appendChild(d);
+  });
+}
+
+/* ===== RUOLI ===== */
+(function(){
+  const R=[
+    {k:'fornitore',t:'Fornitore (provider)',d:'Sviluppi un sistema di IA e lo immetti sul mercato o lo metti in servizio con il tuo nome o marchio',
+     head:'Sei il soggetto con più obblighi dell\'intera catena.',
+     intro:'Il fornitore risponde della conformità del sistema in sé. Se il sistema è ad alto rischio, l\'elenco è lungo e in gran parte documentale.',
+     items:[
+      ['Sempre, oggi','Alfabetizzazione IA del personale che opera i sistemi (art. 4) e rispetto dei divieti dell\'art. 5. In vigore dal 2 febbraio 2025.'],
+      ['Se generi contenuti sintetici','Marcare gli output in formato leggibile dalla macchina, così che siano rilevabili come generati artificialmente (art. 50, § 2).'],
+      ['Se il sistema è ad alto rischio','Sistema di gestione dei rischi (art. 9), governo dei dati di addestramento (art. 10), documentazione tecnica (art. 11), registrazione automatica degli eventi — i log (art. 12), istruzioni per il deployer (art. 13), sorveglianza umana progettata (art. 14), accuratezza-robustezza-cibersicurezza (art. 15).'],
+      ['Prima di immettere sul mercato','Sistema di gestione della qualità (art. 17), valutazione della conformità, dichiarazione UE, marcatura CE, registrazione nella banca dati UE.'],
+      ['Dopo l\'immissione','Monitoraggio successivo all\'immissione sul mercato (art. 72) e segnalazione degli incidenti gravi (art. 73).'],
+      ['Se fai modelli per finalità generali','Documentazione tecnica, informazioni ai fornitori a valle, politica sul diritto d\'autore, sintesi pubblica dei dati di addestramento (artt. 53-55). Obblighi applicabili dal 2 agosto 2025; i modelli già sul mercato prima di quella data si adeguano entro il 2 agosto 2027.']
+     ]},
+    {k:'deployer',t:'Deployer (utilizzatore)',d:'Usi un sistema di IA sotto la tua autorità nell\'ambito di un\'attività professionale — la posizione della grande maggioranza delle imprese',
+     head:'Meno obblighi del fornitore, ma non zero — e sono quelli che si dimenticano.',
+     intro:'Attenzione alla parola "professionale": se usi l\'IA per un\'attività personale non professionale non sei deployer. Se la usi in azienda, lo sei — anche se il sistema è di un terzo e tu ti limiti a comprarlo.',
+     items:[
+      ['Sempre, oggi','Alfabetizzazione IA (art. 4) per il personale che usa i sistemi, e rispetto dei divieti (art. 5). Applicabili dal 2 febbraio 2025.'],
+      ['Sempre','Usare il sistema conformemente alle istruzioni del fornitore (art. 26, § 1). Uscire dalle istruzioni può farti scivolare nella posizione di fornitore.'],
+      ['Se il sistema è ad alto rischio','Sorveglianza umana affidata a persone con competenza e autorità adeguate; controllo della pertinenza dei dati di input che controlli tu; conservazione dei log per almeno sei mesi; monitoraggio del funzionamento e segnalazione al fornitore delle anomalie.'],
+      ['Se sei datore di lavoro','Informare i lavoratori e i loro rappresentanti prima di mettere in servizio un sistema ad alto rischio sul luogo di lavoro (art. 26, § 7). In Italia si somma l\'obbligo informativo dell\'art. 11 della legge 132/2025, che rinvia al d.lgs. 152/1997.'],
+      ['Se decidi su persone fisiche','Informare la persona interessata quando un sistema ad alto rischio dell\'allegato III è usato per prendere o assistere una decisione che la riguarda (art. 26, § 11); a quell\'informativa corrisponde il diritto della persona di ottenere, su richiesta, una spiegazione chiara e significativa del ruolo del sistema nella decisione (art. 86).'],
+      ['Se sei ente pubblico o certi privati','Valutazione d\'impatto sui diritti fondamentali — FRIA — prima del primo utilizzo (art. 27). Riguarda organismi di diritto pubblico, soggetti privati che erogano servizi pubblici, e chi usa IA per merito creditizio o per prezzi e rischi in assicurazioni vita e salute.'],
+      ['Se produci contenuti sintetici','Se generi o manipoli deepfake, o testi pubblicati per informare il pubblico su questioni di interesse pubblico, devi dichiararlo (art. 50, §§ 4). Se usi chatbot o riconoscimento emozioni, devi informare le persone.']
+     ]},
+    {k:'importatore',t:'Importatore',d:'Immetti sul mercato UE un sistema di IA che porta il nome di un soggetto stabilito fuori dall\'Unione',
+     head:'Sei il controllore di frontiera della conformità.',
+     intro:'Non rispondi di come il sistema è stato costruito, ma di aver verificato che chi lo ha costruito abbia fatto il suo dovere.',
+     items:[
+      ['Prima di immettere','Verificare che il fornitore extra-UE abbia svolto la valutazione della conformità, redatto la documentazione tecnica, apposto la marcatura CE e nominato un rappresentante autorizzato (art. 23).'],
+      ['Se sospetti non conformità','Non immettere il sistema sul mercato finché non è conforme; informare fornitore, rappresentante e autorità di vigilanza.'],
+      ['Sempre','Indicare nome e recapiti sul sistema o sull\'imballaggio; conservare per dieci anni copia del certificato e della dichiarazione UE di conformità; garantire condizioni di stoccaggio e trasporto che non compromettano la conformità.']
+     ]},
+    {k:'distributore',t:'Distributore',d:'Metti a disposizione sul mercato un sistema di IA, senza essere fornitore né importatore',
+     head:'Obblighi di verifica formale, non sostanziale.',
+     intro:'Il distributore controlla che i segni della conformità ci siano, non che la conformità sia stata fatta bene.',
+     items:[
+      ['Prima di distribuire','Verificare la presenza della marcatura CE, della dichiarazione UE di conformità e delle istruzioni per l\'uso, e che fornitore e importatore abbiano adempiuto ai loro obblighi (art. 24).'],
+      ['Se il sistema non è conforme','Non metterlo a disposizione; se già distribuito, adottare le misure correttive necessarie o ritirarlo, e informare le autorità.'],
+      ['Attenzione','Se apponi il tuo marchio o modifichi la finalità del sistema, cambi ruolo: diventi fornitore a tutti gli effetti (art. 25).']
+     ]},
+    {k:'rappresentante',t:'Rappresentante autorizzato',d:'Sei stabilito nell\'Unione e agisci per conto di un fornitore extra-UE che ti ha dato mandato scritto',
+     head:'Sei il punto di contatto giuridico dell\'operatore straniero.',
+     intro:'Ogni fornitore extra-UE che immette un sistema ad alto rischio nell\'Unione deve nominarne uno prima di immetterlo sul mercato.',
+     items:[
+      ['Sempre','Verificare che dichiarazione UE di conformità e documentazione tecnica siano state redatte; conservarle per dieci anni a disposizione delle autorità (art. 22).'],
+      ['Su richiesta','Fornire alle autorità competenti tutte le informazioni e la documentazione necessarie a dimostrare la conformità, e cooperare alle azioni intraprese.'],
+      ['Se il fornitore è inadempiente','Puoi — e in certi casi devi — porre fine al mandato, informandone l\'autorità di vigilanza e la Commissione.']
+     ]}
+  ];
+  const wrap=document.getElementById('roles'), out=document.getElementById('role-out');
+  R.forEach((r,i)=>{
+    const b=document.createElement('button'); b.className='role'+(i===1?' on':'');
+    b.innerHTML='<b>'+r.t+'</b><span>'+r.d+'</span>';
+    b.addEventListener('click',()=>{
+      wrap.querySelectorAll('.role').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on'); draw(r);
+    });
+    wrap.appendChild(b);
+  });
+  function draw(r){
+    out.innerHTML='<h4>'+r.head+'</h4><p style="font-size:14px">'+r.intro+'</p><ul class="ro-list">'+
+      r.items.map(([a,b])=>'<li><b>'+a+'</b><i>'+b+'</i></li>').join('')+'</ul>';
+  }
+  draw(R[1]);
+})();
+
+/* tabs */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('.tabs[data-tabs] .tab'); if(!t)return;
+  const grp=t.closest('.tabs');
+  grp.querySelectorAll('.tab').forEach(x=>x.classList.remove('on')); t.classList.add('on');
+  [...grp.querySelectorAll('.tab')].forEach(x=>document.getElementById(x.dataset.t).classList.remove('on'));
+  document.getElementById(t.dataset.t).classList.add('on');
+});
+
+/* ===== PIRAMIDE DEL RISCHIO ===== */
+(function(){
+  const P=[
+    {c:'p1',t:'Rischio inaccettabile — vietato',s:'AI Act art. 5 · in vigore dal 2 febbraio 2025',
+     b:'<p>Otto famiglie di pratiche che non si possono immettere sul mercato, mettere in servizio né usare. Non esiste conformità possibile: si fa o non si fa.</p><ul>'+
+       '<li>Tecniche subliminali, manipolative o ingannevoli che distorcono il comportamento causando un danno significativo</li>'+
+       '<li>Sfruttamento delle vulnerabilità legate a età, disabilità o situazione sociale ed economica</li>'+
+       '<li>Punteggio sociale che porta a trattamenti sfavorevoli sproporzionati o fuori contesto</li>'+
+       '<li>Previsione del rischio di reato basata unicamente su profilazione o su tratti di personalità</li>'+
+       '<li>Creazione di banche dati di riconoscimento facciale tramite scraping non mirato da internet o da telecamere a circuito chiuso</li>'+
+       '<li>Inferenza delle emozioni sul luogo di lavoro e negli istituti di istruzione, salve le finalità mediche o di sicurezza</li>'+
+       '<li>Categorizzazione biometrica per dedurre razza, opinioni politiche, appartenenza sindacale, convinzioni religiose, vita o orientamento sessuale</li>'+
+       '<li>Identificazione biometrica remota <i>in tempo reale</i> in spazi accessibili al pubblico a fini di attività di contrasto, salve eccezioni tassative e autorizzate</li></ul>'+
+       '<p style="margin-top:12px"><b>Dal 2 dicembre 2026 se ne aggiungono due</b>, introdotte dal Reg. UE 2026/1744: i sistemi che generano o manipolano immagini, video o audio realistici delle parti intime di una persona riconoscibile o che la ritraggono in atti sessualmente espliciti, senza il suo consenso libero, specifico, informato e inequivocabile; e i sistemi che generano o manipolano materiale o spettacoli pedopornografici ai sensi della direttiva 2011/93/UE.</p>'+
+       '<p style="margin-top:10px">Su questi due nuovi divieti il regolamento precisa il perimetro: l\'immissione sul mercato è vietata solo se quella generazione è la <i>finalità prevista</i> del sistema, oppure se è un risultato ragionevolmente prevedibile e riproducibile senza modifiche tecniche significative e il sistema è privo di misure di sicurezza ragionevoli per prevenirla. L\'<i>uso</i> è vietato quando il deployer impiega il sistema proprio per generare quel materiale.</p>'},
+    {c:'p2',t:'Alto rischio',s:'AI Act artt. 6-27 · allegato I dal 2 agosto 2028, allegato III dal 2 dicembre 2027',
+     b:'<p>Consentiti, ma con il carico più pesante di obblighi. Due strade indipendenti per finirci dentro.</p>'+
+       '<p style="margin-top:10px"><b>Via 1 — allegato I (art. 6, § 1).</b> Il sistema è un componente di sicurezza di un prodotto già coperto da normativa di armonizzazione dell\'Unione, o è esso stesso quel prodotto, e quel prodotto richiede una valutazione della conformità da parte di terzi. Rientrano fra gli altri macchine, giocattoli, ascensori, dispositivi medici, apparecchi a gas, DPI, imbarcazioni da diporto, oltre ad aviazione, veicoli e ferrovie.</p>'+
+       '<p style="margin-top:10px"><b>Via 2 — allegato III (art. 6, § 2).</b> Otto settori d\'uso:</p><ul>'+
+       '<li><b>Biometria</b> — identificazione biometrica remota, categorizzazione in base ad attributi sensibili, riconoscimento delle emozioni</li>'+
+       '<li><b>Infrastrutture critiche</b> — componenti di sicurezza di infrastrutture digitali, traffico stradale, acqua, gas, riscaldamento, elettricità</li>'+
+       '<li><b>Istruzione e formazione</b> — accesso e ammissione, valutazione degli apprendimenti, orientamento del livello di istruzione, sorveglianza durante le prove</li>'+
+       '<li><b>Lavoro e gestione dei lavoratori</b> — annunci mirati, filtro delle candidature, valutazione dei candidati, decisioni su promozione e cessazione, assegnazione dei compiti, monitoraggio delle prestazioni</li>'+
+       '<li><b>Servizi essenziali</b> — ammissibilità a prestazioni pubbliche, merito creditizio (esclusa l\'individuazione di frodi), prezzi e rischi in assicurazioni vita e salute, gestione delle chiamate di emergenza e triage</li>'+
+       '<li><b>Attività di contrasto</b> — rischio di vittimizzazione, poligrafi, valutazione dell\'affidabilità delle prove, rischio di reato o recidiva, profilazione investigativa</li>'+
+       '<li><b>Migrazione, asilo e frontiere</b> — poligrafi, valutazione dei rischi, esame delle domande, individuazione delle persone</li>'+
+       '<li><b>Giustizia e processi democratici</b> — assistenza all\'autorità giudiziaria nella ricerca e interpretazione dei fatti e del diritto, influenza su elezioni e referendum</li></ul>'+
+       '<p style="margin-top:12px">Per un\'impresa non specializzata, i due settori che scattano più spesso senza che nessuno se ne accorga sono il <b>quarto</b> — qualunque strumento che filtri curricula o valuti prestazioni — e il <b>quinto</b>, per chi opera nel credito o nelle assicurazioni.</p>'},
+    {c:'p3',t:'Rischio di trasparenza',s:'AI Act art. 50 · applicabile dal 2 agosto 2026',
+     b:'<p>Non sono sistemi pericolosi: sono sistemi che possono ingannare sulla natura di ciò che si vede o con cui si interagisce. L\'obbligo è dire come stanno le cose, e riguarda anche chi non tocca mai un sistema ad alto rischio.</p><ul>'+
+       '<li><b>Interazione diretta con persone</b> — il fornitore progetta il sistema in modo che la persona sia informata di stare interagendo con un\'IA, salvo che sia ovvio per una persona ragionevolmente avveduta</li>'+
+       '<li><b>Contenuti sintetici</b> — chi genera audio, immagini, video o testo sintetici marca gli output in <i>formato leggibile dalla macchina</i>, così che siano rilevabili come generati o manipolati artificialmente</li>'+
+       '<li><b>Riconoscimento emozioni e categorizzazione biometrica</b> — il deployer informa le persone esposte al sistema</li>'+
+       '<li><b>Deepfake</b> — il deployer dichiara che il contenuto è stato generato o manipolato artificialmente</li>'+
+       '<li><b>Testi pubblicati per informare il pubblico</b> su questioni di interesse pubblico — va dichiarata la generazione artificiale, salvo che vi sia stata revisione umana con responsabilità editoriale su chi pubblica</li></ul>'+
+       '<p style="margin-top:12px"><b>Regime transitorio introdotto dall\'Omnibus:</b> i fornitori di sistemi generativi già immessi sul mercato prima del 2 agosto 2026 hanno tempo fino al <b>2 dicembre 2026</b> per conformarsi all\'obbligo di marcatura.</p>'},
+    {c:'p4',t:'Rischio minimo o nullo',s:'nessun obbligo specifico oltre a quelli trasversali',
+     b:'<p>Tutto il resto — e in termini di volume è la maggioranza schiacciante dei sistemi in uso in azienda: filtri antispam, motori di raccomandazione di prodotti, assistenti alla scrittura, videogiochi, strumenti di ottimizzazione logistica.</p>'+
+       '<p style="margin-top:10px">Nessun obbligo specifico. Restano però due cose che valgono <b>per tutti i sistemi, a prescindere dal rischio</b>: il rispetto dei divieti dell\'art. 5, e l\'obbligo di alfabetizzazione in materia di IA dell\'art. 4, in capo sia ai fornitori sia ai deployer. Entrambi sono applicabili dal 2 febbraio 2025 — cioè sono già scaduti da oltre un anno.</p>'+
+       '<p style="margin-top:10px">Restano ovviamente applicabili tutte le altre discipline che non spariscono perché c\'è di mezzo l\'IA: protezione dei dati personali, diritto d\'autore, tutela del consumatore, sicurezza sul lavoro, segreto professionale.</p>'}
+  ];
+  const w=document.getElementById('pyr');
+  P.forEach((p,i)=>{
+    const d=document.createElement('div'); d.className='pyr-row '+p.c;
+    d.style.width=(100-i*4)+'%';
+    d.innerHTML='<div class="pyr-hd"><b>'+p.t+'</b><span>'+p.s+'</span></div><div class="pyr-bd">'+p.b+'</div>';
+    d.addEventListener('click',()=>d.classList.toggle('on'));
+    w.appendChild(d);
+  });
+})();
+
+/* ===== TIMELINE ===== */
+(function(){
+  const OGGI=new Date('2026-07-27');
+  const F=[['all','Tutte'],['forn','Fornitori'],['depl','Utilizzatori (deployer)'],['alto','Alto rischio'],['gpai','Modelli general purpose'],['ita','Italia'],['pa','Settore pubblico']];
+  const T=[
+    {d:'2024-08-01',l:'1 agosto 2024',t:'L\'AI Act entra in vigore',c:['forn','depl','alto','gpai'],
+     p:'Il regolamento è in vigore, ma le sue disposizioni si applicano in modo scaglionato. Da qui partono tutti i conteggi.',src:'Reg. UE 2024/1689, art. 113',who:['tutti']},
+    {d:'2025-02-02',l:'2 febbraio 2025',t:'Divieti e alfabetizzazione IA: già obbligatori',c:['forn','depl','alto','gpai','pa','ita'],
+     p:'Si applicano i capi I e II: definizioni, ambito, pratiche vietate dell\'art. 5 e obbligo di alfabetizzazione in materia di IA dell\'art. 4. Riguardano fornitori e deployer di qualunque sistema, a prescindere dal livello di rischio. È la scadenza più trascurata di tutte, perché è passata in sordina e non richiede documenti da depositare da nessuna parte.',src:'Reg. UE 2024/1689, art. 113, lett. a)',who:['fornitori','deployer','tutti i livelli di rischio']},
+    {d:'2025-08-02',l:'2 agosto 2025',t:'Modelli general purpose, governance e sanzioni',c:['forn','gpai'],
+     p:'Si applicano il capo V (obblighi per i modelli di IA per finalità generali), il capo VII (governance), il capo III sezione 4 (autorità di notifica e organismi notificati), il capo XII (sanzioni, salvo l\'art. 101) e l\'art. 78. Da questa data il quadro sanzionatorio dell\'art. 99 è operativo.',src:'Reg. UE 2024/1689, art. 113, lett. b)',who:['fornitori di modelli GPAI','autorità']},
+    {d:'2025-10-10',l:'10 ottobre 2025',t:'Entra in vigore la legge italiana 132/2025',c:['ita','pa','depl'],
+     p:'Principi e disposizioni settoriali, designazione di AgID e ACN come autorità nazionali, nuove fattispecie penali (fra cui il deepfake dannoso dell\'art. 612-quater c.p.), modifiche alla legge sul diritto d\'autore e deleghe al Governo. Da qui decorrono i dodici mesi per l\'esercizio delle deleghe.',src:'L. 23 settembre 2025, n. 132',who:['imprese in Italia','PA','professionisti']},
+    {d:'2026-01-08',l:'8 gennaio 2026',t:'Termine per il decreto sull\'Osservatorio lavoro',c:['ita'],
+     p:'Novanta giorni dall\'entrata in vigore della legge per il decreto del Ministro del lavoro che stabilisce composizione, funzionamento e compiti dell\'Osservatorio sull\'adozione di sistemi di IA nel mondo del lavoro. È un termine per l\'amministrazione, non per le imprese.',src:'L. 132/2025, art. 12, c. 2',who:['Ministero del lavoro']},
+    {d:'2026-06-24',l:'24 giugno 2026',t:'Schema AG 418 trasmesso alle Camere',c:['ita','depl','forn'],
+     p:'Lo schema di decreto legislativo su IA e attività di polizia, responsabilità penale e responsabilità civile arriva al Senato per il parere delle Commissioni competenti.',src:'Atto del Governo n. 418',who:['Parlamento']},
+    {d:'2026-07-24',l:'24 luglio 2026',t:'Omnibus digitale sull\'IA pubblicato in GUUE',c:['forn','depl','alto','gpai'],
+     p:'Il Regolamento (UE) 2026/1744 viene pubblicato nella Gazzetta ufficiale dell\'Unione europea, modificando l\'AI Act, il regolamento sull\'aviazione civile e il regolamento macchine.',src:'Reg. UE 2026/1744',who:['tutti']},
+    {d:'2026-07-27',l:'27 luglio 2026',t:'L\'Omnibus entra in vigore',c:['forn','depl','alto'],
+     p:'Terzo giorno successivo alla pubblicazione. Da oggi le nuove date di applicazione degli obblighi sui sistemi ad alto rischio sono diritto vigente, e valgono le semplificazioni per PMI e piccole imprese a media capitalizzazione.',src:'Reg. UE 2026/1744, art. 4',who:['tutti']},
+    {d:'2026-08-02',l:'2 agosto 2026',t:'Applicazione generale dell\'AI Act — obblighi di trasparenza',c:['forn','depl','ita','pa'],
+     p:'Scatta la data di applicazione generale del regolamento. Per la maggior parte delle imprese il pezzo concreto è l\'articolo 50: informare quando si interagisce con un\'IA, marcare i contenuti sintetici in formato leggibile dalla macchina, dichiarare i deepfake, informare chi è esposto a riconoscimento emozioni o categorizzazione biometrica. Non serve essere ad alto rischio per esserne toccati.',src:'Reg. UE 2024/1689, art. 113',who:['fornitori','deployer','chiunque generi contenuti']},
+    {d:'2026-08-23',l:'circa 23 agosto 2026',t:'Scadono i 60 giorni per i pareri parlamentari su AG 418',c:['ita'],
+     p:'Decorsi sessanta giorni dalla trasmissione, il decreto può essere emanato anche in mancanza dei pareri. La data è indicativa e va verificata sul calendario parlamentare.',src:'L. 132/2025, art. 24, c. 4',who:['Governo','Parlamento']},
+    {d:'2026-10-10',l:'10 ottobre 2026',t:'Scade la delega al Governo',c:['ita','forn','depl'],
+     p:'Dodici mesi dall\'entrata in vigore della legge 132/2025 per adottare i decreti legislativi di adeguamento all\'AI Act (art. 24) e la disciplina su dati, algoritmi e metodi matematici per l\'addestramento (art. 16). Il termine può essere prorogato di sessanta giorni se quello per i pareri scade nei trenta giorni antecedenti o successivamente.',src:'L. 132/2025, artt. 16 e 24',who:['Governo']},
+    {d:'2026-12-02',l:'2 dicembre 2026',t:'Nuovi divieti e marcatura per i sistemi generativi già in commercio',c:['forn','depl'],
+     p:'Due scadenze nello stesso giorno. Primo: entrano in applicazione i nuovi divieti dell\'art. 5 su nudificazione non consensuale e materiale pedopornografico sintetico — con la sanzione più alta del regolamento. Secondo: i fornitori di sistemi che generano contenuti sintetici già immessi sul mercato prima del 2 agosto 2026 devono essersi conformati all\'obbligo di marcatura dell\'art. 50, § 2.',src:'Reg. UE 2026/1744 (modifica artt. 5, 111 e 113)',who:['fornitori di sistemi generativi','deployer']},
+    {d:'2027-08-02',l:'2 agosto 2027',t:'Modelli GPAI già sul mercato: fine del periodo di adeguamento',c:['gpai','forn'],
+     p:'I fornitori di modelli per finalità generali immessi sul mercato prima del 2 agosto 2025 devono aver adottato le misure necessarie per conformarsi agli obblighi del regolamento. Entro la stessa data la Commissione adotta gli atti delegati previsti dall\'Omnibus.',src:'Reg. UE 2024/1689, art. 111, § 3',who:['fornitori di modelli GPAI']},
+    {d:'2027-09-02',l:'2 settembre 2027',t:'Orientamenti sul monitoraggio post-immissione',c:['forn','alto'],
+     p:'La Commissione pubblica orientamenti, con un modello volontario, sul piano di monitoraggio successivo all\'immissione sul mercato previsto dall\'art. 72. L\'Omnibus ha soppresso il precedente obbligo di adottare un modello armonizzato con atto di esecuzione, lasciando ai fornitori più flessibilità.',src:'Reg. UE 2026/1744',who:['fornitori di sistemi ad alto rischio']},
+    {d:'2027-12-02',l:'2 dicembre 2027',t:'Obblighi sui sistemi ad alto rischio dell\'allegato III',c:['alto','forn','depl','pa'],
+     p:'La scadenza più impegnativa per le imprese. Si applicano il capo III, sezioni 1, 2 e 3: classificazione, requisiti tecnici (gestione dei rischi, governo dei dati, documentazione, log, trasparenza verso il deployer, sorveglianza umana, accuratezza e cibersicurezza) e obblighi di fornitori e deployer, inclusa la valutazione d\'impatto sui diritti fondamentali. Riguarda biometria, infrastrutture critiche, istruzione, lavoro, servizi essenziali, contrasto, migrazione e giustizia.',src:'Reg. UE 2024/1689, art. 113, lett. c), come modificato dal Reg. UE 2026/1744',who:['fornitori','deployer','PA']},
+    {d:'2028-01-27',l:'entro fine gennaio 2028',t:'Organismi notificati: domanda di designazione',c:['forn','alto'],
+     p:'Gli organismi già notificati ai sensi della normativa di armonizzazione dell\'allegato I, sezione A, devono presentare domanda di designazione ai sensi dell\'AI Act entro diciotto mesi dall\'entrata in vigore del regolamento modificativo. Data calcolata, da verificare sul testo pubblicato.',src:'Reg. UE 2026/1744 (modifica art. 43, § 3)',who:['organismi notificati']},
+    {d:'2028-08-02',l:'2 agosto 2028',t:'Obblighi sui sistemi ad alto rischio dell\'allegato I',c:['alto','forn'],
+     p:'Si applicano gli obblighi del capo III, sezioni 1, 2 e 3, ai sistemi di IA che sono componenti di sicurezza di prodotti già soggetti a normativa di armonizzazione dell\'Unione, o che sono essi stessi tali prodotti. Entro la stessa data si applicano gli atti delegati adottati dalla Commissione.',src:'Reg. UE 2024/1689, art. 113, lett. c), come modificato dal Reg. UE 2026/1744',who:['fabbricanti','fornitori']},
+    {d:'2030-08-02',l:'2 agosto 2030',t:'Sistemi ad alto rischio del settore pubblico già in uso',c:['pa','alto','depl','forn'],
+     p:'Fornitori e deployer di sistemi ad alto rischio destinati a essere usati da autorità pubbliche, immessi sul mercato prima della data di applicazione del capo III, devono in ogni caso conformarsi entro questa data. Per gli altri sistemi preesistenti l\'obbligo scatta solo in caso di modifiche significative della progettazione.',src:'Reg. UE 2024/1689, art. 111, § 2, come modificato',who:['PA','fornitori del settore pubblico']},
+    {d:'2030-12-31',l:'31 dicembre 2030',t:'Sistemi IT su larga scala dell\'allegato X',c:['pa','alto'],
+     p:'I sistemi di IA che sono componenti dei grandi sistemi informatici europei nel settore libertà, sicurezza e giustizia, immessi sul mercato prima del 2 agosto 2027, devono essere resi conformi entro questa data.',src:'Reg. UE 2024/1689, art. 111, § 1',who:['istituzioni UE','autorità nazionali']}
+  ];
+  const fw=document.getElementById('tl-filters'), tw=document.getElementById('tl');
+  let cur='all';
+  F.forEach(([k,l])=>{
+    const b=document.createElement('button'); b.className='chip'+(k==='all'?' on':'');
+    b.textContent=l;
+    b.addEventListener('click',()=>{fw.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=k;draw();});
+    fw.appendChild(b);
+  });
+  function stato(d){
+    const dt=new Date(d), gg=(dt-OGGI)/86400000;
+    if(gg<0)return'past'; if(gg<=60)return'hot'; if(gg<=550)return'next'; return'fut';
+  }
+  function draw(){
+    const list=T.filter(x=>cur==='all'||x.c.includes(cur));
+    tw.innerHTML = list.length? list.map(x=>
+      '<div class="tl-item '+stato(x.d)+'"><div class="tl-card">'+
+      '<div class="tl-date"><span>'+x.l+(stato(x.d)==='past'?' · già applicabile':'')+'</span><span class="src">'+x.src+'</span></div>'+
+      '<b>'+x.t+'</b><p>'+x.p+'</p>'+
+      '<div class="tl-who">'+x.who.map(y=>'<span class="who">'+y+'</span>').join('')+'</div>'+
+      '</div></div>').join('')
+      : '<p class="tl-empty">Nessuna scadenza per questo profilo.</p>';
+  }
+  draw();
+})();
+
+/* ===== OMNIBUS ===== */
+mkAcc('omni-acc',[
+ {n:'A',t:'Alfabetizzazione IA: obbligo attenuato',s:'nuovo art. 4 dell\'AI Act',badge:['b-now','In vigore'],
+  b:'<p>L\'obbligo resta — fornitori e deployer devono adottare misure per sviluppare l\'alfabetizzazione in materia di IA del proprio personale e di chi opera i sistemi per loro conto — ma il nuovo testo aggiunge una precisazione decisiva: <b>l\'obbligo non impone di garantire un livello specifico di alfabetizzazione per alcuna persona</b>.</p><p>Le misure vanno calibrate su conoscenze tecniche, esperienza, istruzione e formazione delle persone, sul contesto d\'uso e sui soggetti su cui i sistemi vengono usati. La Commissione pubblicherà esempi pratici di adempimento sulla piattaforma unica di informazione, e il consiglio per l\'IA adotterà raccomandazioni con obiettivi comuni.</p><p><b>Cosa significa in pratica:</b> non serve una certificazione per dipendente. Serve poter dimostrare di aver fatto qualcosa di proporzionato — formazione documentata, istruzioni operative, linee guida interne — e che quel qualcosa sia coerente con chi usa cosa.</p>'},
+ {n:'B',t:'"Componente di sicurezza": la definizione si restringe',s:'nuovi paragrafi 1 bis, 1 ter e 1 quater dell\'art. 6',badge:['b-now','In vigore'],
+  b:'<p>La modifica più rilevante per il manifatturiero. I sistemi di IA utilizzati <b>esclusivamente</b> per aspetti non legati alla sicurezza — assistenza agli utenti, ottimizzazione delle prestazioni, efficienza dei servizi, automazione, praticità, controllo qualità — non sono considerati componenti di sicurezza, e quindi non diventano ad alto rischio per la via dell\'allegato I.</p><p>Due limiti da tenere presenti. <b>Primo:</b> se il guasto o il malfunzionamento del sistema metterebbe comunque a rischio la salute e la sicurezza, il sistema torna a essere componente di sicurezza. <b>Secondo:</b> la definizione stessa di componente di sicurezza è stata riscritta ancorandola alla <i>finalità prevista</i> di prevenire o attenuare rischi per la salute e la sicurezza.</p><p>Viene inoltre chiarito che un prodotto sottoposto a valutazione di terzi <i>solo</i> per rischi diversi da salute e sicurezza — tipicamente interferenze elettromagnetiche o distribuzione dello spettro radio — non soddisfa la condizione dell\'art. 6, § 1, lett. b).</p>'},
+ {n:'C',t:'Documentazione tecnica semplificata per PMI e small mid-cap',s:'modifica dell\'art. 11, § 1',badge:['b-later','Dal 2 dic. 2027'],
+  b:'<p>PMI, start-up e piccole imprese a media capitalizzazione possono fornire in forma semplificata gli elementi della documentazione tecnica dell\'allegato IV. La Commissione definirà un <b>modulo di documentazione tecnica semplificata</b>; chi sceglie questa strada deve usare quel modulo, e <b>gli organismi notificati sono tenuti ad accettarlo</b> ai fini della valutazione della conformità.</p><p>Il regolamento introduce anche, in via generale, le definizioni di "PMI" e di "piccole imprese a media capitalizzazione", che prima non comparivano nell\'AI Act: è la premessa per tutte le altre attenuazioni dimensionali, comprese quelle sanzionatorie.</p>'},
+ {n:'D',t:'Trattamento di dati sensibili per correggere le distorsioni',s:'nuovo art. 4 bis',badge:['b-now','In vigore'],
+  b:'<p>Una base giuridica specifica, prima assente, per un problema molto concreto: per verificare se un sistema discrimina bisogna trattare proprio i dati che rivelano l\'appartenenza al gruppo potenzialmente discriminato.</p><p>Il nuovo articolo consente in via eccezionale ai fornitori di sistemi ad alto rischio di trattare categorie particolari di dati personali per rilevare e correggere le distorsioni, ma solo se ricorrono <b>tutte</b> le condizioni: impossibilità di ottenere il risultato con dati sintetici o anonimizzati; limitazioni tecniche al riutilizzo e misure avanzate di sicurezza, inclusa la pseudonimizzazione; controlli e documentazione rigorosi degli accessi; divieto di trasmissione a terzi; cancellazione appena corretta la distorsione o alla fine del periodo di conservazione; motivazione nei registri delle attività di trattamento.</p><p>Un secondo paragrafo estende la facoltà, a condizioni analoghe, ai fornitori e deployer di altri sistemi e ai deployer di sistemi ad alto rischio — precisando espressamente che <b>ciò non crea alcun obbligo</b> di rilevare e correggere le distorsioni.</p>'},
+ {n:'E',t:'Valutazione d\'impatto sui diritti fondamentali: un questionario',s:'modifica dell\'art. 27',badge:['b-later','Dal 2 dic. 2027'],
+  b:'<p>L\'ufficio per l\'IA elaborerà un <b>modello di questionario</b>, anche sotto forma di strumento automatizzato, per agevolare i deployer nell\'adempimento in modo semplificato. Il modello consentirà, ove opportuno, di rinviare alle sezioni pertinenti della valutazione d\'impatto sulla protezione dei dati, o di incorporarne parti nella FRIA.</p><p>È una risposta pratica alla sovrapposizione fra DPIA del GDPR e FRIA dell\'AI Act, che nella prassi genera duplicazioni costose e poco utili.</p>'},
+ {n:'F',t:'Meno atti di esecuzione, procedure unificate per gli organismi notificati',s:'modifiche agli artt. 28, 29, 43, 50, 56 e 72',badge:['b-now','In vigore'],
+  b:'<p>Una serie di interventi di alleggerimento procedurale: soppressione di alcuni poteri della Commissione di adottare atti di esecuzione dove non strettamente necessari; possibilità per gli organismi di valutazione della conformità di presentare <b>un\'unica domanda</b> e di essere sottoposti a una <b>procedura di valutazione unificata</b> ai sensi sia dell\'AI Act sia della normativa di prodotto; utilizzabilità dei documenti e certificati già ottenuti sotto altre normative di armonizzazione per accelerare la designazione.</p><p>Viene inoltre previsto che un sistema ad alto rischio rientrante nel regolamento sulla cyber-resilienza e conforme ai suoi requisiti sia considerato conforme ai requisiti di cibersicurezza dell\'art. 15 dell\'AI Act: una presunzione di conformità che evita una doppia verifica sullo stesso profilo.</p>'}
+]);
+
+/* ===== LEGGE 132 ===== */
+mkAcc('l132',[
+ {n:'art. 3',t:'La clausola che definisce tutto il resto',s:'nessun obbligo nuovo rispetto all\'AI Act',badge:['b-now','In vigore'],
+  b:'<p>Il comma 5 dell\'art. 3 dice che la legge <b>non produce nuovi obblighi</b> rispetto a quelli previsti dall\'AI Act per i sistemi di IA e per i modelli per finalità generali. È una clausola di compatibilità con il diritto dell\'Unione: uno Stato membro non può appesantire unilateralmente un regolamento armonizzato.</p><p>Conseguenza operativa: se cerchi nella legge italiana un adempimento tecnico da spuntare, non lo troverai. Quello che troverai sono <i>principi</i>, <i>obblighi informativi</i> in settori di competenza nazionale, <i>norme penali</i> e <i>deleghe</i>. Il comma 6 aggiunge però un\'indicazione sostanziale: la cybersicurezza lungo tutto il ciclo di vita è definita <b>precondizione essenziale</b>, con approccio proporzionale basato sul rischio.</p>'},
+ {n:'art. 11-12',t:'Lavoro: informare i lavoratori',s:'obbligo informativo e Osservatorio ministeriale',badge:['b-now','In vigore'],
+  b:'<p>Il datore di lavoro o il committente è tenuto a <b>informare il lavoratore</b> dell\'utilizzo dell\'intelligenza artificiale, nei casi e con le modalità dell\'art. 1-bis del d.lgs. 152/1997 — la norma sulla trasparenza dei sistemi decisionali e di monitoraggio automatizzati.</p><p>L\'uso dell\'IA in ambito lavorativo deve essere sicuro, affidabile e trasparente, non può contrastare con la dignità umana né violare la riservatezza dei dati, e deve garantire l\'assenza di discriminazioni fondate su sesso, età, origini etniche, credo religioso, orientamento sessuale, opinioni politiche e condizioni personali, sociali ed economiche.</p><p>Attenzione alla stratificazione: su un sistema di gestione del personale possono convergere <b>tre obblighi informativi distinti</b> — l\'art. 1-bis del d.lgs. 152/1997 richiamato dalla legge italiana, l\'art. 26, § 7 dell\'AI Act sull\'informazione ai lavoratori e ai loro rappresentanti, e gli obblighi di trasparenza del GDPR. Hanno destinatari, tempi e contenuti diversi.</p><p>L\'art. 12 istituisce presso il Ministero del lavoro un <b>Osservatorio</b> sull\'adozione di sistemi di IA nel mondo del lavoro, con il compito di definire una strategia, monitorare l\'impatto sul mercato del lavoro e promuovere la formazione.</p>'},
+ {n:'art. 13',t:'Professioni intellettuali: informare il cliente',s:'l\'obbligo più immediato per gli studi professionali',badge:['b-now','In vigore'],
+  b:'<p>Due regole brevi ma dense. <b>Prima:</b> l\'uso di sistemi di IA nelle professioni intellettuali è finalizzato al <i>solo</i> esercizio delle attività strumentali e di supporto, «con prevalenza del lavoro intellettuale oggetto della prestazione d\'opera». La prestazione resta umana; l\'IA la assiste.</p><p><b>Seconda:</b> per assicurare il rapporto fiduciario, le informazioni relative ai sistemi di IA utilizzati dal professionista sono comunicate al destinatario della prestazione «con linguaggio chiaro, semplice ed esaustivo».</p><p>La norma non specifica forma né momento. La lettura prudente è: informativa scritta, resa <b>prima</b> del conferimento dell\'incarico o al momento del conferimento, che indichi <i>quali</i> attività sono svolte con ausilio di IA — non una formula generica sepolta nel mandato. Per avvocati, commercialisti, consulenti del lavoro, notai, architetti e ingegneri è l\'adempimento da mettere in agenda per primo, perché non richiede tecnologia: richiede di riscrivere un documento.</p>'},
+ {n:'art. 14-15',t:'PA e attività giudiziaria',s:'conoscibilità, tracciabilità, decisione umana',badge:['b-now','In vigore'],
+  b:'<p><b>Pubblica amministrazione.</b> L\'IA si usa per aumentare efficienza, ridurre i tempi dei procedimenti e migliorare i servizi, assicurando agli interessati la <b>conoscibilità</b> del funzionamento e la <b>tracciabilità</b> dell\'utilizzo. L\'uso è strumentale e di supporto all\'attività provvedimentale: la persona resta l\'unica responsabile dei provvedimenti e dei procedimenti. Le amministrazioni adottano misure tecniche, organizzative e formative, a risorse invariate.</p><p><b>Attività giudiziaria.</b> È sempre riservata al magistrato ogni decisione sull\'interpretazione e applicazione della legge, sulla valutazione dei fatti e delle prove e sull\'adozione dei provvedimenti. Fino alla compiuta attuazione dell\'AI Act, sperimentazione e impiego negli uffici giudiziari ordinari sono <b>autorizzati dal Ministero della giustizia</b>, sentite le Autorità nazionali.</p><p>Per i fornitori della PA queste due norme si traducono in requisiti contrattuali: spiegabilità, log, e una catena di responsabilità che resta in capo al funzionario.</p>'},
+ {n:'art. 4',t:'Minori: consenso sotto i quattordici anni',s:'una soglia italiana da conoscere',badge:['b-now','In vigore'],
+  b:'<p>L\'accesso alle tecnologie di IA da parte dei minori di quattordici anni, e il conseguente trattamento dei dati personali, richiedono il <b>consenso di chi esercita la responsabilità genitoriale</b>. Il minore che abbia compiuto quattordici anni può esprimere autonomamente il consenso, purché le informazioni siano facilmente accessibili e comprensibili.</p><p>Riguarda direttamente chi offre servizi digitali con componenti di IA rivolti anche a un pubblico giovane: la soglia va gestita nel flusso di registrazione, non in una clausola dell\'informativa.</p>'},
+ {n:'art. 20',t:'Chi vigila in Italia',s:'AgID, ACN e le autorità di settore',badge:['b-now','In vigore'],
+  b:'<p><b>AgID</b> — Agenzia per l\'Italia digitale: promuove innovazione e sviluppo, ed è <b>autorità di notifica</b> ai sensi dell\'art. 70 dell\'AI Act; definisce le procedure ed esercita le funzioni in materia di notifica, valutazione, accreditamento e monitoraggio dei soggetti incaricati di verificare la conformità.</p><p><b>ACN</b> — Agenzia per la cybersicurezza nazionale: è <b>autorità di vigilanza del mercato</b> e <b>punto di contatto unico</b> con le istituzioni europee, ed è responsabile della vigilanza sui sistemi di IA, <i>incluse le attività ispettive e sanzionatorie</i>.</p><p><b>Banca d\'Italia, CONSOB e IVASS</b> restano autorità di vigilanza del mercato per i rispettivi settori, ai sensi dell\'art. 74, § 6 dell\'AI Act.</p><p>Restano ferme le competenze del <b>Garante per la protezione dei dati personali</b> e dell\'<b>AGCOM</b> come Coordinatore dei servizi digitali. Presso la Presidenza del Consiglio opera un Comitato di coordinamento fra le agenzie.</p>'},
+ {n:'art. 25',t:'Diritto d\'autore e text and data mining',s:'due modifiche alla legge 633/1941',badge:['b-now','In vigore'],
+  b:'<p><b>Opere create con l\'ausilio dell\'IA.</b> L\'art. 1 della legge sul diritto d\'autore viene modificato: sono protette le opere dell\'ingegno <b>umano</b>, «anche laddove create con l\'ausilio di strumenti di intelligenza artificiale, purché costituenti risultato del lavoro intellettuale dell\'autore». La formula conferma l\'impostazione europea: l\'output puramente automatico non è opera protetta, ma l\'uso dell\'IA non impedisce la protezione se resta un apporto creativo umano riconoscibile. La soglia di quell\'apporto è, prevedibilmente, il terreno del contenzioso futuro.</p><p><b>Estrazione di testo e dati.</b> Il nuovo art. 70-septies chiarisce che riproduzioni ed estrazioni da opere o materiali in rete o in banche dati <i>a cui si ha legittimamente accesso</i>, ai fini di estrazione di testo e dati tramite modelli e sistemi di IA anche generativa, sono consentite <b>in conformità agli artt. 70-ter e 70-quater</b> — cioè entro le eccezioni già esistenti per la ricerca scientifica e per il TDM generale, quest\'ultima superabile con riserva espressa del titolare.</p><p>Coerentemente, l\'art. 26 della legge aggiunge una nuova ipotesi penale all\'art. 171 della legge sul diritto d\'autore per chi riproduce o estrae testo o dati in violazione di quegli articoli, anche attraverso sistemi di IA.</p>'},
+ {n:'art. 26',t:'Le nuove norme penali già vigenti',s:'aggravante comune, deepfake, aggiotaggio, market abuse',badge:['b-now','In vigore'],
+  b:'<p>Questa parte è <b>già diritto vigente dal 10 ottobre 2025</b>, a differenza di quella dello schema AG 418.</p><ul>'+
+    '<li><b>Nuova aggravante comune</b> (art. 61, n. 11-undecies c.p.): aver commesso il fatto mediante l\'impiego di sistemi di IA, quando questi abbiano costituito mezzo insidioso, oppure abbiano ostacolato la pubblica o privata difesa o aggravato le conseguenze del reato. Si applica <i>a qualunque reato</i>.</li>'+
+    '<li><b>Nuovo art. 612-quater c.p.</b> — illecita diffusione di contenuti generati o alterati con IA: chi cagiona un danno ingiusto cedendo, pubblicando o diffondendo senza consenso immagini, video o voci falsificati o alterati con IA e idonei a ingannare sulla loro genuinità è punito con la reclusione da <b>uno a cinque anni</b>. Punibile a querela, con procedibilità d\'ufficio nei casi indicati.</li>'+
+    '<li><b>Art. 294 c.p.</b> — attentato contro i diritti politici: reclusione da due a sei anni se l\'inganno è realizzato con sistemi di IA.</li>'+
+    '<li><b>Art. 2637 c.c.</b> — aggiotaggio: reclusione da due a sette anni se il fatto è commesso mediante sistemi di IA.</li>'+
+    '<li><b>Art. 185 TUF</b> — manipolazione del mercato: reclusione da due a sette anni e multa da 25.000 a 6 milioni di euro se il fatto è commesso con sistemi di IA.</li></ul>'+
+    '<p>Per un\'impresa quotata o vigilata, le ultime due voci non sono folklore: alzano sensibilmente il profilo di rischio dell\'uso di IA in comunicazione finanziaria e in attività di trading.</p>'},
+ {n:'art. 16, 24',t:'Le deleghe al Governo',s:'da qui nascono i decreti attuativi',badge:['b-soon','Scadenza 10 ott. 2026'],
+  b:'<p>Due deleghe distinte, entrambe da esercitare entro <b>dodici mesi</b> dall\'entrata in vigore della legge, cioè entro il <b>10 ottobre 2026</b>, con possibile proroga di sessanta giorni.</p><p><b>Art. 16</b> — disciplina organica sull\'utilizzo di dati, algoritmi e metodi matematici per l\'addestramento, «senza obblighi ulteriori» rispetto all\'AI Act: individuazione del regime giuridico, strumenti di tutela risarcitori o inibitori, apparato sanzionatorio, competenza delle sezioni specializzate in materia di impresa.</p><p><b>Art. 24</b> — adeguamento generale all\'AI Act, con criteri direttivi che comprendono: attribuzione alle autorità dell\'art. 20 di tutti i poteri di vigilanza, ispettivi e sanzionatori; modifiche alla normativa bancaria, finanziaria, assicurativa e dei pagamenti; potere di irrogare le sanzioni dell\'art. 99 dell\'AI Act; percorsi di alfabetizzazione e formazione, anche tramite ordini professionali e associazioni di categoria, con possibile riconoscimento di un equo compenso modulato su responsabilità e rischi; disciplina dell\'IA per l\'attività di polizia; poteri ispettivi anche senza preavviso; adeguamento del quadro sanzionatorio.</p><p><b>Da tenere d\'occhio:</b> lo schema AG 418 attua solo una parte di questa delega. I poteri sanzionatori delle autorità e l\'adeguamento del quadro sanzionatorio arriveranno con uno o più decreti ulteriori.</p>'}
+]);
+
+/* ===== AG 418 ===== */
+mkAcc('ag',[
+ {n:'§',t:'Che cos\'è, e a che punto è',s:'inquadramento e stato della procedura',badge:['b-draft','Schema'],
+  b:'<p>Schema di decreto legislativo di adeguamento al Reg. UE 2024/1689 <b>in materia di utilizzo dei sistemi di IA per l\'attività di polizia e di responsabilità penale e civile</b>. Attua l\'art. 24, commi 1, 2 lett. h), 3, 4 e 5 della legge 132/2025.</p><p>Trasmesso alla Presidenza del Senato il <b>24 giugno 2026</b> per il parere delle Commissioni parlamentari. Decorsi sessanta giorni dalla trasmissione il decreto può essere emanato anche in mancanza dei pareri. La delega scade il 10 ottobre 2026, prorogabile di sessanta giorni al ricorrere delle condizioni previste.</p><p>Si compone di <b>22 articoli in tre titoli</b>: il Titolo I sull\'IA nell\'attività di polizia (artt. 1-10), il Titolo II sulle disposizioni penali e civili (artt. 11-20), il Titolo III sulle disposizioni transitorie e finanziarie (artt. 21-22).</p><p style="margin-top:12px;color:var(--amb)"><b>Da tenere presente:</b> essendo un atto in itinere, il testo può essere modificato in sede di parere o di emanazione. Quanto segue descrive lo schema come trasmesso.</p>'},
+ {n:'437-bis',t:'Il nuovo reato: omesse misure di sicurezza e alterazione',s:'nuovo art. 437-bis del codice penale',badge:['b-draft','Schema'],
+  b:'<p>Collocato fra i delitti di comune pericolo mediante violenza, per affinità con l\'art. 437 sull\'omessa collocazione di impianti antinfortunistici.</p>'+
+    '<p><b>Comma 1 — condotta omissiva.</b> Omessa predisposizione di misure tecniche o di sorveglianza umana idonee a prevenire alterazioni del funzionamento di sistemi di IA <b>ad alto rischio</b>. Riguarda chi opera in una delle fasi rilevanti del ciclo di vita: <i>progettazione, addestramento, produzione, immissione sul mercato o utilizzo professionale</i> — un elenco costruito, dice la relazione, per coprire tutte le posizioni di garanzia individuate dall\'AI Act: fornitore, importatore, distributore, deployer. La punibilità richiede il verificarsi di un <b>pericolo concreto</b>. Pena: reclusione da <b>uno a cinque anni</b> se il pericolo riguarda la vita o l\'incolumità individuale; da <b>due a otto anni</b> se riguarda la pubblica incolumità o la sicurezza dello Stato.</p>'+
+    '<p><b>Comma 2 — condotta attiva.</b> Fuori dai casi del comma 1, chi <i>non avendo il controllo lecito</i> del sistema ne altera il funzionamento: reclusione da <b>due a sei anni</b>, o da <b>tre a dieci anni</b> nei casi più gravi. È la norma di chiusura contro la manipolazione esterna.</p>'+
+    '<p><b>Comma 3 — forma colposa.</b> Punibile solo per <b>colpa grave</b>, sul modello dell\'art. 590-sexies c.p., con pena ridotta da un terzo a un sesto. La scelta è motivata dall\'esigenza di non criminalizzare ogni scostamento dallo standard tecnico in un dominio in rapida evoluzione.</p>'+
+    '<p style="margin-top:12px"><b>Perché cambia il calcolo.</b> Fino a oggi la mancata adozione di misure di sicurezza su un sistema ad alto rischio era un problema di conformità amministrativa. Con questa norma, se dall\'omissione deriva un pericolo concreto, diventa un fatto penalmente rilevante per la <i>persona fisica</i> che aveva la posizione di garanzia — non per l\'azienda in astratto.</p>'},
+ {n:'231',t:'Responsabilità dell\'ente: nuovo art. 25-vicies',s:'modifica al d.lgs. 231/2001',badge:['b-draft','Schema'],
+  b:'<p>Il nuovo articolo si colloca dopo l\'art. 25-undevicies e introduce due ipotesi.</p><ul>'+
+    '<li><b>Art. 437-bis c.p.</b> — sanzione pecuniaria da <b>seicento a mille quote</b>. La relazione colloca esplicitamente la forbice «nella fascia alta del catalogo», con l\'art. 25-septies — omicidio colposo e lesioni gravi da violazione delle norme antinfortunistiche — come parametro di riferimento.</li>'+
+    '<li><b>Art. 612-quater c.p.</b> (deepfake dannoso, già in vigore) — sanzione pecuniaria da <b>duecento a settecento quote</b>.</li></ul>'+
+    '<p>A entrambe si applicano le <b>sanzioni interdittive</b> dell\'art. 9, comma 2, lett. b), c), d) ed e): sospensione o revoca di autorizzazioni, divieto di contrattare con la pubblica amministrazione, esclusione da agevolazioni e finanziamenti, divieto di pubblicizzare beni e servizi. È esclusa l\'interdizione dall\'esercizio dell\'attività, per proporzionalità.</p>'+
+    '<p style="margin-top:12px"><b>Conseguenza organizzativa immediata.</b> Se lo schema diventa decreto, i <b>modelli organizzativi 231</b> vanno aggiornati con un presidio dedicato ai sistemi di IA — mappatura dei sistemi ad alto rischio, individuazione delle posizioni di garanzia lungo il ciclo di vita, protocolli sulle misure tecniche e sulla sorveglianza umana, flussi verso l\'organismo di vigilanza. Per le imprese che già hanno un modello, è un cantiere prevedibile; per chi non ce l\'ha, è un argomento in più per costruirlo.</p>'},
+ {n:'art. 17',t:'Accesso alle prove: la documentazione diventa esibibile',s:'ordine di esibizione a favore del danneggiato',badge:['b-draft','Schema'],
+  b:'<p>Lo strumento pensato per superare l\'asimmetria informativa fra chi subisce il danno e chi controlla il sistema, modellato sull\'ordine di esibizione della disciplina antitrust.</p>'+
+    '<p>Il giudice può ordinare alla controparte o al terzo che ne dispone l\'<b>esibizione degli elementi di prova pertinenti</b> sul funzionamento del sistema, su istanza di chi allega di avere subito il danno. Lo standard richiesto all\'istante è quello della <b>verosimiglianza</b> della fondatezza della domanda, anche quanto al collegamento fra l\'output del sistema e il danno lamentato.</p>'+
+    '<p><b>Cosa può essere ordinato di esibire</b>, secondo l\'elencazione esemplificativa: i <i>registri</i> dell\'art. 12 dell\'AI Act, la documentazione del <i>sistema di gestione dei rischi</i> dell\'art. 9, le informazioni pertinenti della <i>documentazione tecnica</i> dell\'art. 11, e le informazioni su parametri e modalità di <i>supervisione umana</i> dell\'art. 14.</p>'+
+    '<p><b>Le conseguenze del rifiuto.</b> In generale il giudice può desumere argomenti di prova ai sensi dell\'art. 116 c.p.c. Ma quando l\'inadempimento riguarda proprio quella documentazione regolatoria, scatta una sanzione più incisiva: i <b>fatti allegati dall\'istante possono essere ritenuti ammessi</b>, previa valutazione di ogni altro elemento. Per il terzo inadempiente è prevista una sanzione pecuniaria da <b>1.500 a 10.000 euro</b>.</p>'+
+    '<p>Sono previste tutele per i segreti commerciali, con rinvio all\'art. 121-ter del codice della proprietà industriale.</p>'+
+    '<p style="margin-top:12px;padding:12px 15px;background:rgba(125,211,252,.07);border-left:3px solid var(--ac);border-radius:0 8px 8px 0"><b>La lettura che conta per un\'impresa.</b> La documentazione che l\'AI Act ti impone di produrre smette di essere un adempimento verso l\'autorità e diventa <i>materiale probatorio nelle mani della controparte</i>. E l\'incentivo si rovescia: chi non ha la documentazione non evita il problema, lo aggrava — perché l\'assenza può tradursi nell\'ammissione dei fatti avversari.</p>'},
+ {n:'art. 18-19',t:'Nesso causale presunto, conformità che non salva',s:'il cuore della riforma sull\'onere della prova',badge:['b-draft','Schema'],
+  b:'<p><b>Art. 18 — presunzione del nesso di causalità.</b> Il nesso fra la violazione di un obbligo previsto dall\'AI Act e il danno è <b>presunto, salvo prova contraria</b>. È una presunzione relativa: l\'inversione riguarda <i>solo</i> il nesso causale, mentre la colpa e la violazione dell\'obbligo restano da provare a carico dell\'attore.</p>'+
+    '<p>È il punto più delicato dell\'intero schema. Nel contenzioso su sistemi complessi, dimostrare che <i>quel</i> output ha causato <i>quel</i> danno è quasi sempre l\'ostacolo insuperabile per il danneggiato. Presumerlo sposta l\'equilibrio in modo sostanziale: al convenuto tocca dimostrare che il danno si sarebbe verificato comunque, o che deriva da altra causa.</p>'+
+    '<p><b>Art. 19 — la conformità non esclude la responsabilità.</b> Il rispetto degli obblighi dell\'AI Act, <i>anche se attestato da certificazione</i> rilasciata ai sensi del capo III, sezione 5, non esclude di per sé la responsabilità del convenuto. La finalità dichiarata è impedire che il sistema di valutazione della conformità si trasformi in un\'immunità sostanziale dalla responsabilità civile.</p>'+
+    '<p>Resta però fermo il <b>valore probatorio</b> della conformità nella valutazione complessiva del comportamento. In pratica: la certificazione non è uno scudo, ma è un argomento — e la sua assenza è un argomento contrario.</p>'+
+    '<p><b>Ambito.</b> L\'accesso alle prove dell\'art. 17 si applica a <i>tutte</i> le azioni risarcitorie, contrattuali ed extracontrattuali, per danni cagionati nell\'utilizzo di un sistema di IA. La presunzione causale e la regola sulla conformità si applicano invece solo alle azioni in cui il danno deriva dalla <b>violazione di un obbligo previsto dall\'AI Act</b>. Sono fatte salve le discipline speciali, fra cui l\'art. 82 del GDPR.</p>'},
+ {n:'art. 20',t:'Azione diretta contro l\'assicuratore',s:'sul modello della RC auto',badge:['b-draft','Schema'],
+  b:'<p>Il danneggiato può agire <b>direttamente contro l\'impresa di assicurazione</b> che copre la responsabilità civile per i danni cagionati nell\'utilizzo di sistemi di IA, nei limiti del massimale, sul modello dell\'art. 144 del codice delle assicurazioni private.</p>'+
+    '<p>Prima del giudizio il danneggiato può chiedere a chi intende citare se esista una copertura assicurativa. Chi riceve la richiesta deve comunicare <b>entro trenta giorni</b> l\'esistenza del contratto, i suoi estremi e la denominazione dell\'impresa. La comunicazione omessa o incompleta è sanzionata sul piano probatorio: il giudice può desumerne argomenti di prova. La richiesta <b>non è condizione di procedibilità</b>.</p>'+
+    '<p>Sono disciplinati i profili tipici dell\'azione diretta: opponibilità al danneggiato delle sole eccezioni contrattuali anteriori al sinistro; diritto di rivalsa dell\'assicuratore verso l\'assicurato; <b>litisconsorzio necessario</b> del soggetto indicato come responsabile; allineamento del termine di prescrizione a quello dell\'azione principale.</p>'+
+    '<p style="margin-top:12px"><b>Effetto collaterale prevedibile:</b> la nascita di un mercato assicurativo dedicato alla responsabilità da IA, e la comparsa di clausole sull\'esistenza e sull\'entità della copertura nelle trattative contrattuali fra fornitori e clienti.</p>'},
+ {n:'359-ter',t:'IA nelle indagini penali e sequestro dei contenuti',s:'nuovo art. 359-ter c.p.p. e modifica alle norme di attuazione',badge:['b-draft','Schema'],
+  b:'<p><b>Identificazione biometrica remota in tempo reale a fini investigativi.</b> Tre ipotesi di impiego: conferma di identificazione e ricerca mirata di un indiziato; localizzazione di un sospetto non identificato; ricerca del latitante destinatario di misura cautelare o di ordine di esecuzione. Il perimetro dei reati è quello dell\'allegato II dell\'AI Act, con l\'ulteriore requisito interno che siano puniti con <b>reclusione non inferiore nel massimo a quattro anni</b>. Un\'ipotesi ulteriore riguarda la ricerca di vittime di sottrazione, tratta o sfruttamento sessuale.</p>'+
+    '<p><b>Garanzie.</b> L\'impiego è subordinato alla richiesta del pubblico ministero al <b>giudice per le indagini preliminari</b> — riserva di giurisdizione, non autorizzazione del PM. L\'autorizzazione deve essere motivata, delimitare l\'area geografica, indicare le persone ricercate e predeterminare il tempo strettamente necessario, <b>non superiore a quindici giorni</b>, prorogabile con decreto motivato. In caso d\'urgenza è previsto un meccanismo di doppia convalida modellato sulle intercettazioni, con termini scanditi: dodici ore per la trasmissione al PM, ventiquattro per la richiesta di convalida al giudice, quarantotto per la decisione.</p>'+
+    '<p><b>Sanzione processuale.</b> I risultati ottenuti fuori dai casi consentiti o in violazione delle prescrizioni sono <b>inutilizzabili</b>, secondo il paradigma dell\'art. 191 c.p.p.; dati, risultati e output vanno cancellati, salvo che costituiscano corpo del reato.</p>'+
+    '<p><b>Rimozione dei contenuti.</b> Viene modificato l\'art. 104 delle norme di attuazione del c.p.p., ampliando l\'ambito del sequestro preventivo mediante ordine ai prestatori di servizi intermediari per includere espressamente i <b>contenuti generati anche con sistemi di IA</b>.</p>'},
+ {n:'Tit. I',t:'IA nell\'attività di polizia',s:'artt. 1-10: il titolo più esteso dello schema',badge:['b-draft','Schema'],
+  b:'<p>Prima disciplina organica dell\'impiego di sistemi di IA nelle attività di polizia, costruita intorno al bilanciamento fra efficacia dell\'azione di prevenzione e contrasto e tutela dei diritti fondamentali.</p><ul>'+
+    '<li><b>Artt. 1-2</b> — oggetto, finalità e definizioni, con rinvio dinamico alle definizioni dell\'art. 3 dell\'AI Act.</li>'+
+    '<li><b>Art. 3</b> — ciclo di vita: ricerca, sperimentazione, sviluppo, addestramento, convalida e utilizzo.</li>'+
+    '<li><b>Art. 4</b> — collaborazione nella ricerca e sperimentazione scientifica.</li>'+
+    '<li><b>Art. 5</b> — sviluppo, realizzazione e prova di determinati sistemi per finalità di polizia.</li>'+
+    '<li><b>Art. 6</b> — formazione del personale di polizia.</li>'+
+    '<li><b>Art. 7</b> — etichettatura, filtraggio e categorizzazione di dati biometrici.</li>'+
+    '<li><b>Art. 8</b> — sistemi di identificazione biometrica remota in tempo reale.</li>'+
+    '<li><b>Art. 9</b> — valutazione d\'impatto sui diritti fondamentali e conservazione delle registrazioni.</li>'+
+    '<li><b>Art. 10</b> — videosorveglianza dotata di tecnologia di riconoscimento.</li></ul>'+
+    '<p>L\'art. 21 detta le disposizioni transitorie per i sistemi già oggetto di rapporti contrattuali o in fase di sviluppo, sperimentazione o utilizzo alla data di entrata in vigore, richiamando i termini di applicazione dell\'AI Act.</p>'+
+    '<p style="margin-top:12px">Per le imprese il titolo è rilevante in via indiretta ma concreta: <b>chi fornisce tecnologie alle forze di polizia</b> troverà qui i requisiti contrattuali, le procedure autorizzative e i vincoli documentali con cui dovrà misurarsi.</p>'}
+]);
+</script>
+<script>
+/* ===== CHECKLIST PER PROFILO ===== */
+(function(){
+  const CK={
+    chk1:[
+      ['Fai l\'inventario dei sistemi di IA in uso','Una riga per sistema: chi lo fornisce, chi lo usa, per cosa, che ruolo abbiamo. È il prerequisito di tutto il resto.'],
+      ['Verifica di non ricadere in nessuna pratica vietata','Art. 5 AI Act. Attenzione al riconoscimento delle emozioni sul luogo di lavoro: è vietato, e compare in più prodotti di quanti si creda.'],
+      ['Documenta le misure di alfabetizzazione IA','Art. 4. Obbligatorio dal 2 febbraio 2025. Basta qualcosa di proporzionato e dimostrabile: formazione, istruzioni operative, linee guida interne.'],
+      ['Adotta una policy interna sull\'uso dell\'IA generativa','Cosa si può inserire nei prompt, cosa no, chi rivede gli output, quali strumenti sono autorizzati. Non è un obbligo di legge, è la difesa più economica.'],
+      ['Se il chatbot parla con clienti, dichiaralo','Art. 50 AI Act, dal 2 agosto 2026. La persona deve sapere di interagire con un sistema di IA, salvo che sia evidente.'],
+      ['Se pubblichi contenuti generati con IA, verifica gli obblighi di dichiarazione','Deepfake e testi su questioni di interesse pubblico hanno regole proprie. La revisione umana con responsabilità editoriale rileva.'],
+      ['Verifica che non entri dalla finestra un uso ad alto rischio','Il caso tipico: uno strumento comprato per altro che finisce a filtrare curricula o valutare prestazioni.'],
+      ['Metti a contratto le garanzie del fornitore','Chiedi documentazione, istruzioni per l\'uso, dichiarazione di conformità e manleve. Costa poco in trattativa, molto dopo.'],
+      ['Coordina con GDPR e sicurezza','Base giuridica, informativa, eventuale DPIA. L\'AI Act si aggiunge al GDPR, non lo sostituisce.']
+    ],
+    chk2:[
+      ['Stabilisci sistema per sistema se sei fornitore o deployer','Non è una qualifica aziendale: cambia per ogni prodotto e per ogni contratto.'],
+      ['Attenzione all\'art. 25 dell\'AI Act','Se apponi il tuo marchio su un sistema ad alto rischio di terzi, o ne modifichi la finalità, diventi fornitore con tutti gli obblighi relativi.'],
+      ['Classifica i tuoi prodotti rispetto ad allegato I e allegato III','Da questa classificazione discende se hai davanti dicembre 2027, agosto 2028, o nessuna delle due.'],
+      ['Se generi contenuti sintetici, pianifica la marcatura leggibile dalla macchina','Art. 50, § 2. Per i sistemi già sul mercato prima del 2 agosto 2026 il termine è il 2 dicembre 2026.'],
+      ['Se sei ad alto rischio, avvia la documentazione tecnica adesso','Allegato IV. PMI e small mid-cap potranno usare il modulo semplificato che la Commissione definirà: monitora quando esce.'],
+      ['Progetta i log fin dall\'inizio','Art. 12. Registrazione automatica degli eventi. Aggiungerli dopo è molto più costoso che prevederli in architettura.'],
+      ['Scrivi istruzioni per l\'uso destinate al deployer','Art. 13. Non è documentazione commerciale: è l\'atto che delimita la tua responsabilità e definisce l\'uso conforme.'],
+      ['Progetta la sorveglianza umana, non dichiararla','Art. 14. Deve essere una misura tecnica e organizzativa effettiva, non una frase nel manuale.'],
+      ['Prepara il monitoraggio post-immissione e la segnalazione incidenti','Artt. 72 e 73. Orientamenti della Commissione attesi entro il 2 settembre 2027.'],
+      ['Conserva tutto in modo ricostruibile','Se lo schema AG 418 diventa decreto, questa documentazione sarà esibibile su ordine del giudice e la sua assenza potrà giocare contro di te.']
+    ],
+    chk3:[
+      ['Parti dal presupposto che sei in allegato III','Selezione, filtro delle candidature, valutazione dei candidati, decisioni su promozione e cessazione, assegnazione dei compiti, monitoraggio delle prestazioni: punto 4 dell\'allegato III.'],
+      ['Verifica se il tuo ATS usa componenti di IA','Molti sistemi di gestione delle candidature includono scoring o ranking automatici senza che sia evidente dall\'interfaccia. Chiedilo per iscritto al fornitore.'],
+      ['Escludi il riconoscimento delle emozioni','Vietato sul luogo di lavoro dall\'art. 5. Riguarda anche gli strumenti di analisi dei colloqui video che valutano espressioni o tono di voce.'],
+      ['Informa i lavoratori e i loro rappresentanti','Art. 26, § 7 AI Act prima della messa in servizio; art. 11 L. 132/2025 con rinvio all\'art. 1-bis del d.lgs. 152/1997. Sono obblighi distinti che convivono.'],
+      ['Informa i candidati e le persone su cui il sistema decide','Art. 86 AI Act: diritto alla spiegazione del ruolo del sistema nella decisione, su richiesta.'],
+      ['Prepara la valutazione d\'impatto sui diritti fondamentali','Art. 27. Verifica se rientri fra i soggetti tenuti. L\'ufficio per l\'IA metterà a disposizione un questionario semplificato.'],
+      ['Affida la sorveglianza umana a chi ha competenza e autorità','Non basta un\'approvazione formale: chi supervisiona deve poter effettivamente disattendere il suggerimento del sistema.'],
+      ['Conserva i log almeno sei mesi','Obbligo del deployer di sistemi ad alto rischio, salvo diverse previsioni di legge.'],
+      ['Metti in calendario il 2 dicembre 2027','È la data in cui questi obblighi diventano esigibili. Sedici mesi sembrano tanti finché non si prova a mappare i processi.']
+    ],
+    chk4:[
+      ['Riscrivi l\'informativa al cliente','Art. 13 L. 132/2025: le informazioni sui sistemi di IA utilizzati vanno comunicate con linguaggio chiaro, semplice ed esaustivo. È l\'adempimento più immediato e non richiede tecnologia.'],
+      ['Verifica che l\'IA resti strumentale','La legge richiede la prevalenza del lavoro intellettuale oggetto della prestazione. L\'output non revisionato non è la prestazione professionale.'],
+      ['Stabilisci quali attività sono assistite da IA, e scrivilo','Ricerca, prima stesura, sintesi documentale, revisione linguistica. Un elenco specifico regge meglio di una clausola generica.'],
+      ['Definisci una regola sulla riservatezza dei dati dei clienti','Quali strumenti sono autorizzati, cosa non può mai essere inserito in un prompt, dove risiedono i dati. Il segreto professionale non conosce eccezioni tecnologiche.'],
+      ['Documenta la revisione umana','Chi controlla cosa, e come lo si dimostra a posteriori. È la difesa naturale in caso di contestazione.'],
+      ['Verifica gli obblighi deontologici del tuo ordine','Alcuni ordini professionali hanno adottato o stanno adottando indicazioni proprie, che si sommano alla legge.'],
+      ['Segui la delega sull\'equo compenso','L\'art. 24 della L. 132/2025 prevede fra i criteri direttivi la possibilità di riconoscere un equo compenso modulabile su responsabilità e rischi connessi all\'uso dell\'IA, oltre a percorsi di alfabetizzazione tramite ordini e associazioni.'],
+      ['Non dare per scontato che sia tutto a basso rischio','Se lo studio usa strumenti di valutazione del merito creditizio o assicurativo per conto di clienti, il quadro cambia.']
+    ],
+    chk5:[
+      ['Mappa gli usi che ricadono nel punto 5 dell\'allegato III','Valutazione dell\'affidabilità creditizia e del merito di credito; valutazione dei rischi e determinazione dei prezzi per assicurazioni vita e salute. Sono espressamente ad alto rischio.'],
+      ['Ricorda l\'esclusione per l\'antifrode','I sistemi utilizzati al solo scopo di individuare frodi finanziarie sono esclusi dalla qualificazione ad alto rischio per il credito.'],
+      ['Verifica chi è la tua autorità di vigilanza del mercato','Per il settore bancario, finanziario e assicurativo restano competenti Banca d\'Italia, CONSOB e IVASS ai sensi dell\'art. 74, § 6 dell\'AI Act.'],
+      ['Prepara la valutazione d\'impatto sui diritti fondamentali','Art. 27: chi usa IA per merito creditizio o per prezzi e rischi in assicurazioni vita e salute rientra espressamente fra i soggetti tenuti.'],
+      ['Integra la conformità AI Act nel quadro prudenziale esistente','Modello di gestione dei rischi, validazione dei modelli, funzione di controllo: le strutture ci sono già, vanno estese ai sistemi di IA.'],
+      ['Presta attenzione all\'art. 185 TUF','La L. 132/2025 ha aggiunto una circostanza specifica per la manipolazione del mercato commessa mediante sistemi di IA: reclusione da due a sette anni e multa fino a sei milioni.'],
+      ['Verifica lo spazio di sperimentazione per gli istituti finanziari','La L. 132/2025 fa salvo il regime dell\'art. 36 del d.l. 34/2019 per la sperimentazione di sistemi di IA destinati a istituti finanziari.'],
+      ['Prepara il modello 231 all\'arrivo del nuovo reato presupposto','Se lo schema AG 418 diventa decreto, il nuovo art. 437-bis c.p. entra nel catalogo con sanzioni nella fascia alta e sanzioni interdittive.'],
+      ['Considera il rischio contenzioso civile','Presunzione del nesso causale, accesso alle prove, azione diretta contro l\'assicuratore: il profilo di rischio civile su decisioni automatizzate di massa cambia sensibilmente.']
+    ]
+  };
+  for(const id in CK){
+    const w=document.getElementById(id); if(!w)continue;
+    CK[id].forEach(([t,s])=>{
+      const d=document.createElement('div'); d.className='chk-i';
+      d.innerHTML='<div class="chk-box">&#10003;</div><div class="chk-tx">'+t+'<small>'+s+'</small></div>';
+      d.addEventListener('click',()=>d.classList.toggle('done'));
+      w.appendChild(d);
+    });
+  }
+})();
+
+/* ===== QUIZ ===== */
+(function(){
+  const Q=[
+    {q:'Un\'azienda usa ChatGPT per scrivere email commerciali. Nessun sistema ad alto rischio. Ha già obblighi oggi?',
+     o:['No, gli obblighi partono dal 2 dicembre 2027 con i sistemi ad alto rischio',
+        'Sì: alfabetizzazione IA e divieti si applicano dal 2 febbraio 2025 a prescindere dal livello di rischio, e dal 2 agosto 2026 si aggiungono gli obblighi di trasparenza dell\'art. 50',
+        'No, perché è deployer e non fornitore'],
+     a:1,e:'Gli artt. 4 e 5 dell\'AI Act si applicano a fornitori e deployer di qualunque sistema, senza soglia di rischio, dal 2 febbraio 2025. Il rinvio introdotto dall\'Omnibus riguarda solo il capo III, sezioni 1, 2 e 3 — cioè i sistemi ad alto rischio.'},
+    {q:'La legge italiana 132/2025 ha introdotto l\'obbligo di etichettare i contenuti generati con IA?',
+     o:['Sì, è la novità principale della legge',
+        'No: il testo definitivo non contiene un obbligo di marcatura. L\'obbligo esiste, ma sta nell\'art. 50 dell\'AI Act',
+        'Sì, ma solo per i contenuti audiovisivi trasmessi in televisione'],
+     a:1,e:'La previsione era presente in una versione precedente del disegno di legge ma non è sopravvissuta nel testo approvato. Cercare l\'obbligo nella legge italiana porta anche a sbagliare la scadenza: quella dell\'art. 50 è il 2 agosto 2026, con transitorio al 2 dicembre 2026 per i sistemi già in commercio.'},
+    {q:'Compri un sistema di IA ad alto rischio da un fornitore terzo e lo rivendi ai tuoi clienti con il tuo marchio. Che ruolo hai?',
+     o:['Distributore: ti limiti a mettere a disposizione sul mercato',
+        'Deployer, perché non l\'hai sviluppato tu',
+        'Fornitore: apporre il proprio marchio su un sistema ad alto rischio già immesso sul mercato fa scattare gli obblighi del fornitore'],
+     a:2,e:'È l\'art. 25 dell\'AI Act. Lo stesso effetto si produce se modifichi sostanzialmente la finalità del sistema, o se lo modifichi in modo da renderlo ad alto rischio. Il fornitore originario esce di scena e tu ne assumi tutti gli obblighi — inclusa la documentazione tecnica che potresti non avere.'},
+    {q:'Il tuo sistema ad alto rischio ha ottenuto la certificazione di conformità. Un cliente ti fa causa per un danno. Che effetto ha la certificazione?',
+     o:['Esclude la responsabilità: la conformità è una causa di esonero',
+        'Nessuno: la responsabilità civile è del tutto indipendente dalla conformità regolatoria',
+        'Non esclude la responsabilità, ma conserva valore probatorio nella valutazione complessiva del comportamento'],
+     a:2,e:'È la regola dell\'art. 19 dello schema AG 418, pensata per impedire che la valutazione di conformità diventi un\'immunità sostanziale. La certificazione non è uno scudo, ma è un argomento a tuo favore — e simmetricamente la sua assenza è un argomento contro.'},
+    {q:'Cosa succede se, in un giudizio risarcitorio, non esibisci la documentazione tecnica che l\'AI Act ti impone di avere?',
+     o:['Nulla: nessuno può obbligarti a produrre documenti riservati',
+        'Il giudice può ritenere ammessi i fatti allegati dalla controparte, previa valutazione degli altri elementi',
+        'Scatta automaticamente una sanzione amministrativa dell\'autorità di vigilanza'],
+     a:1,e:'Art. 17 dello schema AG 418. È una sanzione probatoria più incisiva del semplice argomento di prova, calibrata proprio sulla documentazione regolatoria. Il messaggio implicito è chiaro: non averla non ti mette al riparo, ti espone di più. Per il terzo inadempiente è prevista anche una sanzione pecuniaria da 1.500 a 10.000 euro.'},
+    {q:'L\'Omnibus digitale ha rinviato le scadenze. Quali obblighi sono slittati?',
+     o:['Tutto l\'AI Act è slittato al 2 dicembre 2027',
+        'Solo il capo III, sezioni 1, 2 e 3: allegato III al 2 dicembre 2027, allegato I al 2 agosto 2028. Divieti, trasparenza e sanzioni restano alle date originarie',
+        'Sono slittati i divieti dell\'art. 5, ora applicabili dal 2 dicembre 2026'],
+     a:1,e:'La terza risposta contiene un\'insidia: al 2 dicembre 2026 si applicano i due divieti *nuovi* introdotti dall\'Omnibus — nudificazione non consensuale e materiale pedopornografico sintetico — non i divieti originari dell\'art. 5, che sono in vigore dal 2 febbraio 2025.'},
+    {q:'Uno strumento di videocolloquio analizza le espressioni facciali dei candidati per valutarne l\'entusiasmo. Come si qualifica?',
+     o:['Sistema ad alto rischio: rientra nel punto 4 dell\'allegato III',
+        'Pratica vietata: il riconoscimento delle emozioni sul luogo di lavoro è proibito dall\'art. 5',
+        'Rischio di trasparenza: basta informare i candidati'],
+     a:1,e:'L\'art. 5 vieta l\'inferenza delle emozioni sul luogo di lavoro e negli istituti di istruzione, salve le finalità mediche o di sicurezza. Non c\'è conformità possibile né informativa che tenga: il sistema non si può usare. È la fattispecie in cui più spesso ci si imbatte senza accorgersene, perché arriva incorporata in prodotti venduti come strumenti di selezione.'},
+    {q:'La legge 132/2025 impone alle imprese adempimenti tecnici nuovi rispetto all\'AI Act?',
+     o:['Sì, molti: è la normativa di attuazione italiana',
+        'No: l\'art. 3, comma 5, esclude espressamente obblighi nuovi. Ciò che aggiunge sono principi settoriali, obblighi informativi in materie nazionali, norme penali e deleghe',
+        'Sì, ma solo per la pubblica amministrazione'],
+     a:1,e:'Uno Stato membro non può appesantire unilateralmente un regolamento armonizzato. Restano però nella competenza nazionale il penale, il civile, l\'organizzazione delle autorità e i settori come lavoro, sanità, giustizia e professioni — ed è esattamente lì che la legge italiana interviene, con obblighi informativi che sono reali anche se non "tecnici".'}
+  ];
+  const box=document.getElementById('quizbox'); let done=0,right=0;
+  Q.forEach((q,i)=>{
+    const d=document.createElement('div'); d.className='q';
+    d.innerHTML='<div class="q-q"><i>'+String(i+1).padStart(2,'0')+'</i>'+q.q+'</div>'+
+      q.o.map((o,j)=>'<button class="opt" data-j="'+j+'">'+o+'</button>').join('')+
+      '<div class="q-ex"><strong>Perché.</strong> '+q.e+'</div>';
+    d.querySelectorAll('.opt').forEach(b=>{
+      b.addEventListener('click',()=>{
+        if(d.dataset.done)return; d.dataset.done='1'; done++;
+        const j=+b.dataset.j;
+        d.querySelectorAll('.opt').forEach((x,k)=>{x.disabled=true;
+          if(k===q.a)x.classList.add('right'); else if(k===j)x.classList.add('wrong');});
+        if(j===q.a)right++;
+        d.querySelector('.q-ex').classList.add('show');
+        if(done===Q.length){
+          const r=document.getElementById('quizres'); r.style.display='block';
+          document.getElementById('qr-t').textContent=right+' / '+Q.length;
+          document.getElementById('qr-s').textContent =
+            right===Q.length?'Pieno. Hai il quadro giusto: obblighi diversi, soggetti diversi, date diverse.':
+            right>=6?'Solido. Rileggi le spiegazioni sbagliate: di solito nascondono la confusione fra fonte europea e fonte italiana.':
+            right>=4?'A metà. Le parti 2, 3 e 4 sono quelle da rivedere: ruolo, livello di rischio e calendario.':
+            'Vale la pena rifare il percorso dalla Parte 1. La distinzione fra i quattro testi è il presupposto di tutto il resto.';
+          r.scrollIntoView({behavior:'smooth',block:'nearest'});
+        }
+      });
+    });
+    box.appendChild(d);
+  });
+})();
+
+/* ===== FONTI ===== */
+(function(){
+  const S=[
+    ['Reg. UE 2024/1689 — Regolamento sull\'intelligenza artificiale (AI Act)','Testo integrale, GU L del 12 luglio 2024. Fonte primaria per ruoli, classificazione del rischio, obblighi, sanzioni (art. 99), allegati I e III e calendario di applicazione (art. 113).','http://data.europa.eu/eli/reg/2024/1689/oj'],
+    ['Reg. UE 2026/1744 — Omnibus digitale sull\'IA','Regolamento che modifica i regolamenti (UE) 2024/1689, 2018/1139 e 2023/1230 quanto alla semplificazione dell\'attuazione di regole armonizzate sull\'IA. Pubblicato in GUUE il 24 luglio 2026, in vigore dal 27 luglio 2026. Testo consolidato del documento PE-CONS 30/26.','https://eur-lex.europa.eu/'],
+    ['Legge 23 settembre 2025, n. 132','Disposizioni e deleghe al Governo in materia di intelligenza artificiale. Pubblicata in GU n. 223 del 25 settembre 2025, in vigore dal 10 ottobre 2025.','https://www.normattiva.it/'],
+    ['Atto del Governo n. 418 — Schema di decreto legislativo','Adeguamento della normativa nazionale al Reg. UE 2024/1689 in materia di utilizzo dei sistemi di IA per l\'attività di polizia e di responsabilità penale e civile. Trasmesso alla Presidenza del Senato il 24 giugno 2026. Comprende relazione illustrativa, relazione tecnica e articolato.','https://www.senato.it/'],
+    ['Giurisprudenza Penale — Pubblicazione in GU della L. 132/2025','Conferma della data di pubblicazione e di entrata in vigore della legge italiana.','https://www.giurisprudenzapenale.com/2025/09/26/intelligenza-artificiale-pubblicata-in-gazzetta-ufficiale-e-in-vigore-dal-10-ottobre-2025-la-legge-23-settembre-2025-n-132/'],
+    ['Altalex — Il Digital Omnibus sull\'IA in GUUE: cosa cambia per le imprese','Conferma della pubblicazione e della numerazione del regolamento di semplificazione.','https://www.altalex.com/documents/2026/07/27/digital-omnibus-intelligenza-artificiale-guue-cambia-imprese'],
+    ['Key4biz — AI Act, pubblicate in Gazzetta UE le modifiche del Digital Omnibus','Cronaca della pubblicazione e sintesi delle principali modifiche.','https://www.key4biz.it/ai-act-pubblicate-in-gazzetta-ufficiale-ue-le-modifiche-del-digital-omnibus/582570/'],
+    ['Diritto Bancario — Digital omnibus sull\'IA: in GU UE le modifiche all\'AI Act','Analisi delle modifiche con taglio bancario e finanziario.','https://www.dirittobancario.it/art/digital-omnibus-sullia-in-gu-ue-le-modifiche-allai-act/']
+  ];
+  const w=document.getElementById('fonti-box'); if(!w)return;
+  S.forEach(([t,d,u],i)=>{
+    const li=document.createElement('li'); li.id='src-'+(i+1);
+    li.innerHTML='<a href="'+u+'" target="_blank" rel="noopener">'+t+'</a><span>'+d+'</span>';
+    w.appendChild(li);
+  });
+})();
+</script>
+</body>
+</html>
