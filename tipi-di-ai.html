@@ -220,6 +220,26 @@
     font-size:13.5px;color:var(--ink-faint);
   }
 
+  /* ---------- deep link ---------- */
+  .card{scroll-margin-top:90px}
+  .card.flash{
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-soft);
+    animation:flash 1.8s ease;
+  }
+  @keyframes flash{
+    0%,55%{box-shadow:0 0 0 6px var(--accent-soft)}
+    100%{box-shadow:0 0 0 3px var(--accent-soft)}
+  }
+  .backlink{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:14px;font-weight:600;color:var(--ink-soft);
+    text-decoration:none;background:var(--panel);
+    border:1px solid var(--line);border-radius:20px;
+    padding:8px 16px;margin-bottom:22px;transition:all .15s;
+  }
+  .backlink:hover{border-color:var(--accent);color:var(--accent)}
+
   @media(max-width:640px){
     h1{font-size:32px}
     h2{font-size:24px}
@@ -236,6 +256,7 @@
 <div class="wrap">
 
 <header>
+  <a class="backlink" href="tipi-di-ai-index.html">← Torna alla mappa visuale</a>
   <div class="eyebrow">Guida di orientamento · per decision maker</div>
   <h1>I tipi di Intelligenza Artificiale:<br>una mappa che funziona davvero</h1>
   <p class="lede">Le classificazioni che si trovano online mescolano categorie che non stanno sulla stessa scala. Questa guida le separa in cinque assi indipendenti, con esempi concreti e le implicazioni pratiche per chi deve decidere cosa comprare, cosa vietare e di cosa preoccuparsi.</p>
@@ -273,7 +294,7 @@
     <div class="axis-question">Domanda: quanto è ampio il dominio in cui il sistema è competente?</div>
     <p class="axis-intro">Questo è l'asse più citato e il più frainteso. Non misura quanto un sistema è «bravo», ma quanto è <em>largo</em>. Un sistema può essere sovrumano in un compito e restare AI ristretta, perché fuori da quel compito non esiste. È l'asse su cui si collocano ANI, AGI e ASI.</p>
 
-    <div class="card">
+    <div class="card" id="c-ani">
       <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">AI ristretta (ANI — Artificial Narrow Intelligence)<span class="card-sub">Competenza altissima in un dominio delimitato, zero fuori da esso</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>Un sistema addestrato per una classe specifica di compiti, che non trasferisce la propria competenza al di fuori del perimetro per cui è stato costruito. <strong>Tutta l'AI in produzione nel mondo, senza eccezioni, è AI ristretta.</strong> Compreso ogni sistema che vi sembra «generale».</p></div>
@@ -283,7 +304,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="c-agi">
       <div class="card-head"><span class="badge b-partial">Contesa</span><span class="card-title">AI generale (AGI — Artificial General Intelligence)<span class="card-sub">Competenza trasferibile a qualunque compito cognitivo umano</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>Un sistema capace di apprendere e svolgere qualunque compito intellettuale che un essere umano può svolgere, trasferendo competenza da un dominio all'altro senza essere riaddestrato da zero. Il punto critico non è la performance: è la <strong>generalità del trasferimento</strong>.</p><p>Non esiste una definizione operativa condivisa di AGI, e questa non è una nota a piè di pagina: è il motivo per cui il dibattito «l'AGI è vicina?» non converge mai. Le parti in causa misurano cose diverse.</p></div>
@@ -293,7 +314,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="c-asi">
       <div class="card-head"><span class="badge b-theory">Ipotetica</span><span class="card-title">Superintelligenza (ASI — Artificial Superintelligence)<span class="card-sub">Prestazione cognitiva molto superiore a quella umana in quasi ogni dominio</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>Nick Bostrom, nel volume <em>Superintelligence</em> (Oxford University Press, 2014), la definisce come «qualunque intelletto che superi largamente la performance cognitiva degli esseri umani in virtualmente tutti i domini di interesse». Bostrom distingue tre forme: <strong>di velocità</strong> (fa quello che fa una mente umana, ma enormemente più in fretta), <strong>collettiva</strong> (moltissime menti coordinate che insieme superano qualunque sistema cognitivo esistente) e <strong>di qualità</strong> (pensa in modi che a noi sono semplicemente preclusi).</p></div>
@@ -303,7 +324,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="c-singolarita">
       <div class="card-head"><span class="badge b-info">Non è un tipo di AI</span><span class="card-title">Singolarità tecnologica<span class="card-sub">Un evento ipotizzato, non una categoria di sistema</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>Qui va corretto l'errore di categoria più diffuso di tutta la lista: <strong>la singolarità non è un tipo di intelligenza artificiale.</strong> È l'ipotesi di un <em>momento storico</em> in cui il progresso tecnologico diventerebbe così rapido e profondo da rendere il futuro oltre quel punto non predicibile con le nostre categorie attuali.</p><p>Il termine risale a John von Neumann, riportato da Stanisław Ulam dopo la sua morte nel 1957: «l'accelerazione costante del progresso tecnologico dà l'apparenza di avvicinarsi a una singolarità essenziale nella storia della specie, oltre la quale le vicende umane come le conosciamo non potrebbero continuare». Vernor Vinge l'ha reso celebre nel saggio del 1993 <em>The Coming Technological Singularity</em>, presentato a un simposio NASA, legandolo esplicitamente alla creazione di entità con intelligenza superiore all'umana. Ray Kurzweil l'ha portato al grande pubblico nel 2005, indicando il 2045 come data.</p></div>
@@ -319,7 +340,7 @@
     <div class="axis-question">Domanda: con quale tecnica è costruito il sistema?</div>
     <p class="axis-intro">Questo asse è annidato: ogni voce è un sottoinsieme della precedente. Machine learning, deep learning e AI generativa non sono alternative tra cui scegliere — sono cerchi concentrici. Confonderli con l'asse della capacità è la causa numero uno del disorientamento generale.</p>
 
-    <div class="card">
+    <div class="card" id="t-simbolica">
       <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">AI simbolica (o basata su regole)<span class="card-sub">Il comportamento è scritto a mano da esseri umani</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>Il paradigma dominante dagli anni '50 agli anni '80: la conoscenza viene codificata esplicitamente in regole, alberi decisionali e ontologie da esperti umani. La macchina non impara nulla — esegue ciò che qualcuno ha scritto. È AI a tutti gli effetti, nella definizione classica del manuale di riferimento della disciplina (Russell &amp; Norvig, <em>Artificial Intelligence: A Modern Approach</em>).</p></div>
@@ -329,7 +350,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="t-ml">
       <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">Machine Learning<span class="card-sub">Il comportamento viene ricavato dai dati, non scritto</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>La svolta metodologica: invece di scrivere le regole, si mostrano al sistema molti esempi di input e output corretti, e un algoritmo di ottimizzazione ricava da solo la funzione che li collega. Il ML è un <strong>sottoinsieme</strong> dell'AI, non un'alternativa. Le tre famiglie classiche sono apprendimento supervisionato (esempi etichettati), non supervisionato (struttura nascosta nei dati) e per rinforzo (ricompensa e punizione).</p></div>
@@ -339,7 +360,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="t-dl">
       <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">Deep Learning<span class="card-sub">Machine learning con reti neurali profonde</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>Sottoinsieme del ML che usa reti neurali artificiali con molti strati. La proprietà decisiva è il <strong>feature learning</strong>: il sistema impara da solo quali caratteristiche dei dati siano rilevanti, invece di riceverle predefinite da un ingegnere. È il motivo per cui dal 2012 in poi visione artificiale, riconoscimento vocale e linguaggio hanno fatto salti che vent'anni di lavoro precedente non avevano prodotto.</p></div>
@@ -349,7 +370,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="t-generativa">
       <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">AI generativa<span class="card-sub">Produce contenuto nuovo invece di classificare l'esistente</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>Sottoinsieme del deep learning i cui modelli generano output nello stesso spazio dei dati di addestramento — testo, immagini, audio, codice, strutture molecolari — invece di limitarsi a emettere un'etichetta o un numero. La distinzione operativa è netta: l'AI <em>discriminativa</em> risponde «questa email è spam?»; l'AI <em>generativa</em> risponde «scrivimi la risposta a questa email».</p></div>
@@ -359,7 +380,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="t-agentica">
       <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">AI agentica<span class="card-sub">Non produce solo output: compie azioni</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>Sistemi che usano un modello generativo come motore decisionale all'interno di un ciclo: ricevono un obiettivo, lo scompongono in passi, invocano strumenti esterni (API, database, browser, terminale), osservano il risultato e correggono la rotta. Il salto rispetto al generativo puro non è nella qualità del modello ma nel <strong>permesso di agire sul mondo</strong>.</p></div>
@@ -375,7 +396,7 @@
     <div class="axis-question">Domanda: il sistema capisce davvero, o simula la comprensione?</div>
     <p class="axis-intro">Questo è l'asse dove si annida l'equivoco più costoso. «AI debole» e «AI forte» sono termini di <strong>filosofia della mente</strong>, coniati da John Searle nel 1980. Non misurano quanto un sistema è potente. Molte fonti li usano come sinonimi sciatti di «ristretta» e «generale»: è un uso scorretto che rende impossibile capire il dibattito originale.</p>
 
-    <div class="card">
+    <div class="card" id="f-debole">
       <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">AI debole (Weak AI)<span class="card-sub">La macchina simula il pensiero — utile strumento, nessuna mente</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>Nella tesi dell'AI debole, il computer è uno strumento potentissimo per <em>studiare</em> e <em>simulare</em> la mente, ma la sua apparente comprensione non è comprensione reale: è comprensione «come se». Il sistema manipola simboli in modo corretto senza che nulla, al suo interno, significhi qualcosa. <strong>Ogni sistema oggi esistente è AI debole</strong> — è la posizione di consenso, non una posizione minoritaria.</p></div>
@@ -385,7 +406,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="f-forte">
       <div class="card-head"><span class="badge b-theory">Ipotetica e contestata</span><span class="card-title">AI forte (Strong AI)<span class="card-sub">La macchina non simula una mente: è una mente</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>Nella formulazione di Searle, secondo la tesi dell'AI forte «il computer non è semplicemente uno strumento nello studio della mente; piuttosto, il computer opportunamente programmato <em>è</em> realmente una mente, nel senso che si può letteralmente dire che comprende e ha altri stati cognitivi». Searle formulò la Stanza Cinese proprio per <em>confutare</em> questa tesi, non per sostenerla.</p></div>
@@ -401,7 +422,7 @@
     <div class="axis-question">Domanda: cosa può ricordare, capire degli altri e sapere di sé?</div>
     <p class="axis-intro">Classificazione proposta da Arend Hintze (Michigan State University) in un articolo del 2016 su <em>The Conversation</em>. Invece di raggruppare i sistemi per dominio applicativo, li ordina per <strong>profondità cognitiva</strong>. È l'asse più utile per capire perché certi comportamenti che ci aspettiamo dalle macchine non arrivano mai.</p>
 
-    <div class="card">
+    <div class="card" id="k-reattive">
       <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">Tipo 1 — Macchine reattive<span class="card-sub">Nessuna memoria, nessun passato: solo lo stato presente</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>Sistemi che percepiscono la situazione attuale e reagiscono, senza formare memorie e senza usare l'esperienza passata per informare la decisione presente.</p></div>
@@ -411,7 +432,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="k-memoria">
       <div class="card-head"><span class="badge b-real">Esiste oggi</span><span class="card-title">Tipo 2 — Memoria limitata<span class="card-sub">Usa il passato recente, ma non lo integra in un'esperienza duratura</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>Sistemi che usano osservazioni passate per informare le decisioni presenti, entro una finestra temporale delimitata. <strong>È qui che si trova tutta l'AI avanzata odierna</strong>, modelli linguistici e guida autonoma compresi.</p></div>
@@ -421,7 +442,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="k-teoria">
       <div class="card-head"><span class="badge b-partial">Ricerca aperta</span><span class="card-title">Tipo 3 — Teoria della mente<span class="card-sub">Comprendere che gli altri hanno credenze, intenzioni e stati mentali propri</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>Sistemi capaci di rappresentare gli stati mentali altrui — sapere che l'altro <em>crede</em> qualcosa, che quella credenza può essere falsa, e che questo influenza il suo comportamento. Alcuni ricercatori sostengono che i modelli linguistici di grandi dimensioni mostrino capacità proto-teoria-della-mente in contesti limitati; sono affermazioni contestate, e nessun sistema in produzione soddisfa la definizione piena di Hintze.</p></div>
@@ -431,7 +452,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="k-autocoscienza">
       <div class="card-head"><span class="badge b-theory">Puramente teorico</span><span class="card-title">Tipo 4 — Autocoscienza<span class="card-sub">Il sistema forma una rappresentazione di sé stesso</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>Il livello finale della scala di Hintze: un sistema che non solo modella gli altri, ma modella sé stesso — la propria esistenza, le proprie capacità, i propri limiti e obiettivi. Puramente teorico. Non esiste né un prototipo né un percorso tecnico condiviso per arrivarci.</p></div>
@@ -449,7 +470,7 @@
 
     <div class="note"><p><strong>Perché conta la data.</strong> Il 2 agosto 2025 sono entrate in applicazione le regole sui modelli per finalità generali (GPAI). Il 2 agosto 2026 è la scadenza più rilevante del calendario residuo: si applica la maggior parte delle regole, incluse quelle sui sistemi ad alto rischio dell'Allegato III e gli obblighi di trasparenza dell'articolo 50, e le autorità nazionali di vigilanza acquisiscono pieni poteri di indagine e sanzione. Per i modelli GPAI immessi sul mercato prima del 2 agosto 2025 il termine di adeguamento è il 2 agosto 2027.</p></div>
 
-    <div class="card">
+    <div class="card" id="r-inaccettabile">
       <div class="card-head"><span class="badge b-info">Vietato</span><span class="card-title">Rischio inaccettabile<span class="card-sub">Pratiche proibite nell'Unione Europea</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>Usi considerati incompatibili con i diritti fondamentali e quindi vietati: manipolazione subliminale o sfruttamento di vulnerabilità che causino danno significativo, punteggio sociale generalizzato da parte di autorità pubbliche, identificazione biometrica remota in tempo reale in spazi pubblici a fini di law enforcement (salvo eccezioni strettamente definite), riconoscimento delle emozioni sul posto di lavoro e in ambito scolastico.</p></div>
@@ -459,7 +480,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="r-alto">
       <div class="card-head"><span class="badge b-info">Fortemente regolato</span><span class="card-title">Alto rischio<span class="card-sub">Permesso, ma con obblighi sostanziali</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p>Sistemi usati in ambiti elencati nell'Allegato III o come componenti di sicurezza di prodotti regolati: selezione del personale, accesso al credito, istruzione, servizi pubblici essenziali, giustizia, infrastrutture critiche, dispositivi medici. Sono ammessi, ma richiedono gestione del rischio documentata, qualità dei dati, documentazione tecnica, log, sorveglianza umana, robustezza e accuratezza dimostrate.</p></div>
@@ -469,7 +490,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="r-limitato">
       <div class="card-head"><span class="badge b-info">Trasparenza</span><span class="card-title">Rischio limitato e rischio minimo<span class="card-sub">La grande maggioranza dei sistemi</span></span><span class="chev">▶</span></div>
       <div class="card-body">
         <div class="field"><div class="field-label">Definizione</div><p><strong>Rischio limitato</strong>: sistemi che interagiscono con persone o generano contenuti, soggetti a obblighi di trasparenza ai sensi dell'articolo 50 — l'utente deve sapere che sta parlando con una macchina, i contenuti sintetici devono essere identificabili come tali. <strong>Rischio minimo</strong>: tutto il resto, senza obblighi specifici, dai filtri antispam ai sistemi di raccomandazione alla manutenzione predittiva.</p></div>
@@ -635,6 +656,31 @@
       head.parentElement.classList.toggle('open');
     });
   });
+
+  // deep linking: apre il tab giusto, espande la scheda, evidenzia
+  function openFromHash(){
+    var id = decodeURIComponent(location.hash.replace('#',''));
+    if(!id) return;
+    var card = document.getElementById(id);
+    if(!card || !card.classList.contains('card')) return;
+
+    var panel = card.closest('.axis-panel');
+    if(panel){
+      var btn = document.querySelector('.axis-nav button[data-panel="'+panel.id+'"]');
+      if(btn) btn.click();
+    }
+    card.classList.add('open');
+    document.querySelectorAll('.card.flash').forEach(function(c){ c.classList.remove('flash'); });
+    // reflow per riavviare l'animazione
+    void card.offsetWidth;
+    card.classList.add('flash');
+    setTimeout(function(){
+      card.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 60);
+  }
+
+  window.addEventListener('hashchange', openFromHash);
+  window.addEventListener('load', openFromHash);
 </script>
 </body>
 </html>
