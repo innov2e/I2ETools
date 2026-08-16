@@ -21,6 +21,26 @@
     color:var(--text);
     padding:40px 24px 80px;
   }
+  /* rimando alla pagina indice del sito */
+  .backlink-row{
+    text-align:center;
+    margin:0 0 22px;
+  }
+  .backlink{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:0.85rem;
+    font-weight:600;
+    color:var(--muted);
+    text-decoration:none;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:7px 15px;
+    transition:all .15s;
+  }
+  .backlink:hover{border-color:var(--accent);color:var(--accent)}
   h1{
     font-size:1.5rem;
     margin:0 0 4px;
@@ -180,6 +200,8 @@
 </style>
 </head>
 <body>
+
+<div class="backlink-row"><a class="backlink" href="index.html">← Indice</a></div>
 
 <h1>Le tappe che hanno cambiato il mondo</h1>
 <p class="sub">Clicca su una data per leggere i dettagli</p>

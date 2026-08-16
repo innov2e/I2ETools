@@ -27,6 +27,9 @@ a:hover{text-decoration:underline}
   border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;padding:0 20px}
 .brand{font-weight:700;font-size:14.5px;white-space:nowrap;letter-spacing:-.2px}
 .brand span{color:var(--ac)}
+.homelink{color:var(--tx-3);font-size:13px;font-weight:600;white-space:nowrap;
+  padding:6px 11px;border:1px solid var(--line);border-radius:7px;transition:.15s}
+.homelink:hover{color:var(--ac);border-color:var(--ac);text-decoration:none}
 .topnav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1}
 .topnav::-webkit-scrollbar{display:none}
 .topnav a{color:var(--tx-3);font-size:12.5px;padding:6px 9px;border-radius:7px;white-space:nowrap;transition:.15s;font-weight:500}
@@ -211,6 +214,7 @@ footer{border-top:1px solid var(--line);padding:36px 28px;text-align:center;colo
 
 <div class="progress" id="prog"></div>
 <div class="topbar">
+  <a class="homelink" href="index.html">← Indice</a>
   <div class="brand">Normativa <span>IA</span></div>
   <nav class="topnav" id="nav">
     <a href="#mappa">1. La mappa</a>

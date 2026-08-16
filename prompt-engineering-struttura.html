@@ -41,6 +41,9 @@ a{color:var(--ac);text-decoration:none}
 }
 .brand{font-weight:700;font-size:15px;letter-spacing:-.2px;white-space:nowrap}
 .brand span{color:var(--ac)}
+.homelink{color:var(--tx-3);font-size:13px;font-weight:600;white-space:nowrap;
+  padding:6px 11px;border:1px solid var(--line);border-radius:7px;transition:.15s}
+.homelink:hover{color:var(--ac);border-color:var(--ac);text-decoration:none}
 .topnav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1}
 .topnav::-webkit-scrollbar{display:none}
 .topnav a{
@@ -317,6 +320,7 @@ footer{
 
 <div class="progress" id="prog"></div>
 <div class="topbar">
+  <a class="homelink" href="index.html">← Indice</a>
   <div class="brand">Anatomia del <span>Prompt</span></div>
   <nav class="topnav" id="nav">
     <a href="#analisi">1. Analisi</a>

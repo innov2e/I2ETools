@@ -44,6 +44,14 @@
     position:relative;font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
     color:var(--a1);font-weight:700;margin-bottom:18px;
   }
+  /* rimando alla pagina indice del sito */
+  .backlink{
+    position:relative;display:inline-flex;align-items:center;gap:8px;
+    font-size:14px;font-weight:600;color:var(--ink-soft);text-decoration:none;
+    background:var(--panel2);border:1px solid var(--line);border-radius:20px;
+    padding:8px 16px;margin-bottom:22px;transition:all .15s;
+  }
+  .backlink:hover{border-color:var(--a1);color:var(--a1)}
   h1{
     position:relative;font-size:clamp(34px,6vw,62px);line-height:1.04;margin:0 0 22px;
     letter-spacing:-.035em;font-weight:800;
@@ -269,6 +277,7 @@
 <div class="wrap">
 
 <div class="hero">
+  <a class="backlink" href="index.html">← Indice</a>
   <div class="eyebrow">Mappa visuale · tipi di intelligenza artificiale</div>
   <h1>Cinque domande,<br>non <em>una scala sola</em>.</h1>
   <p class="lede">Le classificazioni dell'AI sembrano contraddirsi solo perché rispondono a domande diverse. Eccole separate. Clicca su qualunque nome per aprirne la spiegazione completa.</p>
