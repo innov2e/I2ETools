@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMAD — cos'è, harness engineering, e anatomia dell'installazione</title>
+<style>
+:root{
+  --bg:#0d0f14; --bg-2:#141821; --bg-3:#1b2030;
+  --line:#262d3d; --line-2:#333c52;
+  --tx:#e6e9f0; --tx-2:#a2acc2; --tx-3:#6d7891;
+  --ac:#fb7185; --ac-2:#f43f5e;
+  --ok:#4ade80; --no:#f87171; --amb:#fbbf24; --sky:#7dd3fc; --vio:#a78bfa; --teal:#5eead4;
+  --mono:'SF Mono',ui-monospace,'JetBrains Mono',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{background:var(--bg);color:var(--tx);
+  font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',Roboto,sans-serif;
+  line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased}
+::selection{background:var(--ac);color:#000}
+a{color:var(--ac);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.topbar{position:fixed;top:0;left:0;right:0;height:60px;z-index:100;
+  background:rgba(13,15,20,.9);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;padding:0 20px}
+.brand{font-weight:700;font-size:14.5px;white-space:nowrap;letter-spacing:-.2px}
+.brand span{color:var(--ac)}
+.topnav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1}
+.topnav::-webkit-scrollbar{display:none}
+.topnav a{color:var(--tx-3);font-size:12.5px;padding:6px 9px;border-radius:7px;white-space:nowrap;transition:.15s;font-weight:500}
+.topnav a:hover{color:var(--tx);background:var(--bg-3);text-decoration:none}
+.topnav a.active{color:var(--ac);background:rgba(251,113,133,.12)}
+.progress{position:fixed;top:60px;left:0;height:2px;background:linear-gradient(90deg,var(--ac-2),var(--ac));z-index:101;width:0}
+
+main{max-width:1120px;margin:0 auto;padding:60px 28px 140px}
+section{padding:70px 0;border-top:1px solid var(--line)}
+section:first-of-type{border-top:none}
+h1{font-size:clamp(28px,4.6vw,50px);line-height:1.1;letter-spacing:-1.4px;font-weight:800}
+h2{font-size:clamp(23px,3.3vw,33px);letter-spacing:-.8px;font-weight:750;margin-bottom:10px;line-height:1.2}
+h3{font-size:19px;font-weight:700;margin:36px 0 12px;letter-spacing:-.3px}
+h4{font-size:15px;font-weight:700;margin:20px 0 8px}
+p{color:var(--tx-2);margin-bottom:14px;max-width:78ch}
+strong{color:var(--tx);font-weight:650}
+em{color:var(--ac);font-style:normal;font-weight:600}
+ul,ol{color:var(--tx-2);margin:0 0 16px 20px}
+li{margin-bottom:7px;max-width:76ch}
+code{font-family:var(--mono);font-size:.87em;background:var(--bg-3);padding:2px 6px;border-radius:4px;color:var(--ac)}
+.eyebrow{font-size:11px;letter-spacing:2.4px;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:12px}
+.lead{font-size:18px;color:var(--tx-2);max-width:72ch}
+.sub{color:var(--tx-3);font-size:15px;margin-bottom:28px;max-width:78ch}
+
+.hero{padding:74px 0 50px;position:relative}
+.hero::before{content:'';position:absolute;top:-80px;left:-20%;width:70%;height:420px;
+  background:radial-gradient(ellipse at center,rgba(251,113,133,.11),transparent 65%);pointer-events:none}
+.hero-tag{display:inline-block;font-size:12px;padding:5px 12px;border-radius:100px;border:1px solid var(--line-2);color:var(--tx-2);margin-bottom:22px}
+
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(235px,1fr))}
+.card{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:19px}
+.card h4{margin-top:0}
+.card p{font-size:13.8px;margin-bottom:0}
+
+.callout{border-left:3px solid var(--ac);background:rgba(251,113,133,.055);padding:16px 20px;border-radius:0 10px 10px 0;margin:24px 0}
+.callout p{margin-bottom:0;font-size:15px}
+.callout p+p{margin-top:10px}
+.callout.red{border-color:var(--no);background:rgba(248,113,113,.06)}
+.callout.amb{border-color:var(--amb);background:rgba(251,191,36,.06)}
+.callout.green{border-color:var(--ok);background:rgba(74,222,128,.06)}
+.callout.sky{border-color:var(--sky);background:rgba(125,211,252,.06)}
+.callout.vio{border-color:var(--vio);background:rgba(167,139,250,.06)}
+
+.tbl-wrap{overflow-x:auto;margin:22px 0;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:13.3px;min-width:660px}
+th{background:var(--bg-3);text-align:left;padding:11px 13px;font-weight:650;font-size:11.5px;
+  text-transform:uppercase;letter-spacing:.6px;color:var(--tx-2);border-bottom:1px solid var(--line)}
+td{padding:10px 13px;border-bottom:1px solid var(--line);color:var(--tx-2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td b{color:var(--tx)}
+.yes{color:var(--ok);font-weight:700}.no-m{color:var(--tx-3)}.part{color:var(--amb)}
+code.p{background:transparent;color:var(--sky);padding:0}
+
+.code{position:relative;background:#0a0c11;border:1px solid var(--line);border-radius:10px;margin:14px 0;overflow:hidden}
+.code-hd{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;
+  background:var(--bg-3);border-bottom:1px solid var(--line);font-size:11.5px;color:var(--tx-3);
+  letter-spacing:.4px;text-transform:uppercase;font-weight:600}
+.copy{background:transparent;border:1px solid var(--line-2);color:var(--tx-2);font-size:11px;
+  padding:3px 9px;border-radius:5px;cursor:pointer;transition:.15s;font-family:inherit;text-transform:none;letter-spacing:0}
+.copy:hover{border-color:var(--ac);color:var(--ac)}
+.copy.done{border-color:var(--ok);color:var(--ok)}
+pre{padding:15px;overflow-x:auto;font-family:var(--mono);font-size:12.4px;line-height:1.75;color:#cfd6e4;white-space:pre;word-break:normal}
+pre .c{color:var(--tx-3)}
+pre .d{color:var(--sky)}
+pre .f{color:var(--tx-2)}
+pre .n{color:var(--ok)}
+
+.acc{border:1px solid var(--line);border-radius:11px;margin-bottom:9px;background:var(--bg-2);overflow:hidden}
+.acc-hd{display:flex;align-items:center;gap:13px;padding:15px 18px;cursor:pointer;transition:.15s;user-select:none}
+.acc-hd:hover{background:var(--bg-3)}
+.acc-n{min-width:40px;height:26px;padding:0 8px;flex-shrink:0;border-radius:7px;background:var(--bg-3);border:1px solid var(--line-2);
+  display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--ac);font-family:var(--mono)}
+.acc-t{flex:1;font-weight:650;font-size:15.5px}
+.acc-t small{display:block;font-weight:400;font-size:12.5px;color:var(--tx-3);margin-top:1px}
+.chev{color:var(--tx-3);transition:.25s;font-size:12px}
+.acc.open .chev{transform:rotate(90deg)}
+.acc-bd{display:none;padding:0 18px 20px;border-top:1px solid var(--line)}
+.acc.open .acc-bd{display:block}
+.acc-bd>*:first-child{margin-top:16px}
+.badge{display:inline-block;font-size:10.5px;padding:2px 8px;border-radius:100px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.b-ok{background:rgba(74,222,128,.16);color:#86efac}
+.b-part{background:rgba(251,191,36,.16);color:var(--amb)}
+.b-no{background:rgba(248,113,113,.16);color:#fca5a5}
+
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.tab{background:var(--bg-2);border:1px solid var(--line);color:var(--tx-2);padding:8px 15px;
+  border-radius:8px;cursor:pointer;font-size:13.3px;font-family:inherit;transition:.15s;font-weight:550}
+.tab:hover{border-color:var(--line-2);color:var(--tx)}
+.tab.on{background:var(--ac);border-color:var(--ac);color:#2b0b12;font-weight:700}
+.pane{display:none}
+.pane.on{display:block;animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ALBERO FILESYSTEM */
+.tree{background:#0a0c11;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:22px 0}
+.tree-hd{display:flex;gap:7px;flex-wrap:wrap;padding:11px 14px;background:var(--bg-3);border-bottom:1px solid var(--line)}
+.tchip{background:var(--bg-2);border:1px solid var(--line-2);color:var(--tx-3);padding:4px 11px;border-radius:100px;
+  cursor:pointer;font-size:11.5px;font-family:inherit;transition:.15s}
+.tchip:hover{color:var(--tx)}
+.tchip.on{background:var(--ac);border-color:var(--ac);color:#2b0b12;font-weight:650}
+.tree-body{padding:16px;font-family:var(--mono);font-size:12.5px;line-height:1.85;overflow-x:auto}
+.tline{white-space:pre;cursor:default;display:block;border-radius:4px;padding:0 4px;transition:.12s}
+.tline:hover{background:rgba(255,255,255,.03)}
+.tline .n{color:var(--tx)}
+.tline .w{color:var(--tx-3);font-family:-apple-system,sans-serif;font-size:11.5px;margin-left:10px}
+.tline.dim{opacity:.32}
+.t-proj .n{color:var(--sky)}
+.t-home .n{color:var(--vio)}
+.t-sys .n{color:var(--amb)}
+.tlegend{display:flex;gap:16px;flex-wrap:wrap;padding:11px 16px;border-top:1px solid var(--line);font-size:11.5px;color:var(--tx-3)}
+.tlegend i{font-style:normal;font-weight:700}
+
+.mods{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:13px;margin:22px 0}
+.src-list{counter-reset:s;list-style:none;margin:18px 0 0;padding:0}
+.src-list li{counter-increment:s;position:relative;padding:10px 0 10px 40px;border-bottom:1px solid var(--line);font-size:13.5px;max-width:none;transition:background .4s}
+.src-list li:last-child{border-bottom:none}
+.src-list li::before{content:'['counter(s)']';position:absolute;left:0;top:10px;font-family:var(--mono);font-size:11.5px;color:var(--ac)}
+.src-list span{display:block;color:var(--tx-3);font-size:12.3px}
+.ref{font-size:10.5px;vertical-align:super;color:var(--ac);font-weight:700;cursor:pointer;padding:0 1px}
+footer{border-top:1px solid var(--line);padding:36px 28px;text-align:center;color:var(--tx-3);font-size:13px}
+
+.nextbox{background:linear-gradient(135deg,rgba(251,113,133,.1),rgba(251,113,133,.03));
+  border:1px solid rgba(251,113,133,.3);border-radius:14px;padding:24px;margin-top:34px}
+.nextbox b{color:var(--ac);font-size:17px;display:block;margin-bottom:7px}
+
+.modbar{border-top:1px solid var(--line);margin-top:70px;padding-top:34px}
+.modbar-t{font-size:11px;letter-spacing:2.4px;text-transform:uppercase;color:var(--tx-3);font-weight:700;margin-bottom:16px}
+.modbar-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:10px}
+.modbar-i{display:block;background:var(--bg-2);border:1px solid var(--line);border-radius:11px;padding:14px 15px;transition:.18s;text-decoration:none}
+.modbar-i:hover{transform:translateY(-2px);text-decoration:none;border-color:var(--mc)}
+.modbar-i.cur{border-color:var(--mc);background:var(--bg-3);cursor:default;transform:none}
+.modbar-i em{font-style:normal;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;font-weight:700;color:var(--mc)}
+.modbar-i b{display:block;color:var(--tx);font-size:13.8px;margin-top:5px;font-weight:650;letter-spacing:-.2px;line-height:1.3}
+.modbar-i span{display:block;color:var(--tx-3);font-size:11px;margin-top:4px;font-family:var(--mono)}
+</style>
+</head>
+<body>
+
+<div class="progress" id="prog"></div>
+<div class="topbar">
+  <div class="brand">BMAD <span>Anatomia</span></div>
+  <nav class="topnav" id="nav">
+    <a href="#cose">1. Cos'è BMAD</a>
+    <a href="#harness">2. Harness engineering</a>
+    <a href="#verdetto">3. BMAD come harness</a>
+    <a href="#vocabolario">4. Il vocabolario</a>
+    <a href="#dove">5. Dov'è sul mio PC</a>
+    <a href="#catalogo">6. Cosa si può installare</a>
+    <a href="#nonè">7. Cosa NON viene installato</a>
+    <a href="#fonti">Fonti</a>
+  </nav>
+</div>
+
+<main>
+
+<section class="hero" style="border:none">
+  <div class="hero-tag">Corso BMAD &nbsp;·&nbsp; Installazione, parte 1 di 2 &nbsp;·&nbsp; verificato al 16 agosto 2026</div>
+  <h1>Prima di installare,<br>capire <span style="color:var(--ac)">cosa</span> installi<br>e <span style="color:var(--ac)">dove</span> finisce.</h1>
+  <p class="lead">BMAD non è un'applicazione. Non c'è un eseguibile da lanciare, non c'è un servizio in ascolto, non c'è un modello che scarichi. Quello che installi è <strong>un insieme di file di testo strutturati</strong> che il tuo assistente di coding legge — più, se vuoi, un paio di programmi Python veri che li orchestrano.</p>
+  <p class="lead" style="margin-top:14px">Questa pagina spiega cos'è BMAD, come si colloca nella disciplina che nel 2026 ha preso il nome di <em>harness engineering</em>, e soprattutto costruisce la mappa di dove finisce ogni pezzo sul tuo computer. La <a href="bmad-install-lab.html">parte 2</a> è il laboratorio con i comandi.</p>
+
+  <div class="callout" style="margin-top:30px">
+    <p><strong>Perché questa parte viene prima.</strong> Chi installa senza questa mappa si trova con cartelle nascoste che non sa spiegare, non capisce cosa committare e cosa ignorare, non sa dove guardare quando qualcosa non funziona, e all'aggiornamento successivo non sa cosa verrà sovrascritto. Venti minuti qui ne risparmiano molti dopo.</p>
+  </div>
+</section>
+
+<!-- ===== 1. COS'È ===== -->
+<section id="cose">
+  <div class="eyebrow">Parte 1</div>
+  <h2>Cos'è BMAD</h2>
+  <p class="sub">Il nome sta per <em>Breakthrough Method of Agile AI-Driven Development</em>. È un progetto open source con licenza MIT. Ma la definizione che serve in aula è un'altra.</p>
+
+  <div class="grid g2">
+    <div class="card" style="border-color:rgba(251,113,133,.3)">
+      <h4 style="color:var(--ac)">Due cose in un pacchetto</h4>
+      <p style="margin-top:8px"><strong>Un metodo</strong> — una sequenza di fasi mutuata dall'agile: analisi facoltativa, pianificazione, soluzione, implementazione. Ogni fase produce documenti che diventano il contesto della fase successiva.</p>
+      <p style="margin-top:10px"><strong>Un'implementazione di quel metodo</strong> come file che un assistente di coding sa leggere ed eseguire: skill, agenti con persona, configurazioni, script.</p>
+    </div>
+    <div class="card">
+      <h4>Cosa risolve</h4>
+      <p style="margin-top:8px">La documentazione lo dice senza giri di parole: «gli assistenti di coding sono efficaci nell'implementazione, ma spesso trasformano assunzioni non dichiarate in codice». BMAD rende esplicite le decisioni importanti <em>prima</em> che diventino codice, e le conserva come contesto per il lavoro che segue.</p>
+    </div>
+  </div>
+
+  <h3>I cinque agenti con un nome</h3>
+  <p>BMAD spedisce cinque agenti, uno per fase del metodo. Hanno un'identità fissa — nome, titolo, dominio — e uno strato personalizzabile che comprende ruolo, principi, stile comunicativo, icona e menu. Non puoi rinominarli, ed è deliberato: «hey Mary» deve attivare l'analista a prescindere da come una squadra ne abbia modellato il comportamento.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th style="width:18%">Agente</th><th style="width:20%">Ruolo</th><th style="width:20%">Fase</th><th style="width:42%">Di cosa si occupa</th></tr></thead>
+      <tbody>
+        <tr><td><b>📊 Mary</b></td><td>Business Analyst</td><td>Analisi</td><td>Ricerca di mercato, brainstorming, product brief, PRFAQ, contesto di progetto</td></tr>
+        <tr><td><b>📋 John</b></td><td>Product Manager</td><td>Pianificazione</td><td>Creazione del PRD, scomposizione in epiche e storie</td></tr>
+        <tr><td><b>🎨 Sally</b></td><td>UX Designer</td><td>Pianificazione</td><td>Specifiche di esperienza utente: <code>DESIGN.md</code> e <code>EXPERIENCE.md</code></td></tr>
+        <tr><td><b>🏗️ Winston</b></td><td>System Architect</td><td>Soluzione</td><td>Architettura tecnica, verifiche di allineamento</td></tr>
+        <tr><td><b>💻 Amelia</b></td><td>Senior Engineer</td><td>Implementazione</td><td>Esecuzione delle storie, build, code review, sprint planning</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout sky">
+    <p><strong>Lo sgabello a tre gambe.</strong> La documentazione descrive il modello degli agenti come tre primitive che si compongono, e vale la pena presentarlo così perché spiega la struttura delle cartelle che vedremo dopo: la <em>skill</em> è la capacità (una cosa discreta che l'assistente sa fare); l'<em>agente con nome</em> è la continuità di persona (una skill la cui cartella inizia con <code>bmad-agent-</code>, che avvolge un menu di skill correlate); la <em>personalizzazione</em> è ciò che lo rende tuo. «Togli una gamba e l'esperienza collassa: skill senza agenti sono elenchi di capacità da navigare a memoria; agenti senza skill sono personaggi senza niente da fare; senza personalizzazione ogni team è costretto a forkare per qualunque esigenza specifica».</p>
+  </div>
+
+  <h3>Le quattro fasi</h3>
+  <p>Ogni fase è facoltativa nel senso che puoi entrare direttamente dove ti serve. Ciò che non è facoltativo è la logica: <strong>ogni documento diventa il contesto del successivo</strong>. Il PRD dice all'architetto quali vincoli contano; l'architettura dice all'agente di sviluppo quali pattern seguire; il file di specifica dà un contesto focalizzato e completo all'implementazione.</p>
+  <p>Il modulo <a href="bmad-workshop.html">laboratorio sui tre flussi</a> approfondisce le fasi e i tre modi di attraversarle; qui basta sapere che esistono, perché determinano quali cartelle vengono create e quando.</p>
+</section>
+
+<!-- ===== 2. HARNESS ===== -->
+<section id="harness">
+  <div class="eyebrow">Parte 2</div>
+  <h2>Harness engineering: la disciplina di cui BMAD fa parte</h2>
+  <p class="sub">Un vocabolario nato nel 2026 che rende molto più chiaro <em>che tipo di oggetto</em> sia BMAD — e permette di valutarlo senza tifo.</p>
+
+  <div class="callout" style="border-color:var(--vio);background:rgba(167,139,250,.07)">
+    <p style="font-size:19px;text-align:center;font-weight:650;color:var(--tx)">Agent = Model + Harness</p>
+    <p style="text-align:center;margin-top:8px;font-size:14px;color:var(--tx-3)">Il modello contiene l'intelligenza grezza. L'imbracatura è tutto ciò che la rende affidabile.</p>
+  </div>
+
+  <p><strong>L'imbracatura</strong> — <em>harness</em> — è l'impalcatura che circonda un agente e determina se riesce o fallisce su compiti reali: consegna del contesto, interfacce degli strumenti, artefatti di pianificazione, cicli di verifica, sistemi di memoria, sandbox. La lista di riferimento sulla disciplina lo dice in una riga: «questa lista riguarda l'<em>imbracatura</em>, non il modello. Ogni componente esiste perché il modello non ce la fa da solo — e le imbracature migliori sono progettate sapendo che quei componenti diventeranno inutili man mano che i modelli migliorano».<span class="ref" data-r="7">[7]</span></p>
+
+  <h3>Da dove viene il termine</h3>
+  <p>La ricostruzione condivisa è che nel febbraio 2026 Mitchell Hashimoto abbia descritto la propria pratica di reagire a ogni errore dell'agente <em>ingegnerizzando una correzione permanente nel suo ambiente</em>, chiamandola «engineering the harness». Nel giro di poche settimane OpenAI e Anthropic hanno pubblicato articoli di ingegneria che espandevano l'idea, e da lì il termine è entrato nel vocabolario comune.<span class="ref" data-r="8">[8]</span></p>
+
+  <h3>Le tre formulazioni che aiutano di più in aula</h3>
+  <div class="grid g3">
+    <div class="card">
+      <h4 style="color:var(--vio)">Guide e sensori</h4>
+      <p style="margin-top:8px">Un'imbracatura è fatta di <em>guide in avanti</em> (feedforward) che indirizzano l'agente prima che agisca, e <em>sensori</em> (feedback) che si autocorreggono prima che l'output arrivi sotto gli occhi di un umano. Utile perché è un test binario da applicare a ogni componente: sta guidando o sta misurando?</p>
+    </div>
+    <div class="card">
+      <h4 style="color:var(--vio)">Tre sistemi interconnessi</h4>
+      <p style="margin-top:8px"><em>Ingegneria del contesto</em> (curare cosa l'agente sa), <em>vincoli architetturali</em> (linter deterministici e test strutturali), <em>gestione dell'entropia</em> (agenti periodici che riparano la deriva della documentazione).</p>
+    </div>
+    <div class="card">
+      <h4 style="color:var(--vio)">Umani <i>sul</i> ciclo</h4>
+      <p style="margin-top:8px">L'ingegnere dell'imbracatura progetta e mantiene l'ambiente dell'agente invece di ispezionare i singoli output. È la stessa figura che il modulo sui tre flussi chiama <em>human-on-the-loop</em>.</p>
+    </div>
+  </div>
+
+  <div class="callout amb">
+    <p><strong>L'avvertenza che rende la disciplina onesta.</strong> «Ogni componente dell'imbracatura presuppone che il modello non sappia fare qualcosa; quei presupposti scadono.» Detto altrimenti: metà di ciò che stai per installare esiste per compensare un limite dei modelli del 2026, e sarà da buttare quando quel limite cade. Non è un difetto di BMAD — è la condizione di tutta la categoria, ed è utile dirlo in aula per evitare che il metodo venga preso come una verità permanente.</p>
+  </div>
+</section>
+
+<!-- ===== 3. VERDETTO ===== -->
+<section id="verdetto">
+  <div class="eyebrow">Parte 3</div>
+  <h2>BMAD realizza l'harness engineering? Componente per componente</h2>
+  <p class="sub">La domanda posta seriamente, con un giudizio per ciascuna primitiva canonica. Tre verdetti possibili: coperto, coperto in parte, fuori perimetro.</p>
+
+  <div id="harness-acc"></div>
+
+  <div class="callout green">
+    <p><strong>Il giudizio complessivo.</strong> BMAD è un'imbracatura <em>completa sull'asse della pianificazione e della verifica</em> e <em>volutamente sottile sull'asse dell'infrastruttura</em>. Non fornisce sandbox, permessi, quote né osservabilità di piattaforma: presuppone che quelle le dia la CLI di coding sotto. Ciò che porta è la parte che le CLI non hanno — artefatti di intento versionati, contesto che si propaga per fasi, review avversariale a domande separate, e una macchina a stati che rende l'automazione ispezionabile.</p>
+    <p>Per un corso questo è un punto forte, non una critica: significa che BMAD è <strong>componibile</strong> con qualunque strato di sicurezza e osservabilità la tua organizzazione già abbia, invece di pretendere di sostituirlo.</p>
+  </div>
+</section>
+
+<!-- ===== 4. VOCABOLARIO ===== -->
+<section id="vocabolario">
+  <div class="eyebrow">Parte 4</div>
+  <h2>Il vocabolario, prima dei comandi</h2>
+  <p class="sub">Sei parole che nella documentazione hanno un significato preciso e che nei tutorial in giro vengono usate come sinonimi. Senza queste, l'albero delle cartelle della sezione successiva è illeggibile.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th style="width:15%">Termine</th><th style="width:31%">Cos'è, esattamente</th><th style="width:28%">In che forma esiste su disco</th><th style="width:26%">Chi lo scrive</th></tr></thead>
+      <tbody>
+        <tr><td><b>Skill</b></td>
+          <td>Una capacità discreta: redigere un PRD, implementare una storia, fare una review. È l'unità atomica di tutto il sistema.</td>
+          <td>Una <b>cartella</b> con dentro un <code>SKILL.md</code> — testo in Markdown con un frontmatter — più eventuali file di passo, prompt, template e un <code>customize.toml</code>.</td>
+          <td>BMAD, o tu con bmad-builder. Segue lo standard aperto <i>Agent Skills</i>, quindi funziona su molti strumenti diversi.</td></tr>
+        <tr><td><b>Agente</b></td>
+          <td>Continuità di persona: un'identità riconoscibile che avvolge un menu di skill correlate con voce, principi e icona coerenti.</td>
+          <td><b>Anch'esso una skill</b>, la cui cartella inizia con <code>bmad-agent-</code>. Non è una categoria tecnica separata.</td>
+          <td>BMAD ne spedisce cinque. Puoi crearne di tuoi con bmad-builder.</td></tr>
+        <tr><td><b>Workflow</b></td>
+          <td>La procedura interna che una skill esegue: i passi, in ordine, con i loro punti di decisione.</td>
+          <td>File <code>workflow.md</code> e <code>step-NN-*.md</code> <b>dentro</b> la cartella della skill. Non è un oggetto installabile a sé.</td>
+          <td>Chi scrive la skill.</td></tr>
+        <tr><td><b>Modulo</b></td>
+          <td>Un pacchetto di skill e agenti attorno a un dominio. <code>bmm</code> è il metodo di sviluppo, <code>bmb</code> il costruttore, <code>cis</code> i partner creativi, <code>gds</code> il game dev.</td>
+          <td>Un <b>registro</b> in <code>bmad-modules.yaml</code> più le cartelle delle sue skill. Ha un proprio <code>module.yaml</code> con le domande di configurazione.</td>
+          <td>BMAD per quelli ufficiali; chiunque per quelli di comunità.</td></tr>
+        <tr><td><b>Marketplace plugin</b></td>
+          <td>Un modulo le cui skill non stanno accanto al suo <code>module.yaml</code>, ma sono elencate in un manifesto separato. <b>bmad-loop</b> è l'unico ufficiale in questa forma.</td>
+          <td>Un <code>.claude-plugin/marketplace.json</code> che l'installer risolve con un percorso dedicato.</td>
+          <td>L'autore del modulo.</td></tr>
+        <tr><td><b>Orchestratore</b></td>
+          <td>Un <b>vero programma</b>, non un file di testo: gira come processo, guida sessioni, verifica artefatti, mantiene stato.</td>
+          <td>Un pacchetto <b>Python</b> installato nell'ambiente, che espone il comando <code>bmad-loop</code>.</td>
+          <td>Il progetto bmad-loop, separato dal repository del metodo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout amb">
+    <p><strong>La distinzione che genera più confusione, e va detta esplicitamente.</strong> Le skill <em>non sono programmi</em>: sono istruzioni in Markdown che il tuo assistente legge ed esegue interpretandole. Non hanno un runtime, non si «avviano», non hanno un processo. L'unica eccezione sono alcuni script Python di supporto che le skill invocano — il risolutore delle personalizzazioni, il renderer, il pianificatore di sprint — e questi sì che sono codice vero. Da qui il prerequisito <code>uv</code>: serve a far girare quegli script, non le skill.</p>
+  </div>
+
+  <div class="callout sky">
+    <p><strong>Perché lo standard aperto conta.</strong> Le skill di BMAD seguono lo standard <em>Agent Skills</em>, che è il motivo per cui lo stesso pacchetto si installa su decine di strumenti diversi cambiando solo la cartella di destinazione. Molti di quegli strumenti leggono da una directory condivisa — <code>.agents/skills/</code> — che funziona come formato comune fra tool. È anche la ragione per cui, nella tabella della sezione successiva, tanti strumenti diversi puntano allo stesso posto.</p>
+  </div>
+</section>
+
+<!-- ===== 5. DOVE ===== -->
+<section id="dove">
+  <div class="eyebrow">Parte 5 — Il cuore della pagina</div>
+  <h2>Dov'è tutto questo, sul mio PC</h2>
+  <p class="sub">Tre livelli, e la maggior parte di ciò che installi sta nel primo. Filtra l'albero e cambia sistema operativo per vedere i percorsi reali.</p>
+
+  <div class="tree">
+    <div class="tree-hd">
+      <button class="tchip on" data-f="all">Tutto</button>
+      <button class="tchip" data-f="proj">Solo il progetto</button>
+      <button class="tchip" data-f="home">Solo la home utente</button>
+      <button class="tchip" data-f="sys">Solo il sistema</button>
+      <span style="flex:1"></span>
+      <button class="tchip on" data-os="mac" id="os-mac">macOS</button>
+      <button class="tchip" data-os="win" id="os-win">Windows</button>
+    </div>
+    <div class="tree-body" id="tree-body"></div>
+    <div class="tlegend">
+      <span><i style="color:var(--sky)">■</i> progetto — vive nel repository, lo vedi con <code>ls -la</code></span>
+      <span><i style="color:var(--vio)">■</i> home utente — condiviso fra tutti i progetti</span>
+      <span><i style="color:var(--amb)">■</i> sistema — prerequisiti installati una volta sola</span>
+    </div>
+  </div>
+
+  <h3>Le quattro cartelle di progetto, spiegate</h3>
+  <div id="cartelle"></div>
+
+  <h3>La destinazione delle skill dipende dallo strumento</h3>
+  <p>L'installer chiede con quali strumenti vuoi integrare, e da quella risposta dipende dove finiscono le cartelle delle skill. Molti strumenti condividono la stessa destinazione, perché leggono dal formato comune. Ecco i più diffusi — l'elenco completo si ottiene con <code>npx bmad-method install --list-tools</code>.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th style="width:26%">Strumento</th><th style="width:37%">Nel progetto</th><th style="width:37%">Nella home (installazione globale)</th></tr></thead>
+      <tbody>
+        <tr><td><b>Claude Code</b> <span class="badge b-ok" style="margin-left:6px">consigliato</span></td><td><code>.claude/skills</code></td><td><code>~/.claude/skills</code></td></tr>
+        <tr><td><b>Codex</b> <span class="badge b-ok" style="margin-left:6px">consigliato</span></td><td><code>.agents/skills</code></td><td><code>~/.codex/skills</code></td></tr>
+        <tr><td><b>Cursor</b></td><td><code>.agents/skills</code></td><td><code>~/.agents/skills</code></td></tr>
+        <tr><td><b>GitHub Copilot</b></td><td><code>.agents/skills</code> <span style="color:var(--tx-3)">+ comandi in <code>.github/agents</code></span></td><td><code>~/.agents/skills</code></td></tr>
+        <tr><td><b>Gemini CLI</b></td><td><code>.agents/skills</code></td><td><code>~/.agents/skills</code></td></tr>
+        <tr><td><b>OpenCode</b></td><td><code>.agents/skills</code> <span style="color:var(--tx-3)">+ comandi in <code>.opencode/commands</code></span></td><td><code>~/.agents/skills</code></td></tr>
+        <tr><td><b>Google Antigravity</b> (IDE)</td><td><code>.agent/skills</code></td><td><code>~/.gemini/antigravity/skills</code></td></tr>
+        <tr><td><b>Antigravity CLI</b> (AGY)</td><td><code>.agents/skills</code></td><td><code>~/.gemini/antigravity-cli/skills</code></td></tr>
+        <tr><td><b>OpenClaw</b></td><td><code>.agents/skills</code></td><td><code>~/.agents/skills</code></td></tr>
+        <tr><td><b>Cline</b></td><td><code>.cline/skills</code></td><td><code>~/.cline/skills</code></td></tr>
+        <tr><td><b>Kiro</b></td><td><code>.kiro/skills</code></td><td><code>~/.kiro/skills</code></td></tr>
+        <tr><td><b>Junie</b> (JetBrains)</td><td><code>.junie/skills</code></td><td><code>~/.junie/skills</code></td></tr>
+        <tr><td><b>Windsurf</b>, <b>Roo</b>, <b>Trae</b>, <b>Zed</b>, <b>Amp</b>, <b>Crush</b>, <b>Goose</b> e altri</td><td colspan="2" style="color:var(--tx-3)">Quasi tutti su <code>.agents/skills</code> o su una cartella con il proprio nome. Verifica con <code>--list-tools</code>: la lista supera i quaranta strumenti e cambia a ogni release.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <p><strong>Il dettaglio che spiazza chi cerca le skill nel posto sbagliato.</strong> Le skill <em>non</em> stanno dentro <code>_bmad/</code>. L'installer le copia nella cartella dello strumento e poi <strong>rimuove le copie ridondanti da <code>_bmad/</code></strong>, perché ogni skill è autoconsistente nella sua destinazione. In <code>_bmad/</code> restano configurazione, manifesti, script condivisi e le tue personalizzazioni. Se apri <code>_bmad/</code> e non trovi le skill, non è un'installazione rotta: è il comportamento previsto.</p>
+  </div>
+
+  <div class="callout vio">
+    <p><strong>Progetto o globale?</strong> Ogni strumento ha entrambe le destinazioni. L'installazione <em>di progetto</em> è quella predefinita ed è la scelta giusta in aula e nella maggior parte dei casi reali: la versione di BMAD viaggia con il repository, e ogni progetto può stare su una versione diversa. L'installazione <em>globale</em> ha senso quando vuoi le skill disponibili ovunque senza reinstallare, al prezzo di non poter più avere versioni diverse per progetti diversi — e di dover ricordare che quelle skill esistono anche in repository dove nessuno ha messo BMAD.</p>
+  </div>
+</section>
+
+<!-- ===== 6. CATALOGO ===== -->
+<section id="catalogo">
+  <div class="eyebrow">Parte 6</div>
+  <h2>Cosa si può installare, e da dove arriva</h2>
+  <p class="sub">Tre origini diverse con conseguenze diverse su versioni e aggiornamenti. È la distinzione che rende comprensibile il capitolo sull'upgrade.</p>
+
+  <div class="grid g3">
+    <div class="card" style="border-color:rgba(125,211,252,.3)">
+      <h4 style="color:var(--sky)">A · Impacchettato nell'installer</h4>
+      <p style="margin-top:8px">I moduli <code>core</code> e <code>bmm</code> viaggiano <b>dentro</b> il pacchetto npm dell'installer. La loro versione è determinata dalla versione dell'installer che hai eseguito: non hanno un canale proprio, e tentare di fissarli con un pin non ha effetto.</p>
+    </div>
+    <div class="card" style="border-color:rgba(167,139,250,.3)">
+      <h4 style="color:var(--vio)">B · Clonato da Git</h4>
+      <p style="margin-top:8px">Tutti gli altri moduli ufficiali e quelli di comunità vengono <b>clonati da un repository</b> al momento dell'installazione. Ognuno ha un canale indipendente: <i>stable</i> (l'ultimo tag rilasciato), <i>next</i> (la punta del ramo principale) oppure un tag fissato a mano.</p>
+    </div>
+    <div class="card" style="border-color:rgba(251,191,36,.3)">
+      <h4 style="color:var(--amb)">C · Pacchetto Python</h4>
+      <p style="margin-top:8px">L'orchestratore di bmad-loop è un <b>programma vero</b>, installato nell'ambiente Python e non nel progetto. Le sue skill possono arrivare dall'installer BMAD oppure dal pacchetto stesso: in entrambi i casi il programma va installato a parte.</p>
+    </div>
+  </div>
+
+  <h3>Il catalogo, per categoria</h3>
+  <p>Le prime due categorie sono BMAD; la terza no, ed è importante dirlo in aula per non generare aspettative sbagliate.</p>
+
+  <div id="catalogo-acc"></div>
+
+  <div class="callout red">
+    <p><strong>Sui progetti di terze parti, una nota di onestà.</strong> Nel mondo attorno a BMAD circolano repository molto diversi fra loro che vengono spesso presentati indistintamente come «addon». Non lo sono. Alcuni sono <em>sistemi alternativi</em> che risolvono lo stesso problema con un'architettura propria; altri sono <em>porting</em> di BMAD su un'altra piattaforma; altri ancora sono <em>materiale didattico</em> o <em>esempi di applicazione</em>, cioè cose da leggere e non da installare. Nella sezione qui sopra ciascuno è classificato per quello che è — ed è più utile insegnare la classificazione che l'elenco.</p>
+  </div>
+</section>
+
+<!-- ===== 7. COSA NON ===== -->
+<section id="nonè">
+  <div class="eyebrow">Parte 7</div>
+  <h2>Cosa <em>non</em> viene installato</h2>
+  <p class="sub">Sette chiarimenti che prevengono altrettante domande in aula, e un paio di preoccupazioni legittime.</p>
+
+  <div class="grid g2">
+    <div class="card"><h4>Nessun modello</h4><p style="margin-top:7px">BMAD non scarica pesi né si collega a un fornitore. L'intelligenza resta dove già stava: nella tua CLI di coding, con il tuo abbonamento e le tue chiavi. BMAD non vede mai le tue credenziali.</p></div>
+    <div class="card"><h4>Nessun servizio in ascolto</h4><p style="margin-top:7px">Niente demone, niente porta aperta, niente avvio automatico. L'unico processo che può restare in esecuzione è l'orchestratore, e solo mentre lo stai facendo girare tu.</p></div>
+    <div class="card"><h4>Nessun eseguibile del metodo</h4><p style="margin-top:7px">Non esiste un comando <code>bmad</code>. Il metodo si usa invocando le skill dalla tua CLI. L'unico comando installato è <code>bmad-loop</code>, e appartiene all'orchestratore.</p></div>
+    <div class="card"><h4>Nessuna telemetria del metodo</h4><p style="margin-top:7px">I file installati non inviano dati. Il dump diagnostico dell'orchestratore esiste, ma lo generi tu con un comando esplicito, è sanificato per costruzione, e sei tu a decidere se allegarlo a una segnalazione.</p></div>
+    <div class="card"><h4>Nessuna modifica al sistema</h4><p style="margin-top:7px">Non tocca il PATH di sistema, non installa servizi, non richiede privilegi di amministratore. Tutto quello che scrive sta nel progetto o nella tua home.</p></div>
+    <div class="card"><h4>Nessun database</h4><p style="margin-top:7px">Lo stato è tutto su file di testo — YAML, TOML, Markdown, JSON. Puoi leggerlo con un editor, versionarlo, e ripararlo a mano quando serve.</p></div>
+  </div>
+
+  <div class="callout amb" style="margin-top:24px">
+    <p><strong>Le due cose che invece <em>vengono</em> modificate, e vale la pena saperlo prima.</strong></p>
+    <p><em>(1) La configurazione della tua CLI di coding.</em> L'installazione dell'orchestratore registra degli <em>hook</em> — piccoli agganci che scrivono un file quando una sessione finisce. Vanno a toccare il file di impostazioni della CLI nel progetto. È il meccanismo che sostituisce la lettura del terminale, ed è dichiarato; ma è una modifica a un file che potresti avere già personalizzato.</p>
+    <p><em>(2) Il <code>.gitignore</code>.</em> L'inizializzazione dell'orchestratore aggiunge le proprie voci — la cartella dei run, le cache dei plugin, e il file di policy, che è per macchina e non va condiviso. Se il tuo <code>.gitignore</code> è gestito con cura, guarda il diff prima di committare.</p>
+  </div>
+
+  <div class="callout red">
+    <p><strong>La preoccupazione legittima, da affrontare apertamente in aula.</strong> Per le esecuzioni non presidiate le CLI di coding vengono avviate in modalità che salta le richieste di approvazione. Significa che un agente scrive, esegue comandi e committa sul tuo sistema con i tuoi permessi, senza chiedere. Non è un difetto nascosto — la documentazione lo dice — ma è una scelta da fare consapevolmente: repository usa-e-getta, isolamento in worktree attivato, e in aula mai su codice di lavoro.</p>
+  </div>
+
+  <div class="nextbox">
+    <b>Fine della parte 1. La parte 2 è il laboratorio.</b>
+    <p style="margin-bottom:0">Prerequisiti per macOS e Windows, installazione passo-passo del metodo, ispezione guidata di quello che è stato scritto sul disco, i moduli aggiuntivi, l'orchestratore, l'aggiornamento di un'installazione esistente e la rimozione pulita. Tutti i comandi verificati sulle fonti ufficiali.</p>
+    <p style="margin-top:14px;margin-bottom:0"><a href="bmad-install-lab.html" style="font-weight:700">Vai al laboratorio di installazione →</a></p>
+  </div>
+</section>
+
+<!-- ===== FONTI ===== -->
+<section id="fonti">
+  <div class="eyebrow">Riferimenti</div>
+  <h2>Fonti</h2>
+  <p class="sub">Percorsi, comandi e struttura sono stati letti direttamente nei repository. Le fonti sull'harness engineering servono a inquadrare la disciplina.</p>
+  <ol class="src-list" id="fonti-box"></ol>
+</section>
+
+<!-- MARKER -->
+
+<section class="modbar" style="border-top:1px solid var(--line)"><div class="modbar-t">Il percorso completo del corso</div><div class="modbar-g"><a class="modbar-i" style="--mc:#ffb547" href="prompt-engineering-struttura.html"><em>Modulo 1</em><b>L'anatomia di un prompt</b><span>apri →</span></a><a class="modbar-i" style="--mc:#5eead4" href="memoria-e-contesto-ai.html"><em>Modulo 2</em><b>Memoria e contesto</b><span>apri →</span></a><a class="modbar-i" style="--mc:#7dd3fc" href="normativa-ai-scadenze-obblighi.html"><em>Modulo 3</em><b>Normativa UE e italiana</b><span>apri →</span></a><a class="modbar-i" style="--mc:#a78bfa" href="bmad-tre-flussi.html"><em>Modulo 4</em><b>BMad: i tre flussi</b><span>apri →</span></a><a class="modbar-i" style="--mc:#c084fc" href="bmad-workshop.html"><em>Laboratorio</em><b>BMad: flussi a confronto</b><span>apri →</span></a><div class="modbar-i cur" style="--mc:#fb7185"><em>Install · 1</em><b>Concetti e anatomia</b><span>sei qui</span></div><a class="modbar-i" style="--mc:#fb7185" href="bmad-install-lab.html"><em>Install · 2</em><b>Laboratorio installazione</b><span>apri →</span></a></div></section>
+
+</main>
+
+<footer>
+  Corso BMAD · Parte 1: concetti e anatomia dell'installazione<br>
+  <span style="color:var(--line-2)">Verificato su BMAD-METHOD v6.11.0, bmad-builder e bmad-loop 0.10.0 il 16 agosto 2026 · Pagina autonoma, funziona offline</span>
+</footer>
+
+<script>
+(function(){
+  const links=[...document.querySelectorAll('#nav a')], prog=document.getElementById('prog');
+  function upd(){
+    const h=document.documentElement;
+    prog.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+    let cur=null;
+    document.querySelectorAll('section[id]').forEach(s=>{if(s.getBoundingClientRect().top<200)cur=s.id;});
+    links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+  }
+  window.addEventListener('scroll',upd,{passive:true}); upd();
+})();
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.copy'); if(!b)return;
+  const pre=b.closest('.code').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(()=>{
+    const o=b.textContent;b.textContent='Copiato';b.classList.add('done');
+    setTimeout(()=>{b.textContent=o;b.classList.remove('done')},1600);
+  });
+});
+document.addEventListener('click',e=>{
+  const r=e.target.closest('.ref'); if(!r)return;
+  const el=document.getElementById('src-'+r.dataset.r);
+  if(el){el.scrollIntoView({behavior:'smooth',block:'center'});
+    el.style.background='rgba(251,113,133,.13)';setTimeout(()=>el.style.background='',1800);}
+});
+document.addEventListener('click',e=>{
+  const t=e.target.closest('.tabs[data-tabs] .tab'); if(!t)return;
+  const grp=t.closest('.tabs');
+  grp.querySelectorAll('.tab').forEach(x=>x.classList.remove('on')); t.classList.add('on');
+  [...grp.querySelectorAll('.tab')].forEach(x=>document.getElementById(x.dataset.t).classList.remove('on'));
+  document.getElementById(t.dataset.t).classList.add('on');
+});
+function mkAcc(host,items){
+  const w=document.getElementById(host); if(!w)return;
+  items.forEach(c=>{
+    const d=document.createElement('div'); d.className='acc';
+    d.innerHTML='<div class="acc-hd"><div class="acc-n">'+c.n+'</div><div class="acc-t">'+c.t+
+      '<small>'+c.s+'</small></div>'+(c.badge?'<span class="badge '+c.badge[0]+'">'+c.badge[1]+'</span>':'')+
+      '<span class="chev">&#9654;</span></div><div class="acc-bd">'+c.b+'</div>';
+    d.querySelector('.acc-hd').addEventListener('click',e=>{if(e.target.closest('.copy'))return;d.classList.toggle('open');});
+    w.appendChild(d);
+  });
+}
+
+/* ===== ALBERO FILESYSTEM ===== */
+(function(){
+  const T=[
+    ['h','── IL TUO PROGETTO ──────────────────────────','','proj','both'],
+    [0,'mio-progetto/','la cartella del repository su cui lavori','proj','both'],
+    [1,'.claude/skills/','le skill installate — dipende dallo strumento scelto','proj','both'],
+    [2,'bmad-build/','una cartella per skill','proj','both'],
+    [3,'SKILL.md','il file che l\'assistente legge: cosa fa e quando usarla','proj','both'],
+    [3,'workflow.md','la procedura interna','proj','both'],
+    [3,'step-01-clarify-and-route.md','i passi, un file ciascuno','proj','both'],
+    [3,'customize.toml','la superficie personalizzabile — non si modifica','proj','both'],
+    [3,'review-prompts/','i prompt dei revisori','proj','both'],
+    [2,'bmad-agent-dev/','un agente: è una skill il cui nome inizia con bmad-agent-','proj','both'],
+    [2,'bmad-prd/  bmad-spec/  bmad-code-review/  …','una cartella per ciascuna skill installata','proj','both'],
+    [1,'.claude/settings.json','gli hook che l\'orchestratore registra qui','proj','both'],
+    [1,'_bmad/','configurazione, manifesti e script — NON le skill','proj','both'],
+    [2,'config.toml','configurazione centrale generata dall\'installer','proj','both'],
+    [2,'config.user.toml','le tue preferenze personali, sopra quelle di team','proj','both'],
+    [2,'custom/','le tue personalizzazioni per skill — parte vuota','proj','both'],
+    [3,'bmad-build.toml','override di team, si committa','proj','both'],
+    [3,'bmad-build.user.toml','override personali, si ignorano in git','proj','both'],
+    [2,'scripts/','gli script Python di supporto: risolutore, renderer, sprint','proj','both'],
+    [2,'render/','snapshot immutabili di ciò che è stato eseguito','proj','both'],
+    [2,'_config/','manifesti dell\'installazione: cosa c\'è e da dove viene','proj','both'],
+    [2,'bmm/config.yaml','configurazione del modulo, ancora nel formato precedente','proj','both'],
+    [1,'_bmad-output/','tutto ciò che il metodo produce — il nome è configurabile','proj','both'],
+    [2,'planning-artifacts/','brief, PRD, design, architettura, epiche','proj','both'],
+    [2,'implementation-artifacts/','sprint-status.yaml, storie, review, retrospettive','proj','both'],
+    [2,'specs/spec-<slug>/','SPEC.md, stories.yaml e le specifiche delle storie','proj','both'],
+    [1,'docs/','conoscenza di lungo periodo — percorso configurabile','proj','both'],
+    [1,'AGENTS.md','il blocco di contesto verificato del progetto','proj','both'],
+    [1,'.bmad-loop/','solo se usi l\'orchestratore','proj','both'],
+    [2,'policy.toml','gate, limiti, verifiche, adattatori — per macchina, si ignora in git','proj','both'],
+    [2,'runs/<run-id>/','stato di ogni run: state.json, journal.jsonl, tasks/, logs/','proj','both'],
+    [2,'decisions.json','le risposte alle decisioni lasciate in sospeso dalle spazzate','proj','both'],
+    [2,'archive/','i run compressi','proj','both'],
+    [2,'bmad_loop_hook.py','il relay degli hook copiato nel progetto','proj','both'],
+    [1,'.gitignore','modificato: la cartella dei run, le cache e policy.toml','proj','both'],
+    ['h','── LA TUA HOME UTENTE ──────────────────────','','home','both'],
+    [0,'~/','la tua cartella utente — condivisa fra tutti i progetti','home','mac'],
+    [0,'C:\\Users\\<tu>\\','la tua cartella utente — condivisa fra tutti i progetti','home','win'],
+    [1,'~/.claude/skills/','skill installate globalmente, se scegli quella modalità','home','mac'],
+    [1,'.claude\\skills\\','skill installate globalmente, se scegli quella modalità','home','win'],
+    [1,'~/.local/state/bmad-loop/','stato di controllo dei run, tenuto FUORI dall\'albero di progetto','home','mac'],
+    [1,'AppData\\Local\\bmad-loop\\state\\','stato di controllo dei run, tenuto FUORI dall\'albero di progetto','home','win'],
+    [1,'~/.local/bin/bmad-loop','il comando dell\'orchestratore, se installato con uv tool o pipx','home','mac'],
+    [1,'AppData\\Local\\...\\Scripts\\bmad-loop.exe','il comando dell\'orchestratore','home','win'],
+    [1,'~/.npm/_npx/','cache di npx: qui atterra il pacchetto dell\'installer','home','mac'],
+    [1,'AppData\\Local\\npm-cache\\_npx\\','cache di npx: qui atterra il pacchetto dell\'installer','home','win'],
+    [1,'~/.cache/uv/','cache di uv, inclusi gli interpreti Python che provvede lui','home','mac'],
+    [1,'AppData\\Local\\uv\\cache\\','cache di uv, inclusi gli interpreti Python che provvede lui','home','win'],
+    ['h','── PREREQUISITI DI SISTEMA ─────────────────','','sys','both'],
+    [0,'Node.js 20.12+','serve a far girare l\'installer — non serve al metodo','sys','both'],
+    [0,'uv  +  Python 3.11+','obbligatorio: gli script delle skill si arrestano senza','sys','both'],
+    [0,'git','per clonare i moduli esterni e per l\'isolamento in worktree','sys','both'],
+    [0,'una CLI di coding','Claude, Codex, Gemini, Copilot, Antigravity, OpenCode…','sys','both'],
+    [0,'tmux','solo per l\'orchestratore — è il multiplexer predefinito','sys','mac'],
+    [0,'WSL  (consigliato)','dentro WSL vale tutta la colonna macOS/Linux','sys','win'],
+    [0,'psmux + PowerShell','alternativa nativa Windows per l\'orchestratore — sperimentale','sys','win']
+  ];
+  const body=document.getElementById('tree-body');
+  let filt='all', os='mac';
+  function render(){
+    body.innerHTML='';
+    T.forEach(([lvl,name,what,cat,forOs])=>{
+      if(forOs!=='both' && forOs!==os) return;
+      const hide = filt!=='all' && filt!==cat;
+      const div=document.createElement('span');
+      div.className='tline t-'+cat+(hide?' dim':'');
+      if(lvl==='h'){
+        div.innerHTML='<span style="color:var(--tx-3);font-size:11.5px">'+name+'</span>';
+        div.style.marginTop='10px'; div.style.display='block';
+      } else {
+        const ind='  '.repeat(lvl);
+        const branch = lvl>0 ? (ind.slice(0,-2)+'└─ ') : '';
+        div.innerHTML=ind.slice(0,Math.max(0,(lvl-1)*2))+(lvl>0?'└─ ':'')+
+          '<span class="n">'+name.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span>'+
+          (what?'<span class="w">'+what+'</span>':'');
+      }
+      body.appendChild(div);
+    });
+  }
+  document.querySelectorAll('.tchip[data-f]').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.tchip[data-f]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); filt=b.dataset.f; render();
+  }));
+  document.querySelectorAll('.tchip[data-os]').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.tchip[data-os]').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); os=b.dataset.os; render();
+  }));
+  render();
+})();
+
+mkAcc('cartelle',[
+ {n:'A',t:'<code>.claude/skills/</code> — o la cartella del tuo strumento',s:'qui vivono le skill vere e proprie',
+  b:'<p><b>Cosa contiene.</b> Una cartella per skill, ciascuna autoconsistente: il <code>SKILL.md</code> che l\'assistente legge, il <code>workflow.md</code> con la procedura, i file dei singoli passi, i template, i prompt dei revisori e il <code>customize.toml</code> che dichiara la superficie personalizzabile.</p>'+
+    '<p><b>La committi?</b> Sì, di norma. Metterla sotto controllo di versione significa che chiunque cloni il repository ottiene la stessa versione del metodo, senza reinstallare. È anche il modo per accorgersi in code review di cosa cambia quando qualcuno aggiorna.</p>'+
+    '<p><b>La modifichi?</b> No. Il file <code>customize.toml</code> dichiara cosa è personalizzabile ma non si tocca: le tue modifiche vanno in <code>_bmad/custom/</code>. Toccare direttamente queste cartelle significa perdere tutto al primo aggiornamento.</p>'},
+ {n:'B',t:'<code>_bmad/</code>',s:'configurazione, manifesti, script — non le skill',
+  b:'<p><b>Cosa contiene.</b> La configurazione centrale su più strati (<code>config.toml</code> poi <code>config.user.toml</code>), la cartella <code>custom/</code> con le tue personalizzazioni, gli script Python condivisi, i manifesti dell\'installazione in <code>_config/</code> e gli snapshot immutabili in <code>render/</code>.</p>'+
+    '<p><b>Il modello di override a tre livelli</b> vale la pena mostrarlo: vince <code>custom/{skill}.user.toml</code> (personale, da ignorare in git), poi <code>custom/{skill}.toml</code> (di team, da committare), infine il <code>customize.toml</code> della skill (i valori di default). La cartella <code>custom/</code> parte vuota: i file compaiono solo quando qualcuno personalizza davvero.</p>'+
+    '<p><b>La committi?</b> Sì, tranne i file <code>.user.toml</code> che sono personali per definizione.</p>'},
+ {n:'C',t:'<code>_bmad-output/</code>',s:'tutto ciò che il metodo produce',
+  b:'<p><b>Cosa contiene.</b> Gli artefatti di pianificazione (brief, PRD, design, architettura, epiche), quelli di implementazione (<code>sprint-status.yaml</code>, storie, review, retrospettive) e le cartelle delle specifiche, ciascuna con il proprio <code>SPEC.md</code> e l\'eventuale <code>stories.yaml</code>.</p>'+
+    '<p><b>Il nome è configurabile</b> e viene chiesto durante l\'installazione, insieme ai percorsi separati per artefatti di pianificazione, di implementazione e conoscenza di progetto. Le cartelle non vengono pre-create: nascono quando la prima skill ci scrive dentro.</p>'+
+    '<p><b>La committi?</b> Dipende dalla squadra, ed è una decisione da prendere consapevolmente. Committarla significa avere la storia delle decisioni di prodotto nel repository — che è metà del valore del metodo. Ignorarla significa trattare quegli artefatti come output usa-e-getta, e allora tanto vale non produrli.</p>'},
+ {n:'D',t:'<code>.bmad-loop/</code>',s:'presente solo se usi l\'orchestratore',
+  b:'<p><b>Cosa contiene.</b> Il file di policy con gate, limiti, comandi di verifica e adattatori; la cartella dei run con lo stato completo di ciascuno — stato ripristinabile, diario di ogni decisione, prompt e risultato per sessione, log, specifiche accantonate, escalation, il file delle allerte; l\'archivio dei run compressi; il relay degli hook.</p>'+
+    '<p><b>Cosa NON contiene, e sorprende.</b> Il canale degli eventi degli hook vive deliberatamente <em>fuori</em> dall\'albero di progetto, sotto una radice di stato nella tua home. La ragione è dichiarata: un cambio di branch, il montaggio di un worktree o un rollback <b>non devono poter togliere il piano di controllo a un run vivo</b>. È un dettaglio di progettazione che vale la pena raccontare, perché spiega perché una cartella di stato compare nella home.</p>'+
+    '<p><b>La committi?</b> No. L\'inizializzazione aggiunge da sola le voci al <code>.gitignore</code>, incluso il file di policy — che è per macchina, perché porta la scelta del multiplexer. Se hai una vecchia installazione con la policy già committata, va rimossa dall\'indice una volta sola.</p>'}
+]);
+
+mkAcc('catalogo-acc',[
+ {n:'A',t:'I moduli ufficiali BMAD',s:'quelli che l\'installer ti offre nel selettore',badge:['b-ok','Installabili'],
+  b:'<div class="tbl-wrap" style="margin-top:0"><table style="min-width:0"><thead><tr><th>Modulo</th><th>Codice</th><th>Origine</th><th>Cosa porta</th></tr></thead><tbody>'+
+    '<tr><td><b>Core</b></td><td><code>core</code></td><td>nell\'installer</td><td>Le skill trasversali: aiuto, review, ricerca approfondita, brainstorming, party mode, elicitazione avanzata. Viene sempre installato per primo.</td></tr>'+
+    '<tr><td><b>BMad Method</b></td><td><code>bmm</code></td><td>nell\'installer</td><td>Il metodo vero e proprio: i cinque agenti, le skill di pianificazione, soluzione e implementazione. È quello selezionato per default.</td></tr>'+
+    '<tr><td><b>BMad Builder</b></td><td><code>bmb</code></td><td>clonato da Git</td><td>La fabbrica: costruttore di agenti, di workflow e di moduli, più un esecutore di valutazioni. Serve a creare le <i>tue</i> skill e a distribuirle.</td></tr>'+
+    '<tr><td><b>Creative Intelligence Suite</b></td><td><code>cis</code></td><td>clonato da Git</td><td>Partner di pensiero creativo.</td></tr>'+
+    '<tr><td><b>Test Architect</b></td><td><code>tea</code></td><td>clonato da Git</td><td>Estensione di testing di livello enterprise sopra il metodo.</td></tr>'+
+    '<tr><td><b>Game Dev Studio</b></td><td><code>gds</code></td><td>clonato da Git</td><td>Ideare, progettare e costruire giochi.</td></tr>'+
+    '<tr><td><b>BMad Loop</b></td><td><code>bmad-loop</code></td><td>plugin + Python</td><td>L\'orchestratore non presidiato. Unico modulo in forma di <i>marketplace plugin</i>, e l\'unico che richiede un secondo passaggio di installazione.</td></tr>'+
+    '<tr><td colspan="4" style="color:var(--tx-3)"><b>Deprecati:</b> <i>BMad Automator</i> (sostituito da BMad Loop) e <i>Whiteport Design Studio</i>. Restano visibili a chi li ha già installati, ma non vengono più offerti a chi installa oggi.</td></tr>'+
+    '</tbody></table></div>'+
+    '<p><b>Da tenere a mente per l\'upgrade:</b> core e bmm salgono di versione solo cambiando la versione dell\'installer che esegui; tutti gli altri hanno un canale proprio che puoi impostare, mettere sulla punta del ramo, o fissare a un tag preciso.</p>'},
+ {n:'B',t:'L\'orchestratore, che è un caso a sé',s:'due pezzi che vanno installati entrambi',badge:['b-ok','Installabile'],
+  b:'<p><b>Il malinteso più comune</b> è credere che selezionare BMad Loop nel selettore dell\'installer basti. Non basta: l\'installer copia <b>solo le tre cartelle di skill</b> (<code>bmad-loop-setup</code>, <code>bmad-loop-sweep</code>, <code>bmad-loop-resolve</code>), perché copia cartelle di skill e non i file che stanno loro accanto. Il programma vero — l\'orchestratore Python — si installa a parte.</p>'+
+    '<p><b>Le due strade, entrambe legittime.</b> Se sei passato dal selettore BMAD, completi con la skill di setup, che installa l\'orchestratore, chiede quali CLI vuoi guidare e prepara il progetto; è anche il modo di aggiornarlo in seguito. Se preferisci partire dal pacchetto Python, il pacchetto include già le skill e il comando di inizializzazione le mette a posto da solo, saltando quelle che l\'installer avesse già messo.</p>'+
+    '<p><b>Perché ci tiene tanto a dirlo:</b> senza l\'orchestratore installato, le skill da sole non fanno nulla. E il progetto mostra un avviso subito dopo l\'installazione proprio per questo — su un\'installazione interattiva devi anche premere invio per confermare di averlo letto.</p>'},
+ {n:'C',t:'Progetti di terze parti — classificati per quello che sono',s:'nessuno di questi è un «addon» nel senso di modulo installabile',badge:['b-part','Da leggere bene'],
+  b:'<div class="tbl-wrap" style="margin-top:0"><table style="min-width:0"><thead><tr><th style="width:22%">Progetto</th><th style="width:20%">Che cosa è davvero</th><th style="width:58%">Come si rapporta a BMAD</th></tr></thead><tbody>'+
+    '<tr><td><b>boss-skill</b><br><span style="font-size:11.5px;color:var(--tx-3)">echoVic</span></td><td>Sistema <b>alternativo</b>, non un addon</td><td>Un flusso di squadra verificabile per agenti di coding: trasforma un assistente in PM, architetto, tech lead, QA, DevOps. Risolve lo <i>stesso</i> problema di BMAD con un\'architettura propria — runtime a eventi con append-only su <code>.boss/&lt;feature&gt;/</code>, gate non aggirabili, valutazioni deterministiche. Si installa da npm ed è indipendente. Utile in aula come <b>termine di paragone</b>, non come componente da aggiungere.</td></tr>'+
+    '<tr><td><b>BMAD_Openclaw</b><br><span style="font-size:11.5px;color:var(--tx-3)">ErwanLorteau</span></td><td><b>Porting</b> su un\'altra piattaforma</td><td>Reimplementa il metodo come plugin per OpenClaw, con strumenti propri per inizializzare il progetto, elencare e avviare workflow, salvare artefatti e leggere lo stato. Nota di progettazione interessante: il master deve essere un agente di primo livello perché in quella piattaforma i sotto-agenti non possono generarne altri. Si installa clonando nelle estensioni della piattaforma, non con l\'installer BMAD.</td></tr>'+
+    '<tr><td><b>Finance-Guru</b><br><span style="font-size:11.5px;color:var(--tx-3)">AojdevStudio</span></td><td><b>Esempio applicativo</b> di dominio</td><td>Un repository di analisi finanziaria che usa agenti e skill in un dominio specifico. Il valore didattico è vedere come si struttura un progetto reale attorno a skill di dominio — non è un\'estensione di BMAD e non si installa in un progetto BMAD.</td></tr>'+
+    '<tr><td><b>spec-compare</b><br><span style="font-size:11.5px;color:var(--tx-3)">cameronsjo</span></td><td><b>Ricerca comparativa</b></td><td>Confronto documentato fra strumenti di sviluppo guidato da specifica, con sito interattivo: matrice di funzionalità, mappa di punteggi e una guida decisionale. Utile per collocare BMAD rispetto alle alternative — e per far vedere in aula che esistono percorsi più corti per problemi più piccoli.</td></tr>'+
+    '<tr><td><b>bmad-method-tutorial</b><br><span style="font-size:11.5px;color:var(--tx-3)">ljxpython</span></td><td><b>Materiale didattico</b> (in cinese)</td><td>Due percorsi completi, greenfield e brownfield, con casi di studio su modernizzazione CRM, ottimizzazione e-commerce, espansione SaaS e refactoring. Riferito a una versione precedente del metodo, quindi i nomi delle skill non corrispondono più — ma la struttura dei percorsi resta un buon modello per costruire il proprio corso.</td></tr>'+
+    '<tr><td><b>message-center</b><br><span style="font-size:11.5px;color:var(--tx-3)">RishoniDeSilva</span></td><td><b>Esempio del processo</b></td><td>Un\'applicazione minuscola il cui valore non è l\'applicazione ma il percorso: prima uno strato leggero di sviluppo guidato da specifica, poi un retrofit del metodo BMAD sopra lo stesso codice, con PRD, architettura e file di storia ciascuno con criteri di accettazione e registro di ciò che è stato verificato. È il più utile da mostrare in aula: si legge in mezz\'ora e si vede il processo dal risultato.</td></tr>'+
+    '</tbody></table></div>'+
+    '<p style="margin-top:14px"><b>La classificazione da insegnare</b>, che vale ben oltre questi sei: davanti a un repository che dice di lavorare con BMAD, chiedi <i>dove si installa</i>. Se la risposta è «nel selettore dei moduli» è un modulo. Se è «da npm o da pip, con una sua cartella di stato» è un sistema che vive accanto. Se è «da nessuna parte, si legge» è materiale.</p>'},
+ {n:'D',t:'Strumenti di contorno che migliorano l\'esperienza',s:'non sono BMAD, ma cambiano molto la giornata',badge:['b-part','Consigliati'],
+  b:'<ul>'+
+    '<li><b>Un multiplexer di terminale.</b> Obbligatorio per l\'orchestratore, ma utile a prescindere: guardare un run mentre gira e potersi staccare senza fermarlo è metà del valore dell\'automazione.</li>'+
+    '<li><b>Un gestore di versioni per Node.</b> L\'installer richiede una versione minima, e su una macchina con più progetti è la fonte più comune di errori misteriosi.</li>'+
+    '<li><b>Un secondo modello.</b> Sia gli strati di review sia il passaggio all\'implementazione sono configurabili verso una CLI esterna. Avere due strumenti di coding installati apre la strada a far scrivere il codice a uno e revisionarlo a un altro — che è una delle configurazioni più interessanti dell\'intero sistema.</li>'+
+    '<li><b>Un editor che si apre da riga di comando.</b> A fine run il metodo può aprire da solo il progetto e la specifica finita; il comando è configurabile e ci sono esempi pronti per gli editor più diffusi.</li>'+
+    '<li><b>Un repository di prova.</b> La cosa più utile in assoluto: un clone usa-e-getta su cui provare senza paura. In aula è un prerequisito, non un consiglio.</li>'+
+    '</ul>'}
+]);
+
+mkAcc('harness-acc',[
+ {n:'01',t:'Consegna del contesto',s:'far arrivare all\'agente ciò che gli serve, e solo quello',badge:['b-ok','Coperto'],
+  b:'<p><b>Come lo realizza.</b> È il cuore del metodo. Le quattro fasi producono artefatti che diventano il contesto della fase successiva: PRD → architettura → epiche → specifica di storia. Un compilatore di contesto d\'epica assembla il materiale rilevante per la storia in corso, e la specifica della storia precedente viene letta per continuità.</p>'+
+    '<p><b>Il pezzo più raffinato</b> è il criterio di ammissione di <code>bmad-project-context</code>: qualunque cosa derivabile dal sorgente viene letta dal vivo e mai memorizzata. «<code>pnpm test</code>» resta fuori dal blocco di contesto, mentre «la suite impiega undici minuti» entra. È una regola di igiene applicabile ben oltre BMAD.</p>'+
+    '<p><b>Il limite.</b> Il recupero dentro la base di conoscenza dipende dalla CLI sottostante: BMAD struttura <i>cosa</i> esiste, non implementa un proprio motore di ricerca semantica.</p>'},
+ {n:'02',t:'Artefatti di pianificazione',s:'l\'intento scritto prima del codice, e versionato',badge:['b-ok','Coperto']  ,
+  b:'<p><b>Come lo realizza.</b> È la primitiva su cui BMAD è più forte dell\'intera categoria. Il kernel a cinque campi di <code>SPEC.md</code> — <i>Why</i>, <i>Capabilities</i>, <i>Constraints</i>, <i>Non-goals</i>, <i>Success signal</i> — è un contratto macchina, con un solo scrittore autorizzato: le altre skill lo invocano senza interfaccia quando devono esprimere o aggiornare un intento. Una sola fonte di verità sull\'intento, e un solo posto che la scrive.</p>'+
+    '<p>Accanto ad esso il contratto <code>stories.yaml</code>: una sequenza ordinata in cui l\'ordine della lista <i>è</i> l\'ordine di esecuzione, e con l\'assenza deliberata di un campo <code>status</code> — lo stato vive nella specifica della storia, non nel piano, così non ci sono due fonti di verità che possono divergere.</p>'+
+    '<p>Nel vocabolario di guide e sensori, questa è la <b>guida in avanti</b> per eccellenza.</p>'},
+ {n:'03',t:'Cicli di verifica',s:'sensori che si accorgono dell\'errore prima dell\'umano',badge:['b-ok','Coperto'],
+  b:'<p><b>Come lo realizza.</b> Su due livelli distinti, ed è la ragione per cui l\'impianto regge.</p>'+
+    '<p><b>Verifica inferenziale</b> — la review avversariale a quattro strati, con quattro <i>domande diverse</i>: cosa c\'è di sbagliato, quali casi limite mancano, quale comportamento resterebbe non testato, e se il diff fa quello che era stato chiesto. Girano in sessioni a contesto fresco, così chi revisiona non eredita gli assunti di chi ha implementato.</p>'+
+    '<p><b>Verifica computazionale</b> — nell\'orchestratore, il controllo degli artefatti su disco prima di procedere: stato nel frontmatter, corrispondenza del commit di base registrato indipendentemente («un rilevatore di bugie da LLM a basso costo»), diff non vuoto, sincronizzazione della lavagna, e infine <i>i tuoi</i> comandi di test e lint. Una build rotta non arriva mai alla review né al commit.</p>'+
+    '<p>È esattamente la distinzione fra controlli computazionali e inferenziali che la letteratura sull\'imbracatura raccomanda di tenere separati.</p>'},
+ {n:'04',t:'Memoria e stato',s:'ciò che sopravvive alla fine di una sessione',badge:['b-ok','Coperto'],
+  b:'<p><b>Come lo realizza.</b> Interamente su file, quindi ispezionabile e versionabile. Il <code>status</code> nel frontmatter della specifica è lo stato leggibile dalla macchina su cui si regge l\'orchestrazione; <code>sprint-status.yaml</code> è la lavagna del progetto, con un solo scrittore mentre un run è in volo; il registro del lavoro differito raccoglie i reperti che non riguardano la storia corrente.</p>'+
+    '<p><b>Il collegamento con il <a href="memoria-e-contesto-ai.html">modulo 2</a></b> è diretto: è il livello 7 della tassonomia — memoria gestita dall\'agente su file — realizzato in modo particolarmente disciplinato, perché ogni stato è anche un punto di ripresa.</p>'},
+ {n:'05',t:'Interfacce degli strumenti',s:'come l\'agente agisce sul mondo',badge:['b-part','In parte'],
+  b:'<p><b>Cosa fa.</b> BMAD non definisce strumenti propri: usa quelli della CLI di coding sotto — lettura e scrittura file, esecuzione comandi, git. La scelta è deliberata e allineata a un risultato noto della disciplina: esporre tutto come file e lasciare che l\'agente usi <code>read</code>, <code>grep</code>, <code>find</code> e <code>shell</code> tende a battere lo strumentario specializzato.</p>'+
+    '<p><b>Dove interviene davvero.</b> Nel <i>passaggio</i> all\'implementazione: <code>[workflow] implementation_handoff</code> contiene la ricetta letterale passata al subagente, con un vincolo esplicito — al processo padre è vietato riformulare gli obiettivi, elencare i file o iniettare criteri di accettazione. È progettazione dell\'interfaccia fra agenti, più che fra agente e mondo.</p>'},
+ {n:'06',t:'Umano nel ciclo',s:'dove e quando una persona decide',badge:['b-ok','Coperto'],
+  b:'<p><b>Come lo realizza.</b> È il tema del <a href="bmad-tre-flussi.html">modulo 4</a>. Tre flussi che differiscono <i>solo</i> per la posizione dei checkpoint, e in quello automatico un parametro esplicito — <code>gates.mode</code> — che sposta le fermate da una per storia a nessuna. In aggiunta, checkpoint indipendenti per singola storia e uno stato terminale onesto (<code>awaiting-operator</code>) per il lavoro che richiede un\'azione esterna che solo una persona può compiere.</p>'+
+    '<p>La cosa notevole è che il grado di supervisione sia un <b>parametro di configurazione</b> e non una proprietà del prodotto: è precisamente ciò che la disciplina intende quando parla di spostare l\'umano <i>sul</i> ciclo invece che dentro.</p>'},
+ {n:'07',t:'Osservabilità e tracciamento',s:'sapere cosa sta facendo, mentre lo fa',badge:['b-part','In parte'],
+  b:'<p><b>Cosa c\'è.</b> Nell\'orchestratore: un diario append-only di ogni decisione, la dashboard testuale dal vivo, il dump diagnostico sanificato per le segnalazioni di bug, i totali di token pesati per costo. Nel metodo: gli snapshot immutabili e indirizzati dal contenuto di ciò che è stato effettivamente eseguito, con un manifesto degli hash.</p>'+
+    '<p><b>Cosa manca.</b> Non c\'è tracciamento distribuito, non c\'è esportazione verso una piattaforma di osservabilità, non ci sono metriche aggregate su più run o più progetti. Per un uso individuale è sufficiente; per una flotta in azienda va affiancato qualcos\'altro.</p>'},
+ {n:'08',t:'Sandbox e isolamento',s:'contenere il danno di un\'esecuzione sbagliata',badge:['b-part','In parte'],
+  b:'<p><b>Cosa c\'è.</b> L\'isolamento in <i>worktree</i> git: ogni unità di lavoro gira nel proprio albero e ramo, e viene reintegrata localmente; le unità fallite restano lì per l\'ispezione. Risolve un problema reale — un run lungo che muta l\'albero su cui stai lavorando tu — ed è <b>opzionale, non attivo per default</b>.</p>'+
+    '<p><b>Cosa non è.</b> Non è isolamento a livello di processo o di container. L\'agente esegue con i permessi del tuo utente sul tuo sistema. Se ti serve una sandbox vera, va messa sotto: BMAD non la fornisce e non pretende di farlo.</p>'},
+ {n:'09',t:'Permessi e autorizzazione',s:'chi può fare cosa, in modo strutturato',badge:['b-no','Fuori perimetro'],
+  b:'<p>È il componente che la letteratura sull\'imbracatura considera primitivo e che BMAD <b>non copre</b>. Non c\'è un modello di permessi, non c\'è distinzione di ruoli, non ci sono livelli di rischio per strumento né soglie di intervento umano legate al rischio dell\'operazione.</p>'+
+    '<p>Il presupposto è che quello strato lo dia la CLI di coding — che tipicamente ha il proprio sistema di approvazione — o l\'ambiente in cui la fai girare. Per le esecuzioni non presidiate le CLI vengono in genere avviate in modalità che quelle approvazioni le saltano: è una scelta che va fatta consapevolmente, ed è uno dei punti in cui vale la pena fermarsi in aula.</p>'},
+ {n:'10',t:'Valutazione sistematica',s:'misurare se l\'imbracatura funziona davvero',badge:['b-part','In parte'],
+  b:'<p><b>Cosa c\'è.</b> Il modulo <b>bmad-builder</b> include una skill di esecuzione di valutazioni (<code>bmad-eval-runner</code>) per chi costruisce skill proprie. E il progetto stesso pratica la valutazione su di sé: la rimozione della persona del «revisore cinico» nella 6.11 è motivata da un test A/B su due modelli diversi, e il revisore sui varchi di verifica è stato validato alla cieca su commit reali di una piattaforma in produzione.</p>'+
+    '<p><b>Cosa manca.</b> Una suite di valutazione che <i>tu</i> possa far girare sul <i>tuo</i> codice per misurare se la tua configurazione dell\'imbracatura sta migliorando o peggiorando. La misurazione esiste dentro il progetto, non come strumento consegnato all\'utente.</p>'},
+ {n:'11',t:'Gestione dell\'entropia',s:'riparare la deriva prima che diventi debito',badge:['b-ok','Coperto'],
+  b:'<p><b>Come lo realizza.</b> Tre meccanismi che rientrano precisamente in questa categoria. La <b>retrospettiva</b> giudica un\'epica rispetto ai suoi stessi artefatti — richiedendo un riferimento alla fonte su ogni reperto, e rifiutando un\'epica con storie non finite invece di chiuderla in silenzio — e produce viste aggregate che nessun singolo diff mostra: delta architetturale, duplicazione, crescita delle classi-dio, divergenza dai pattern.</p>'+
+    '<p>La <b>spazzata del lavoro differito</b> raccoglie e smista ciò che è rimasto aperto. L\'intento <code>audit</code> di <code>bmad-project-context</code> ri-verifica e pota il blocco di contesto.</p>'+
+    '<p>È la primitiva che più raramente si trova implementata negli strumenti concorrenti, ed è quella che Martin Fowler indica come terzo pilastro della pratica.</p>'}
+]);
+
+/* ===== FONTI ===== */
+(function(){
+  const S=[
+    ['BMAD-METHOD — repository ufficiale','Fonte primaria di tutto ciò che riguarda struttura, moduli e installazione. Letti direttamente: bmad-modules.yaml (il registro dei moduli), src/bmm-skills (agents / plan / ship), tools/installer (la mappa strumento → cartella di destinazione). Versione letta: 6.11.0.','https://github.com/bmad-code-org/BMAD-METHOD'],
+    ['BMAD-METHOD — how-to/install-bmad e how-to/customize-bmad','Flusso di installazione interattivo e headless, i due assi di versionamento, il menu di aggiornamento, e il modello di override a tre strati con la cartella custom/.','https://docs.bmad-method.org/how-to/install-bmad/'],
+    ['BMAD-METHOD — explanation/named-agents','Lo sgabello a tre gambe (skill, agente con nome, personalizzazione), il roster dei cinque agenti e il flusso di attivazione in otto passi.','https://docs.bmad-method.org/explanation/named-agents/'],
+    ['bmad-builder — repository ufficiale','Il modulo di costruzione: agent builder, workflow builder, module builder, eval runner, e la distribuzione tramite marketplace. Riferimento anche per lo standard aperto Agent Skills.','https://github.com/bmad-code-org/bmad-builder'],
+    ['bmad-loop — repository ufficiale','L\'orchestratore: README, docs/setup-guide.md, docs/FEATURES.md. Fonte dei percorsi .bmad-loop/, della radice di stato fuori albero e delle sue varianti su Windows, dei prerequisiti e dei backend del multiplexer. Versione letta: 0.10.0.','https://github.com/bmad-code-org/bmad-loop'],
+    ['Agent Skills — lo standard aperto','Il formato che rende le stesse skill installabili su decine di strumenti diversi.','https://agentskills.io/home'],
+    ['Awesome Harness Engineering','Raccolta curata sulla disciplina: la definizione usata in questa pagina, la tassonomia delle primitive (agent loop, pianificazione, contesto, strumenti, permessi, memoria, verifica, osservabilità, human-in-the-loop) e le fonti canoniche di OpenAI, Anthropic, Martin Fowler e LangChain.','https://github.com/ai-boost/awesome-harness-engineering'],
+    ['Martin Fowler / Birgitta Böckeler — Harness engineering','Il modello mentale di guide in avanti e sensori di ritorno, la distinzione fra controlli computazionali e inferenziali, e i tre sistemi interconnessi: ingegneria del contesto, vincoli architetturali, gestione dell\'entropia.','https://martinfowler.com/articles/harness-engineering.html'],
+    ['boss-skill — echoVic','Sistema alternativo per flussi di squadra verificabili: runtime a eventi, gate non aggirabili, valutazioni deterministiche. Usato in questa pagina come termine di paragone.','https://github.com/echoVic/boss-skill'],
+    ['BMAD_Openclaw — ErwanLorteau','Porting del metodo come plugin per OpenClaw, con i propri strumenti di orchestrazione dei workflow.','https://github.com/ErwanLorteau/BMAD_Openclaw'],
+    ['spec-compare — cameronsjo','Confronto documentato fra strumenti di sviluppo guidato da specifica, con sito interattivo e guida decisionale.','https://github.com/cameronsjo/spec-compare'],
+    ['bmad-method-tutorial — ljxpython','Percorsi didattici completi greenfield e brownfield con casi di studio. Riferito a una versione precedente del metodo.','https://github.com/ljxpython/bmad-method-tutorial'],
+    ['spec-driven-ai-project-message-center — RishoniDeSilva','Esempio applicato del processo: sviluppo guidato da specifica e poi retrofit del metodo BMAD sullo stesso codice, con tutti gli artefatti committati.','https://github.com/RishoniDeSilva/spec-driven-ai-project-message-center'],
+    ['Finance-Guru — AojdevStudio','Esempio di progetto di dominio costruito attorno ad agenti e skill specialistiche.','https://github.com/AojdevStudio/Finance-Guru']
+  ];
+  const w=document.getElementById('fonti-box'); if(!w)return;
+  S.forEach(([t,d,u],i)=>{
+    const li=document.createElement('li'); li.id='src-'+(i+1);
+    li.innerHTML='<a href="'+u+'" target="_blank" rel="noopener">'+t+'</a><span>'+d+'</span>';
+    w.appendChild(li);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMAD — laboratorio di installazione (macOS e Windows)</title>
+<style>
+:root{
+  --bg:#0d0f14; --bg-2:#141821; --bg-3:#1b2030;
+  --line:#262d3d; --line-2:#333c52;
+  --tx:#e6e9f0; --tx-2:#a2acc2; --tx-3:#6d7891;
+  --ac:#fb7185; --ac-2:#f43f5e;
+  --ok:#4ade80; --no:#f87171; --amb:#fbbf24; --sky:#7dd3fc; --vio:#a78bfa;
+  --mac:#7dd3fc; --win:#60a5fa;
+  --mono:'SF Mono',ui-monospace,'JetBrains Mono',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{background:var(--bg);color:var(--tx);
+  font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',Roboto,sans-serif;
+  line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased}
+::selection{background:var(--ac);color:#000}
+a{color:var(--ac);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.topbar{position:fixed;top:0;left:0;right:0;height:60px;z-index:100;
+  background:rgba(13,15,20,.9);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;padding:0 20px}
+.brand{font-weight:700;font-size:14.5px;white-space:nowrap;letter-spacing:-.2px}
+.brand span{color:var(--ac)}
+.topnav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1}
+.topnav::-webkit-scrollbar{display:none}
+.topnav a{color:var(--tx-3);font-size:12.5px;padding:6px 9px;border-radius:7px;white-space:nowrap;transition:.15s;font-weight:500}
+.topnav a:hover{color:var(--tx);background:var(--bg-3);text-decoration:none}
+.topnav a.active{color:var(--ac);background:rgba(251,113,133,.12)}
+.progress{position:fixed;top:60px;left:0;height:2px;background:linear-gradient(90deg,var(--ac-2),var(--ac));z-index:101;width:0}
+
+main{max-width:1120px;margin:0 auto;padding:60px 28px 140px}
+section{padding:66px 0;border-top:1px solid var(--line)}
+section:first-of-type{border-top:none}
+h1{font-size:clamp(28px,4.6vw,50px);line-height:1.1;letter-spacing:-1.4px;font-weight:800}
+h2{font-size:clamp(23px,3.3vw,33px);letter-spacing:-.8px;font-weight:750;margin-bottom:10px;line-height:1.2}
+h3{font-size:19px;font-weight:700;margin:34px 0 12px;letter-spacing:-.3px}
+h4{font-size:15px;font-weight:700;margin:20px 0 8px}
+p{color:var(--tx-2);margin-bottom:14px;max-width:78ch}
+strong{color:var(--tx);font-weight:650}
+em{color:var(--ac);font-style:normal;font-weight:600}
+ul,ol{color:var(--tx-2);margin:0 0 16px 20px}
+li{margin-bottom:7px;max-width:76ch}
+code{font-family:var(--mono);font-size:.87em;background:var(--bg-3);padding:2px 6px;border-radius:4px;color:var(--ac)}
+.eyebrow{font-size:11px;letter-spacing:2.4px;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:12px}
+.lead{font-size:18px;color:var(--tx-2);max-width:72ch}
+.sub{color:var(--tx-3);font-size:15px;margin-bottom:26px;max-width:78ch}
+
+.hero{padding:74px 0 46px;position:relative}
+.hero::before{content:'';position:absolute;top:-80px;left:-20%;width:70%;height:420px;
+  background:radial-gradient(ellipse at center,rgba(251,113,133,.11),transparent 65%);pointer-events:none}
+.hero-tag{display:inline-block;font-size:12px;padding:5px 12px;border-radius:100px;border:1px solid var(--line-2);color:var(--tx-2);margin-bottom:22px}
+
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(235px,1fr))}
+.card{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:19px}
+.card h4{margin-top:0}
+.card p{font-size:13.8px;margin-bottom:0}
+
+.callout{border-left:3px solid var(--ac);background:rgba(251,113,133,.055);padding:16px 20px;border-radius:0 10px 10px 0;margin:22px 0}
+.callout p{margin-bottom:0;font-size:15px}
+.callout p+p{margin-top:10px}
+.callout.red{border-color:var(--no);background:rgba(248,113,113,.06)}
+.callout.amb{border-color:var(--amb);background:rgba(251,191,36,.06)}
+.callout.green{border-color:var(--ok);background:rgba(74,222,128,.06)}
+.callout.sky{border-color:var(--sky);background:rgba(125,211,252,.06)}
+
+.tbl-wrap{overflow-x:auto;margin:20px 0;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:13.3px;min-width:640px}
+th{background:var(--bg-3);text-align:left;padding:11px 13px;font-weight:650;font-size:11.5px;
+  text-transform:uppercase;letter-spacing:.6px;color:var(--tx-2);border-bottom:1px solid var(--line)}
+td{padding:10px 13px;border-bottom:1px solid var(--line);color:var(--tx-2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td b{color:var(--tx)}
+
+.code{position:relative;background:#0a0c11;border:1px solid var(--line);border-radius:10px;margin:14px 0;overflow:hidden}
+.code-hd{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;
+  background:var(--bg-3);border-bottom:1px solid var(--line);font-size:11.5px;color:var(--tx-3);
+  letter-spacing:.4px;text-transform:uppercase;font-weight:600}
+.copy{background:transparent;border:1px solid var(--line-2);color:var(--tx-2);font-size:11px;
+  padding:3px 9px;border-radius:5px;cursor:pointer;transition:.15s;font-family:inherit;text-transform:none;letter-spacing:0}
+.copy:hover{border-color:var(--ac);color:var(--ac)}
+.copy.done{border-color:var(--ok);color:var(--ok)}
+pre{padding:15px;overflow-x:auto;font-family:var(--mono);font-size:12.4px;line-height:1.75;color:#cfd6e4;white-space:pre-wrap;word-break:break-word}
+pre .c{color:var(--tx-3)}
+pre .p{color:var(--ac)}
+pre .o{color:var(--ok)}
+
+/* OS SWITCH globale */
+.osbar{position:sticky;top:60px;z-index:60;background:rgba(13,15,20,.94);backdrop-filter:blur(10px);
+  border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:0 0 28px;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.osbar-lbl{font-size:12px;color:var(--tx-3);letter-spacing:.4px}
+.osbtn{background:var(--bg-2);border:1px solid var(--line-2);color:var(--tx-2);padding:7px 16px;
+  border-radius:8px;cursor:pointer;font-size:13.3px;font-family:inherit;transition:.15s;font-weight:550}
+.osbtn:hover{color:var(--tx)}
+.osbtn.on{color:#08131c;font-weight:700}
+.osbtn[data-os="mac"].on{background:var(--mac);border-color:var(--mac)}
+.osbtn[data-os="wsl"].on{background:var(--win);border-color:var(--win);color:#061225}
+.osbtn[data-os="win"].on{background:var(--amb);border-color:var(--amb);color:#2b1f00}
+.osnote{font-size:12px;color:var(--tx-3);flex:1;min-width:200px}
+.os{display:none}
+body[data-os="mac"] .os-mac,body[data-os="wsl"] .os-wsl,body[data-os="win"] .os-win{display:block}
+.os-tag{display:inline-block;font-size:10.5px;padding:2px 9px;border-radius:100px;font-weight:700;
+  letter-spacing:.5px;text-transform:uppercase;margin-bottom:9px}
+.t-mac{background:rgba(125,211,252,.16);color:var(--mac)}
+.t-wsl{background:rgba(96,165,250,.16);color:var(--win)}
+.t-win{background:rgba(251,191,36,.16);color:var(--amb)}
+
+/* ESERCIZI */
+.ex{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;margin-bottom:15px;overflow:hidden}
+.ex-hd{display:flex;align-items:center;gap:14px;padding:17px 20px;cursor:pointer;transition:.15s;user-select:none}
+.ex-hd:hover{background:var(--bg-3)}
+.ex-n{min-width:52px;height:30px;padding:0 9px;flex-shrink:0;border-radius:8px;
+  display:grid;place-items:center;font-size:12px;font-weight:700;font-family:var(--mono);
+  background:rgba(251,113,133,.14);color:var(--ac);border:1px solid rgba(251,113,133,.3)}
+.ex-t{flex:1;font-weight:650;font-size:16px}
+.ex-t small{display:block;font-weight:400;font-size:12.5px;color:var(--tx-3);margin-top:2px}
+.ex-time{font-size:11px;font-family:var(--mono);color:var(--tx-3);background:var(--bg-3);
+  border:1px solid var(--line-2);padding:3px 9px;border-radius:100px;white-space:nowrap}
+.ex-chev{color:var(--tx-3);transition:.25s;font-size:12px}
+.ex.open .ex-chev{transform:rotate(90deg)}
+.ex-bd{display:none;padding:2px 20px 22px;border-top:1px solid var(--line)}
+.ex.open .ex-bd{display:block}
+.ex-bd>h4:first-child,.ex-bd>.goal:first-child{margin-top:18px}
+.goal{background:var(--bg-3);border-left:3px solid var(--ac);padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;font-size:14px;color:var(--tx-2)}
+.goal b{color:var(--ac)}
+.steps{counter-reset:st;list-style:none;margin:16px 0 0;padding:0}
+.steps li{counter-increment:st;position:relative;padding:11px 0 11px 40px;border-bottom:1px solid var(--line);font-size:14px;max-width:none}
+.steps li:last-child{border-bottom:none}
+.steps li::before{content:counter(st);position:absolute;left:0;top:11px;width:25px;height:25px;
+  border-radius:7px;background:var(--bg-3);border:1px solid var(--line-2);display:grid;place-items:center;
+  font-size:11.5px;font-weight:700;color:var(--ac);font-family:var(--mono)}
+.obs{margin-top:16px;padding:14px 17px;border-radius:10px;background:rgba(125,211,252,.06);border:1px solid rgba(125,211,252,.22);font-size:13.8px;color:var(--tx-2)}
+.obs b{color:var(--sky);display:block;margin-bottom:5px}
+.warn{margin-top:16px;padding:14px 17px;border-radius:10px;background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.25);font-size:13.8px;color:var(--tx-2)}
+.warn b{color:var(--no);display:block;margin-bottom:5px}
+
+.chk{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:6px 4px;margin:18px 0}
+.chk-i{display:flex;gap:12px;padding:11px 16px;border-bottom:1px solid var(--line);cursor:pointer;transition:.15s}
+.chk-i:last-child{border-bottom:none}
+.chk-i:hover{background:var(--bg-3)}
+.chk-box{width:19px;height:19px;flex-shrink:0;border:1.5px solid var(--line-2);border-radius:5px;margin-top:2px;
+  display:grid;place-items:center;font-size:11px;color:transparent;transition:.15s}
+.chk-i.done .chk-box{background:var(--ok);border-color:var(--ok);color:#06240f}
+.chk-i.done .chk-tx{color:var(--tx-3);text-decoration:line-through}
+.chk-tx{font-size:14px;color:var(--tx-2)}
+.chk-tx small{display:block;color:var(--tx-3);font-size:12.3px;margin-top:1px;text-decoration:none}
+
+.src-list{counter-reset:s;list-style:none;margin:18px 0 0;padding:0}
+.src-list li{counter-increment:s;position:relative;padding:10px 0 10px 40px;border-bottom:1px solid var(--line);font-size:13.5px;max-width:none}
+.src-list li:last-child{border-bottom:none}
+.src-list li::before{content:'['counter(s)']';position:absolute;left:0;top:10px;font-family:var(--mono);font-size:11.5px;color:var(--ac)}
+.src-list span{display:block;color:var(--tx-3);font-size:12.3px}
+footer{border-top:1px solid var(--line);padding:36px 28px;text-align:center;color:var(--tx-3);font-size:13px}
+
+
+.modbar{border-top:1px solid var(--line);margin-top:70px;padding-top:34px}
+.modbar-t{font-size:11px;letter-spacing:2.4px;text-transform:uppercase;color:var(--tx-3);font-weight:700;margin-bottom:16px}
+.modbar-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:10px}
+.modbar-i{display:block;background:var(--bg-2);border:1px solid var(--line);border-radius:11px;padding:14px 15px;transition:.18s;text-decoration:none}
+.modbar-i:hover{transform:translateY(-2px);text-decoration:none;border-color:var(--mc)}
+.modbar-i.cur{border-color:var(--mc);background:var(--bg-3);cursor:default;transform:none}
+.modbar-i em{font-style:normal;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;font-weight:700;color:var(--mc)}
+.modbar-i b{display:block;color:var(--tx);font-size:13.8px;margin-top:5px;font-weight:650;letter-spacing:-.2px;line-height:1.3}
+.modbar-i span{display:block;color:var(--tx-3);font-size:11px;margin-top:4px;font-family:var(--mono)}
+</style>
+</head>
+<body data-os="mac">
+
+<div class="progress" id="prog"></div>
+<div class="topbar">
+  <div class="brand">BMAD <span>Laboratorio installazione</span></div>
+  <nav class="topnav" id="nav">
+    <a href="#prereq">0. Prerequisiti</a>
+    <a href="#lab">Esercitazioni</a>
+    <a href="#trouble">Quando non funziona</a>
+    <a href="#checklist">Checklist</a>
+    <a href="#fonti">Fonti</a>
+  </nav>
+</div>
+
+<main>
+
+<section class="hero" style="border:none">
+  <div class="hero-tag">Corso BMAD &nbsp;·&nbsp; Installazione, parte 2 di 2 &nbsp;·&nbsp; verificato al 16 agosto 2026</div>
+  <h1>Adesso installiamo.<br><span style="color:var(--ac)">Passo per passo,<br>su entrambi i sistemi.</span></h1>
+  <p class="lead">Nove esercitazioni: prerequisiti, metodo, ispezione di ciò che è stato scritto, primo giro di prova, moduli aggiuntivi, orchestratore, personalizzazione, aggiornamento e rimozione pulita. Ogni comando è stato letto nelle fonti ufficiali e viene indicato quando cambia fra sistemi.</p>
+  <p class="lead" style="margin-top:14px">Se non hai letto la <a href="bmad-anatomia.html">parte 1</a>, fallo prima: qui si dà per acquisito il vocabolario e la mappa di dove finiscono le cose.</p>
+</section>
+
+<!-- ===== 0. PREREQUISITI ===== -->
+<section id="prereq">
+  <div class="eyebrow">Esercitazione 0</div>
+  <h2>Prerequisiti</h2>
+  <p class="sub">Quattro cose obbligatorie e una che serve solo all'orchestratore. Scegli il tuo sistema in alto: tutta la pagina si adatta.</p>
+
+  <div class="osbar" id="osbar">
+    <span class="osbar-lbl">Sistema:</span>
+    <button class="osbtn on" data-os="mac">macOS</button>
+    <button class="osbtn" data-os="wsl">Windows + WSL</button>
+    <button class="osbtn" data-os="win">Windows nativo</button>
+    <span class="osnote" id="osnote"></span>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th style="width:22%">Componente</th><th style="width:14%">Obbligatorio</th><th style="width:64%">A cosa serve</th></tr></thead>
+      <tbody>
+        <tr><td><b>Node.js 20.12+</b></td><td style="color:var(--ok)">sì</td><td>Serve solo a far girare l'installer. Il metodo, una volta installato, non usa Node.</td></tr>
+        <tr><td><b>uv + Python 3.11+</b></td><td style="color:var(--ok)">sì</td><td>Gli script di supporto delle skill girano con <code>uv run</code>. Dalla 6.11 non c'è più un ripiego su un interprete di sistema: senza <code>uv</code>, alcune skill si arrestano. È anche il modo più semplice di installare l'orchestratore.</td></tr>
+        <tr><td><b>Git</b></td><td style="color:var(--ok)">sì</td><td>Per clonare i moduli esterni durante l'installazione, e per l'isolamento in worktree dell'orchestratore.</td></tr>
+        <tr><td><b>Una CLI di coding</b></td><td style="color:var(--ok)">sì</td><td>È lei che esegue le skill. Claude Code e Codex sono le due indicate come preferite nel selettore.</td></tr>
+        <tr><td><b>Un multiplexer</b></td><td style="color:var(--amb)">solo per l'orchestratore</td><td>Serve a lanciare, seguire e guidare le sessioni. Non serve se usi solo il metodo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="os os-mac">
+    <span class="os-tag t-mac">macOS</span>
+    <p>Il percorso più liscio passa da Homebrew. Se non ce l'hai, installalo prima dal sito ufficiale.</p>
+    <div class="code">
+      <div class="code-hd"><span>Prerequisiti su macOS</span><button class="copy">Copia</button></div>
+<pre><span class="c"># Node, git e il multiplexer</span>
+brew install node git tmux
+
+<span class="c"># uv — provvede da sé un Python adatto, non serve installarlo a parte</span>
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+<span class="c"># riapri il terminale, poi verifica tutto in un colpo</span>
+node --version    <span class="c"># atteso: v20.12.0 o superiore</span>
+git --version
+uv --version
+tmux -V</pre>
+    </div>
+    <div class="obs"><b>Se node è troppo vecchio</b>
+    È il problema numero uno su macchine con progetti di età diversa. Un gestore di versioni risolve una volta per tutte: <code>brew install nvm</code> oppure <code>brew install fnm</code>, poi installi la 20 o superiore e la imposti come predefinita. Verificalo <em>prima</em> di lanciare l'installer: l'errore che dà altrimenti non è sempre limpido.</div>
+  </div>
+
+  <div class="os os-wsl">
+    <span class="os-tag t-wsl">Windows + WSL — la strada consigliata</span>
+    <p>Per questi strumenti <strong>WSL <em>è</em> Linux</strong>: tutti i percorsi POSIX e tmux funzionano senza modifiche, e nulla del setup cambia. È l'opzione da preferire in aula, perché elimina un'intera classe di problemi.</p>
+    <div class="code">
+      <div class="code-hd"><span>1 · Preparare WSL (da PowerShell come amministratore)</span><button class="copy">Copia</button></div>
+<pre>wsl --install -d Ubuntu
+<span class="c"># riavvia se richiesto, poi apri Ubuntu e crea il tuo utente</span></pre>
+    </div>
+    <div class="code">
+      <div class="code-hd"><span>2 · Prerequisiti dentro Ubuntu</span><button class="copy">Copia</button></div>
+<pre>sudo apt update
+sudo apt install -y git tmux curl
+
+<span class="c"># Node 20+ — il pacchetto di Ubuntu è spesso troppo vecchio</span>
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+
+<span class="c"># uv</span>
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+<span class="c"># riapri la shell e verifica</span>
+node --version; git --version; uv --version; tmux -V</pre>
+    </div>
+    <div class="warn"><b>La regola d'oro di WSL</b>
+    Lavora <strong>dentro</strong> il filesystem di Linux (<code>~/progetti/…</code>), non su <code>/mnt/c/…</code>. Attraversare il confine fra i due filesystem è lento in modo drammatico e crea problemi di permessi che si manifestano come errori incomprensibili. Clona i repository dentro WSL, non in Windows.</div>
+    <div class="obs"><b>Installa gli strumenti nell'interprete Linux</b>
+    Una versione di questi strumenti installata su Windows è raggiungibile dal prompt bash e si comporta silenziosamente <em>come Windows</em>. Per l'orchestratore c'è un modo di verificarlo: il comando che elenca i backend del multiplexer deve dire che il default di piattaforma è <code>linux</code>. Se dice <code>win32</code>, stai usando la build sbagliata.</div>
+  </div>
+
+  <div class="os os-win">
+    <span class="os-tag t-win">Windows nativo</span>
+    <p>Funziona, con un'avvertenza importante: <strong>il metodo gira benissimo, l'orchestratore è sperimentale</strong>. Il backend nativo esiste — una reimplementazione di tmux su ConPTY — ma il progetto dichiara che non è ancora al livello di supporto di Linux, macOS e WSL: restano da completare l'ospitalità delle finestre e l'aggancio e sgancio delle sessioni.</p>
+    <div class="code">
+      <div class="code-hd"><span>Prerequisiti con winget (da PowerShell)</span><button class="copy">Copia</button></div>
+<pre>winget install OpenJS.NodeJS.LTS
+winget install Git.Git
+winget install astral-sh.uv
+winget install Microsoft.PowerShell
+
+<span class="c"># riapri PowerShell e verifica</span>
+node --version
+git --version
+uv --version
+pwsh --version</pre>
+    </div>
+    <div class="obs"><b>Per l'orchestratore, in più</b>
+    Servono <code>psmux</code> e <code>pwsh</code> raggiungibili nel PATH, con <code>psmux</code> in versione superiore alla 3.3.6 — le versioni fino a quella possono terminare a forza un processo riciclato durante lo smontaggio, e per questo vengono considerate non disponibili. Il backend viene selezionato da solo su Windows quando questi prerequisiti ci sono.</div>
+    <div class="warn"><b>Consiglio per l'aula</b>
+    Se la giornata prevede l'esercitazione sull'orchestratore, fai preparare WSL a tutti i partecipanti Windows. Il Windows nativo va benissimo per le esercitazioni da 1 a 4 e per la 7, ma sulla 5 rischi di passare il tempo a diagnosticare il multiplexer invece che a insegnare.</div>
+  </div>
+
+  <div class="callout red">
+    <p><strong>Prima di qualunque comando: dove lavorare.</strong> Tutte le esercitazioni presuppongono un <em>repository usa-e-getta</em>. Questi strumenti scrivono file, eseguono comandi e committano. In aula non si punta mai nulla di questo su codice di lavoro, e nemmeno su un progetto personale a cui si tiene. Un clone nuovo, un branch dedicato, e la libertà di cancellare tutto.</p>
+  </div>
+</section>
+
+<!-- ===== LAB ===== -->
+<section id="lab">
+  <div class="eyebrow">Il laboratorio</div>
+  <h2>Le esercitazioni</h2>
+  <p class="sub">In ordine. La 1, la 2 e la 3 sono il nucleo minimo e stanno in un'ora. Le altre si possono distribuire su più sessioni.</p>
+
+  <!-- ES 1 -->
+  <div class="ex open">
+    <div class="ex-hd"><div class="ex-n">ES · 1</div>
+      <div class="ex-t">Installare il metodo<small>Un progetto vuoto, un comando, sei domande</small></div>
+      <span class="ex-time">15 min</span><span class="ex-chev">&#9654;</span></div>
+    <div class="ex-bd">
+      <div class="goal"><b>Obiettivo.</b> Portare a termine un'installazione interattiva, capendo cosa chiede ogni domanda. Poi ripeterla in forma non interattiva, che è quella che userai davvero.</div>
+
+      <h4>Passo 1 — Un progetto pulito</h4>
+      <div class="code os os-mac">
+        <div class="code-hd"><span>macOS · terminale</span><button class="copy">Copia</button></div>
+<pre>mkdir ~/bmad-lab && cd ~/bmad-lab
+git init</pre>
+      </div>
+      <div class="code os os-wsl">
+        <div class="code-hd"><span>WSL · dentro il filesystem Linux, non su /mnt/c</span><button class="copy">Copia</button></div>
+<pre>mkdir ~/bmad-lab && cd ~/bmad-lab
+git init</pre>
+      </div>
+      <div class="code os os-win">
+        <div class="code-hd"><span>Windows · PowerShell</span><button class="copy">Copia</button></div>
+<pre>mkdir $HOME\bmad-lab; cd $HOME\bmad-lab
+git init</pre>
+      </div>
+
+      <h4>Passo 2 — Guardare l'elenco degli strumenti supportati</h4>
+      <p>Prima di installare, vale la pena vedere la lista completa con le rispettive cartelle di destinazione. È la stessa tabella della <a href="bmad-anatomia.html#dove">parte 1</a>, ma aggiornata alla versione che stai per installare.</p>
+      <div class="code">
+        <div class="code-hd"><span>Elenco degli strumenti</span><button class="copy">Copia</button></div>
+<pre>npx bmad-method install --list-tools</pre>
+      </div>
+
+      <h4>Passo 3 — L'installazione interattiva</h4>
+      <div class="code">
+        <div class="code-hd"><span>Il comando principale</span><button class="copy">Copia</button></div>
+<pre>npx bmad-method install</pre>
+      </div>
+      <p>Ti verranno poste fino a sei domande. Vale la pena fermarsi su ciascuna invece di premere invio:</p>
+      <ol class="steps">
+        <li><b>Cartella di installazione.</b> Predefinita: quella corrente. Accettala.</li>
+        <li><b>Quali moduli.</b> Caselle per <code>core</code>, <code>bmm</code>, <code>bmb</code>, <code>cis</code>, <code>gds</code>, <code>tea</code>. Per ora <b>solo <code>bmm</code></b>: <code>core</code> viene aggiunto da solo e installato per primo. Aggiungeremo <code>bmb</code> nell'esercitazione 5.</li>
+        <li><b>Tutto stabile?</b> Rispondi sì: accetta l'ultimo tag rilasciato per ogni modulo esterno.</li>
+        <li><b>Con quali strumenti integrare.</b> Scegli la CLI che userai davvero. È la risposta che determina in quale cartella finiranno le skill.</li>
+        <li><b>Configurazione del modulo.</b> Nome, lingua, cartella di output. Qui si decidono i percorsi degli artefatti: annota cosa rispondi, serve nell'esercitazione 2.</li>
+        <li><b>Installare gli shim di compatibilità?</b> Su un'installazione nuova la risposta predefinita è <b>no</b>, ed è quella giusta: sono inoltri per skill deprecate che ti servono solo se stai migrando da una versione precedente.</li>
+      </ol>
+
+      <h4>Passo 4 — La stessa cosa, in forma riproducibile</h4>
+      <p>La forma interattiva serve a capire. Quella da usare per davvero — in aula, negli script, nella CI — è quella con i flag: è ripetibile e documenta da sola cosa è stato installato.</p>
+      <div class="code">
+        <div class="code-hd"><span>Installazione non interattiva</span><button class="copy">Copia</button></div>
+<pre>npx bmad-method install --directory . --modules bmm --tools claude-code --yes</pre>
+      </div>
+      <p>Adatta <code>--tools</code> alla tua CLI. Gli identificatori validi sono quelli stampati da <code>--list-tools</code>.</p>
+
+      <div class="obs"><b>Da far notare in aula</b>
+      <code>--modules</code> <b>non è un delta</b>: elenca l'insieme esatto che vuoi avere alla fine. Se in seguito lanci lo stesso comando con un modulo in meno, quel modulo viene rimosso. È la causa più frequente di «mi è sparito un modulo» dopo un aggiornamento fatto di fretta.</div>
+
+      <div class="warn"><b>Se l'installazione riesce ma la prima skill si arresta</b>
+      È <code>uv</code> mancante. L'installer stampa un avviso e nomina le skill che si fermeranno, ma <b>non blocca</b>: puoi vedere un'installazione verde e trovarti bloccato al primo comando. Installa <code>uv</code>, riapri il terminale e riprova — non serve reinstallare BMAD.</div>
+    </div>
+  </div>
+
+  <!-- ES 2 -->
+  <div class="ex">
+    <div class="ex-hd"><div class="ex-n">ES · 2</div>
+      <div class="ex-t">Ispezionare cosa è stato scritto<small>L'esercitazione che vale più di tutta la teoria</small></div>
+      <span class="ex-time">20 min</span><span class="ex-chev">&#9654;</span></div>
+    <div class="ex-bd">
+      <div class="goal"><b>Obiettivo.</b> Guardare con i propri occhi le cartelle create, capire cosa c'è dentro ciascuna e decidere consapevolmente cosa committare. Chi salta questo passaggio non saprà mai diagnosticare un problema.</div>
+
+      <div class="code os os-mac">
+        <div class="code-hd"><span>macOS · guarda cosa è comparso</span><button class="copy">Copia</button></div>
+<pre><span class="c"># tutte le cartelle nascoste create</span>
+ls -la
+
+<span class="c"># le skill: una cartella ciascuna</span>
+ls .claude/skills/          <span class="c"># o .agents/skills/ per altri strumenti</span>
+
+<span class="c"># dentro una skill</span>
+ls .claude/skills/bmad-build/
+head -20 .claude/skills/bmad-build/SKILL.md
+
+<span class="c"># cosa c'è in _bmad — nota: NIENTE skill</span>
+find _bmad -maxdepth 2 -type d
+
+<span class="c"># quante skill sono state installate</span>
+ls .claude/skills/ | wc -l</pre>
+      </div>
+      <div class="code os os-wsl">
+        <div class="code-hd"><span>WSL · identici a macOS</span><button class="copy">Copia</button></div>
+<pre>ls -la
+ls .claude/skills/
+ls .claude/skills/bmad-build/
+head -20 .claude/skills/bmad-build/SKILL.md
+find _bmad -maxdepth 2 -type d
+ls .claude/skills/ | wc -l</pre>
+      </div>
+      <div class="code os os-win">
+        <div class="code-hd"><span>Windows · PowerShell</span><button class="copy">Copia</button></div>
+<pre>Get-ChildItem -Force
+
+Get-ChildItem .claude\skills\
+Get-ChildItem .claude\skills\bmad-build\
+Get-Content .claude\skills\bmad-build\SKILL.md -TotalCount 20
+
+Get-ChildItem _bmad -Recurse -Directory -Depth 1 | Select-Object FullName
+
+(Get-ChildItem .claude\skills\).Count</pre>
+      </div>
+
+      <h4>Le cinque domande a cui rispondere guardando</h4>
+      <ol class="steps">
+        <li><b>Dove sono finite le skill?</b> Nella cartella dello strumento che hai scelto. Verifica che corrisponda alla riga della tabella nella parte 1.</li>
+        <li><b>Che forma ha una skill?</b> Apri <code>SKILL.md</code>: è Markdown con un frontmatter che dichiara nome e descrizione. Non è codice. Guarda anche <code>workflow.md</code> e i file dei passi.</li>
+        <li><b>Cosa c'è in <code>_bmad/</code>?</b> Configurazione, manifesti, script — e <b>nessuna skill</b>. Se te lo aspettavi diversamente, è il momento di correggere il modello mentale.</li>
+        <li><b>La cartella <code>_bmad/custom/</code> è vuota?</b> Sì, e deve esserlo: i file compaiono solo quando personalizzi davvero.</li>
+        <li><b>Esiste già <code>_bmad-output/</code>?</b> Probabilmente no. Le cartelle degli artefatti non vengono pre-create: nascono quando la prima skill ci scrive dentro.</li>
+      </ol>
+
+      <h4>La decisione da prendere adesso: cosa va in git</h4>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:32%">Cosa</th><th style="width:16%">In git?</th><th style="width:52%">Perché</th></tr></thead>
+          <tbody>
+            <tr><td><code>.claude/skills/</code> o equivalente</td><td style="color:var(--ok)"><b>sì</b></td><td>Chi clona il repository ottiene la stessa versione del metodo, e in code review si vede cosa cambia quando qualcuno aggiorna.</td></tr>
+            <tr><td><code>_bmad/</code></td><td style="color:var(--ok)"><b>sì</b></td><td>Configurazione condivisa e manifesti dell'installazione.</td></tr>
+            <tr><td><code>_bmad/**/*.user.toml</code></td><td style="color:var(--no)"><b>no</b></td><td>Sono preferenze personali per definizione.</td></tr>
+            <tr><td><code>_bmad-output/</code></td><td style="color:var(--amb)"><b>decidete</b></td><td>Committarla significa avere la storia delle decisioni di prodotto nel repository — che è metà del valore del metodo. È una scelta di squadra, non una preferenza individuale.</td></tr>
+            <tr><td><code>.bmad-loop/</code></td><td style="color:var(--no)"><b>no</b></td><td>Se ne occupa da solo il comando di inizializzazione dell'orchestratore.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="obs"><b>Esercizio bonus, molto istruttivo</b>
+      Fai <code>git status</code> e conta i file non tracciati. Poi <code>git add -A</code> e <code>git status</code> di nuovo. In aula genera sempre una discussione utile: <em>vogliamo davvero centinaia di file di skill nella cronologia del repository?</em> Non c'è una risposta unica — ma va discussa una volta, non subita.</div>
+    </div>
+  </div>
+
+  <!-- ES 3 -->
+  <div class="ex">
+    <div class="ex-hd"><div class="ex-n">ES · 3</div>
+      <div class="ex-t">Il primo giro di prova<small>Verificare che l'installazione sia viva davvero</small></div>
+      <span class="ex-time">20 min</span><span class="ex-chev">&#9654;</span></div>
+    <div class="ex-bd">
+      <div class="goal"><b>Obiettivo.</b> Passare da «i file ci sono» a «funziona». Sono due cose diverse, e la seconda si verifica solo eseguendo qualcosa.</div>
+      <div class="code">
+        <div class="code-hd"><span>Apri la CLI nella cartella del progetto</span><button class="copy">Copia</button></div>
+<pre>claude       <span class="c"># o codex, gemini, copilot… secondo lo strumento scelto</span></pre>
+      </div>
+      <ol class="steps">
+        <li>Chiedi aiuto: <code>/bmad-help</code>. Se risponde elencando le skill disponibili e suggerendo cosa fare, l'installazione è viva. È anche il modo giusto di orientarsi ogni volta che non si sa che passo fare.</li>
+        <li>Prova un agente con nome: scrivi <code>hey Mary, let's brainstorm</code>. Osserva che si presenta, adotta la persona e — se l'intento è chiaro — salta il menu e parte direttamente.</li>
+        <li>Prova la skill di implementazione su un compito senza incognite: <code>/bmad-build write an implementation of mars rover kata</code>. Rispondi alla domanda che ti fa, leggi il piano, approvalo.</li>
+        <li>Torna al terminale e guarda cosa è comparso: la cartella degli artefatti adesso esiste, con dentro la specifica che la skill ha prodotto.</li>
+      </ol>
+      <div class="obs"><b>Cosa hai appena verificato</b>
+      Tre cose in una: che le skill sono nella cartella giusta perché la CLI le ha trovate; che <code>uv</code> funziona, perché gli script di supporto hanno girato; e che i percorsi degli artefatti configurati all'installazione sono quelli veri, perché ci è stato scritto dentro.</div>
+    </div>
+  </div>
+
+  <!-- ES 4 -->
+  <div class="ex">
+    <div class="ex-hd"><div class="ex-n">ES · 4</div>
+      <div class="ex-t">Personalizzare senza rompere<small>Il modello a tre strati, provato su un caso reale</small></div>
+      <span class="ex-time">25 min</span><span class="ex-chev">&#9654;</span></div>
+    <div class="ex-bd">
+      <div class="goal"><b>Obiettivo.</b> Imparare l'unico posto in cui è lecito mettere le mani. Chi modifica direttamente le skill perde tutto al primo aggiornamento: questa esercitazione previene quel danno.</div>
+
+      <h4>Il modello, in tre righe</h4>
+      <div class="code">
+        <div class="code-hd"><span>Priorità, dalla più alta</span><button class="copy">Copia</button></div>
+<pre>1. _bmad/custom/{skill}.user.toml    <span class="c">← personale, si ignora in git — vince</span>
+2. _bmad/custom/{skill}.toml         <span class="c">← di team, si committa</span>
+3. {skill}/customize.toml            <span class="c">← i default — NON si modifica</span></pre>
+      </div>
+
+      <ol class="steps">
+        <li>Apri il <code>customize.toml</code> di un agente, per esempio quello del PM, e leggi cosa dichiara come personalizzabile. <b>Non modificarlo.</b></li>
+        <li>Crea la cartella <code>_bmad/custom/</code> se non esiste, e dentro un file con il nome della skill.</li>
+        <li>Scrivici <b>solo i campi che vuoi cambiare</b>. Copiare l'intero <code>customize.toml</code> è l'errore classico: al prossimo aggiornamento la tua copia congelata sovrascriverà le novità.</li>
+        <li>Verifica che il merge sia avvenuto invocando l'agente e osservando il comportamento cambiato.</li>
+      </ol>
+
+      <div class="code">
+        <div class="code-hd"><span>Esempio: fatti persistenti per il team</span><button class="copy">Copia</button></div>
+<pre><span class="c"># _bmad/custom/bmad-agent-architect.toml</span>
+[agent]
+persistent_facts = [
+  "L'organizzazione è esclusivamente su AWS: nessuna proposta multi-cloud.",
+  "Il database standard è PostgreSQL. Ogni deroga va motivata.",
+  "La suite di test completa impiega undici minuti."
+]</pre>
+      </div>
+
+      <div class="obs"><b>Le regole di merge, da conoscere</b>
+      Uno scalare viene sostituito. Una tabella viene fusa in profondità. Un array di tabelle in cui <em>tutti</em> gli elementi condividono lo stesso campo identificatore viene fuso per chiave — le chiavi che coincidono sostituiscono in loco, quelle nuove si aggiungono. Ogni altro array viene <b>aggiunto in coda</b>. E non esiste un meccanismo di rimozione: gli override non possono cancellare elementi di base. Se devi sopprimere una voce di menu, la sovrascrivi per chiave con una descrizione neutra.</div>
+
+      <div class="obs"><b>Scorciatoia</b>
+      Esiste una skill di assistenza alla personalizzazione che analizza cosa è personalizzabile nella tua installazione, ti aiuta a scegliere la superficie giusta, scrive il file al posto tuo e verifica che il merge sia andato a buon fine. Utile soprattutto la prima volta, per non dover imparare la struttura TOML a mente.</div>
+    </div>
+  </div>
+
+  <!-- ES 5 -->
+  <div class="ex">
+    <div class="ex-hd"><div class="ex-n">ES · 5</div>
+      <div class="ex-t">Aggiungere un modulo: il costruttore<small>Installare bmb e creare la propria prima skill</small></div>
+      <span class="ex-time">40 min</span><span class="ex-chev">&#9654;</span></div>
+    <div class="ex-bd">
+      <div class="goal"><b>Obiettivo.</b> Vedere come si aggiunge un modulo a un'installazione esistente — che è diverso da installare da zero — e capire il ciclo di creazione di una skill propria, che è il modo in cui BMAD si estende davvero.</div>
+
+      <h4>Passo 1 — Aggiungere il modulo</h4>
+      <div class="code">
+        <div class="code-hd"><span>Aggiunta a un'installazione esistente</span><button class="copy">Copia</button></div>
+<pre>npx bmad-method install --yes --action update --modules bmm,bmb</pre>
+      </div>
+      <p><code>--tools</code> si omette di proposito: l'azione di aggiornamento riusa gli strumenti configurati alla prima installazione. E ricorda che <code>--modules</code> è l'insieme completo: <code>bmm</code> va rielencato, altrimenti verrebbe tolto.</p>
+
+      <h4>Passo 2 — Vedere cosa è cambiato</h4>
+      <div class="code os os-mac">
+        <div class="code-hd"><span>macOS / WSL</span><button class="copy">Copia</button></div>
+<pre>git status --short | head -30
+ls .claude/skills/ | grep -i builder</pre>
+      </div>
+      <div class="code os os-wsl">
+        <div class="code-hd"><span>WSL</span><button class="copy">Copia</button></div>
+<pre>git status --short | head -30
+ls .claude/skills/ | grep -i builder</pre>
+      </div>
+      <div class="code os os-win">
+        <div class="code-hd"><span>Windows · PowerShell</span><button class="copy">Copia</button></div>
+<pre>git status --short | Select-Object -First 30
+Get-ChildItem .claude\skills\ | Where-Object Name -like "*builder*"</pre>
+      </div>
+      <p>Compaiono le skill del costruttore: il costruttore di agenti, quello di workflow, quello di moduli, l'esecutore di valutazioni e la skill di setup del modulo.</p>
+
+      <h4>Passo 3 — Creare la prima skill</h4>
+      <div class="code">
+        <div class="code-hd"><span>Dentro la CLI</span><button class="copy">Copia</button></div>
+<pre><span class="p">/bmad-bmb-setup</span>
+
+<span class="c"># poi, per costruire qualcosa di tuo:</span>
+<span class="p">/bmad-workflow-builder</span> Voglio una skill che, dato un messaggio di errore,
+produca una checklist di diagnosi ordinata dal controllo più economico
+al più costoso.</pre>
+      </div>
+      <ol class="steps">
+        <li>Rispondi alle domande del costruttore. Osserva che ti chiede l'intento <em>prima</em> della struttura: è la stessa logica del metodo, applicata a se stesso.</li>
+        <li>Guarda dove è stata scritta la skill: il modulo chiede all'installazione dove salvare le tue creazioni, e il valore predefinito è una cartella <code>skills/</code> nel progetto.</li>
+        <li>Apri il <code>SKILL.md</code> generato e confrontalo con quello di una skill ufficiale. È lo stesso formato — lo standard aperto <em>Agent Skills</em> — ed è il motivo per cui la tua skill funziona anche su altri strumenti.</li>
+        <li>Invoca la tua skill e provala su un caso vero.</li>
+      </ol>
+      <div class="obs"><b>Il collegamento con il modulo sul prompt</b>
+      Costruire una skill è scrivere un prompt strutturato che sopravvive alla sessione. Il <a href="prompt-engineering-struttura.html">modulo 1</a> è la teoria di cosa mettere in quel file; il costruttore è lo strumento che gli dà una forma installabile e condivisibile. È il punto in cui i due argomenti del corso si toccano.</div>
+    </div>
+  </div>
+
+  <!-- ES 6 -->
+  <div class="ex">
+    <div class="ex-hd"><div class="ex-n">ES · 6</div>
+      <div class="ex-t">Installare l'orchestratore<small>Due pezzi, due strade, un preflight che dice la verità</small></div>
+      <span class="ex-time">45 min</span><span class="ex-chev">&#9654;</span></div>
+    <div class="ex-bd">
+      <div class="goal"><b>Obiettivo.</b> Installare bmad-loop capendo che sono <b>due componenti distinti</b> — le skill e il programma — e imparare a leggere il preflight, che è lo strumento diagnostico più utile dell'intero ecosistema.</div>
+
+      <div class="warn os os-win"><b>Su Windows nativo</b>
+      L'orchestratore gira su un backend sperimentale. Se puoi, fai questa esercitazione dentro WSL. Se proprio devi restare nativo, aspettati di dover diagnosticare il multiplexer, e usa il comando che elenca i backend per capire cosa è stato selezionato e perché.</div>
+
+      <h4>Strada A — dal pacchetto Python (autosufficiente)</h4>
+      <p>È la strada più diretta: il pacchetto include già le tre skill, e il comando di inizializzazione le mette a posto insieme agli hook e alla policy.</p>
+      <div class="code">
+        <div class="code-hd"><span>Strada A</span><button class="copy">Copia</button></div>
+<pre><span class="c"># un tag fissato — riproducibile, consigliato per l'uso quotidiano</span>
+uv tool install "bmad-loop[tui] @ git+https://github.com/bmad-code-org/bmad-loop.git@v0.9.1"
+
+<span class="c"># oppure la punta del ramo principale: più funzionalità, meno stabile</span>
+<span class="c"># uv tool install "bmad-loop[tui] @ git+https://github.com/bmad-code-org/bmad-loop.git"</span>
+
+bmad-loop --version
+
+cd ~/bmad-lab
+bmad-loop init --cli claude       <span class="c"># ripetibile con --cli codex, --cli gemini…</span>
+bmad-loop validate</pre>
+      </div>
+      <p>L'extra <code>[tui]</code> aggiunge la dashboard; si può omettere per un'installazione senza interfaccia.</p>
+
+      <h4>Strada B — dal selettore dell'installer BMAD</h4>
+      <p>Se hai selezionato il modulo nel picker, l'installer ha copiato <b>solo le skill</b>. Il programma va ancora installato, e lo fa la skill di setup.</p>
+      <div class="code">
+        <div class="code-hd"><span>Strada B</span><button class="copy">Copia</button></div>
+<pre><span class="c"># 1 · aggiungi il modulo all'installazione</span>
+npx bmad-method install --yes --action update --modules bmm,bmad-loop
+
+<span class="c"># 2 · completa: installa il programma, sceglie le CLI, registra gli hook, fa il preflight</span>
+claude "/bmad-loop-setup accept all defaults"</pre>
+      </div>
+
+      <h4>Passo comune — leggere il preflight</h4>
+      <div class="code">
+        <div class="code-hd"><span>Il comando diagnostico più utile</span><button class="copy">Copia</button></div>
+<pre>bmad-loop validate
+
+<span class="c"># quale multiplexer è stato scelto, e perché</span>
+bmad-loop mux
+
+<span class="c"># quali adattatori di CLI sono registrati</span>
+bmad-loop adapters</pre>
+      </div>
+      <p>Il preflight controlla, uno per uno: la configurazione BMAD, la presenza di uno <code>sprint-status.yaml</code>, git, il binario della CLI, la registrazione degli hook e lo stato del multiplexer. Verifica inoltre che ci siano le skill che l'orchestratore andrà a invocare, e le segnala con l'indicazione di quale modulo le fornisce se mancano.</p>
+
+      <div class="obs"><b>Il preflight fallirà, ed è previsto</b>
+      A questo punto manca <code>sprint-status.yaml</code>, perché non hai ancora fatto pianificazione. È il modo giusto per far vedere che il preflight <em>controlla davvero</em> invece di dire sempre di sì. Per completare, servirebbe una passata di pianificazione — che è l'argomento del <a href="bmad-workshop.html">laboratorio sui tre flussi</a>, non di questa pagina.</div>
+
+      <div class="warn"><b>Il passaggio che tutti dimenticano, e che costa mezz'ora</b>
+      Se la CLI di coding non è <b>mai</b> stata avviata in quel progetto, avviala una volta a mano e accetta la finestra di fiducia del workspace e l'eventuale approvazione degli hook. Una sessione generata dall'orchestratore non può rispondere a un dialogo di primo avvio, e quel blocco viene letto come un timeout di sessione: un sintomo che non suggerisce affatto la sua causa.</div>
+
+      <h4>Cosa è comparso sul disco</h4>
+      <div class="code os os-mac">
+        <div class="code-hd"><span>macOS / WSL</span><button class="copy">Copia</button></div>
+<pre>ls -la .bmad-loop/
+cat .bmad-loop/policy.toml | head -30
+git diff .gitignore
+ls ~/.local/state/bmad-loop/ 2>/dev/null</pre>
+      </div>
+      <div class="code os os-wsl">
+        <div class="code-hd"><span>WSL</span><button class="copy">Copia</button></div>
+<pre>ls -la .bmad-loop/
+cat .bmad-loop/policy.toml | head -30
+git diff .gitignore
+ls ~/.local/state/bmad-loop/ 2>/dev/null</pre>
+      </div>
+      <div class="code os os-win">
+        <div class="code-hd"><span>Windows · PowerShell</span><button class="copy">Copia</button></div>
+<pre>Get-ChildItem -Force .bmad-loop\
+Get-Content .bmad-loop\policy.toml -TotalCount 30
+git diff .gitignore
+Get-ChildItem $env:LOCALAPPDATA\bmad-loop\state\ -ErrorAction SilentlyContinue</pre>
+      </div>
+      <p>Nota due cose: il <code>.gitignore</code> è stato modificato — guarda il diff prima di committare — e nella tua home è comparsa una radice di stato <b>fuori</b> dall'albero di progetto, che è deliberato: un cambio di branch o un rollback non devono poter togliere il piano di controllo a un run vivo.</p>
+    </div>
+  </div>
+
+  <!-- ES 7 -->
+  <div class="ex">
+    <div class="ex-hd"><div class="ex-n">ES · 7</div>
+      <div class="ex-t">Aggiornare un'installazione esistente<small>Due assi, tre canali, e un menu che va capito</small></div>
+      <span class="ex-time">30 min</span><span class="ex-chev">&#9654;</span></div>
+    <div class="ex-bd">
+      <div class="goal"><b>Obiettivo.</b> Aggiornare senza sorprese. È l'operazione che si fa più spesso dopo la prima installazione, e quella su cui si sbaglia di più — perché il versionamento ha due assi indipendenti che vanno tenuti distinti.</div>
+
+      <h4>I due assi, da tenere separati in testa</h4>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:26%">Asse</th><th style="width:34%">Cosa controlla</th><th style="width:40%">Come lo muovi</th></tr></thead>
+          <tbody>
+            <tr><td><b>Versione dell'installer</b></td><td>Le versioni di <code>core</code> e <code>bmm</code>, che viaggiano <b>dentro</b> il pacchetto npm</td><td><code>npx bmad-method install</code> per la stabile, <code>npx bmad-method@next install</code> per la prerelease. Non esiste altro modo: un pin su <code>bmm</code> è inefficace, e l'installer te lo dice.</td></tr>
+            <tr><td><b>Canale dei moduli esterni</b></td><td>Tutti gli altri moduli, che vengono <b>clonati da Git</b></td><td>Tre canali per modulo: l'ultimo tag rilasciato, la punta del ramo principale, oppure un tag fissato. Si possono mescolare liberamente.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Il menu che appare se la cartella contiene già <code>_bmad/</code></h4>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:24%">Scelta</th><th style="width:76%">Cosa fa</th></tr></thead>
+          <tbody>
+            <tr><td><b>Quick Update</b></td><td>Rilancia l'installazione con le impostazioni esistenti. Rinfresca i file, applica patch e aggiornamenti minori stabili, <b>rifiuta gli aggiornamenti maggiori</b>. Veloce e non interattivo. È quello che vuoi il 90% delle volte.</td></tr>
+            <tr><td><b>Modify Install</b></td><td>Flusso interattivo completo. Aggiungi o rimuovi moduli, riconfiguri le impostazioni, e — se rispondi di sì alla domanda apposita — rivedi e cambi il canale di ogni modulo esterno.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ol class="steps">
+        <li>Lancia <code>npx bmad-method install</code> nel progetto già installato e osserva che compare il menu invece delle domande iniziali.</li>
+        <li>Scegli <b>Quick Update</b> e guarda cosa cambia con <code>git status</code>. Nota che le tue personalizzazioni in <code>_bmad/custom/</code> non vengono toccate.</li>
+        <li>Rilancia scegliendo <b>Modify Install</b> e rispondi di sì alla revisione dei canali: per ciascun modulo esterno ti verrà offerto di mantenere, passare a stabile, passare alla punta del ramo o fissare un tag.</li>
+        <li>Osserva come vengono classificati gli aggiornamenti disponibili.</li>
+      </ol>
+
+      <div class="obs"><b>La regola sugli aggiornamenti maggiori</b>
+      Patch e minori vengono proposti con risposta predefinita affermativa; i <b>maggiori</b> con risposta predefinita <em>negativa</em>, perché le rotture di compatibilità si presentano spesso come «instabilità» quando non ci si aspettava un cambio maggiore. La richiesta include un collegamento alle note di rilascio: leggile prima di accettare. In modalità non interattiva patch e minori si applicano da soli, i maggiori restano fermi finché non li accetti esplicitamente fissando il nuovo tag.</div>
+
+      <h4>Ricette non interattive</h4>
+      <div class="code">
+        <div class="code-hd"><span>Le quattro che servono davvero</span><button class="copy">Copia</button></div>
+<pre><span class="c"># tutto stabile, insieme esatto di moduli</span>
+npx bmad-method install --yes --modules bmm,bmb,cis --tools claude-code
+
+<span class="c"># riproducibile byte per byte — installazioni aziendali e CI</span>
+npx bmad-method install --yes --modules bmm,bmb,cis \
+  --pin bmb=v1.7.0 --pin cis=v0.2.0 --tools claude-code
+
+<span class="c"># punta del ramo per i moduli esterni</span>
+npx bmad-method install --yes --modules bmm,bmb --all-next --tools claude-code
+
+<span class="c"># aggiungere un modulo mantenendo il resto (--tools si omette apposta)</span>
+npx bmad-method install --yes --action update --modules bmm,bmb,gds</pre>
+      </div>
+      <p>La precedenza quando i flag si sovrappongono: il pin batte la punta del ramo per singolo modulo, che batte l'impostazione globale, che batte il default del registro.</p>
+
+      <h4>Gli shim di compatibilità</h4>
+      <p>Quando una skill viene deprecata, resta in vita come inoltro verso quella nuova. L'aggiornamento ti chiede se vuoi tenerli, con risposta predefinita affermativa perché premere invio non deve mai rompere una skill che stai usando. Ogni volta che li mantiene, l'installer <b>elenca quali sono e verso cosa inoltrano</b>: è la tua lista di migrazione.</p>
+      <div class="code">
+        <div class="code-hd"><span>Toglierli quando hai finito di migrare</span><button class="copy">Copia</button></div>
+<pre>npx bmad-method install --yes --action update --modules bmm --no-shims</pre>
+      </div>
+
+      <h4>Aggiornare l'orchestratore — sono due passi, non uno</h4>
+      <div class="code">
+        <div class="code-hd"><span>La strada facile</span><button class="copy">Copia</button></div>
+<pre>claude "/bmad-loop-setup upgrade"</pre>
+      </div>
+      <div class="code">
+        <div class="code-hd"><span>I due passi che quella skill esegue — utili per CLI diverse o per script</span><button class="copy">Copia</button></div>
+<pre><span class="c"># 1 · il programma. --reinstall è NECESSARIO su una sorgente git:</span>
+<span class="c">#     un upgrade normale riusa il commit in cache e non prende il codice nuovo</span>
+uv tool upgrade bmad-loop --reinstall
+
+<span class="c">#     per passare a un tag più nuovo, reinstalla nominandolo</span>
+<span class="c"># uv tool install --force "bmad-loop[tui] @ git+https://github.com/bmad-code-org/bmad-loop.git@v0.9.1"</span>
+
+<span class="c"># 2 · le copie delle skill in OGNI progetto che usa l'orchestratore</span>
+<span class="c">#     init le ha congelate all'installazione: l'upgrade del programma non le tocca</span>
+bmad-loop init --project /percorso/del/progetto --force-skills</pre>
+      </div>
+      <div class="warn"><b>I due errori classici sull'aggiornamento dell'orchestratore</b>
+      Il primo: dimenticare il secondo passo, e restare con skill vecchie che parlano con un programma nuovo. Il secondo: omettere <code>--reinstall</code> su una sorgente git, e credere di aver aggiornato mentre il commit in cache è lo stesso di prima. Il file di policy invece sopravvive intatto: le chiavi nuove sono opzionali e ricadono sui propri default.</div>
+    </div>
+  </div>
+
+  <!-- ES 8 -->
+  <div class="ex">
+    <div class="ex-hd"><div class="ex-n">ES · 8</div>
+      <div class="ex-t">Il mondo attorno: cosa installare e cosa solo leggere<small>Classificare invece che accumulare</small></div>
+      <span class="ex-time">35 min</span><span class="ex-chev">&#9654;</span></div>
+    <div class="ex-bd">
+      <div class="goal"><b>Obiettivo.</b> Applicare la classificazione della <a href="bmad-anatomia.html#catalogo">parte 1</a> a progetti reali, e installare quello che ha senso installare. L'abilità da trasmettere non è l'elenco: è la domanda «<em>dove si installa?</em>», che smaschera subito la natura di un repository.</div>
+
+      <h4>A · Moduli veri — si aggiungono dal selettore</h4>
+      <div class="code">
+        <div class="code-hd"><span>Provane uno che non hai ancora</span><button class="copy">Copia</button></div>
+<pre><span class="c"># suite creativa e architetto dei test, insieme a quelli che hai già</span>
+npx bmad-method install --yes --action update --modules bmm,bmb,cis,tea
+
+<span class="c"># quali chiavi di configurazione espone un modulo</span>
+npx bmad-method install --list-options cis</pre>
+      </div>
+      <p>Esiste anche la possibilità di installare moduli di comunità da un URL Git o da un percorso locale, con l'apposito flag di sorgente personalizzata. È il meccanismo con cui un'organizzazione distribuisce i propri moduli interni.</p>
+
+      <h4>B · Sistemi che vivono accanto — si installano, ma non dentro BMAD</h4>
+      <p>Il caso più interessante da mostrare in aula è <b>boss-skill</b>: non è un addon, è un <em>sistema alternativo</em> che risolve lo stesso problema con un'architettura diversa. Trasforma un assistente in una squadra — PM, architetto, designer, tech lead, scrum master, frontend, backend, QA, DevOps — e la sua tesi è esplicitamente costruita <em>contro</em> l'orchestrazione basata solo su prompt: stato a runtime, eventi in sola aggiunta, gate non aggirabili, valutazioni deterministiche, artefatti riproducibili.</p>
+      <div class="code">
+        <div class="code-hd"><span>Installazione da npm — in un progetto separato</span><button class="copy">Copia</button></div>
+<pre><span class="c"># NON nello stesso progetto in cui hai BMAD: sono due sistemi</span>
+mkdir ~/boss-lab && cd ~/boss-lab && git init
+
+<span class="c"># una tantum, senza installazione globale</span>
+npx @blade-ai/boss-skill
+
+<span class="c"># oppure globale, con la procedura guidata di auto-installazione</span>
+<span class="c"># npm install -g @blade-ai/boss-skill && boss-skill install</span>
+
+<span class="c"># prova prima cosa farebbe, senza scrivere niente</span>
+<span class="c"># boss-skill install --dry-run</span>
+<span class="c"># boss-skill uninstall     ← per ripulire a fine esercitazione</span>
+
+<span class="c"># poi, dentro la CLI, prova un singolo ruolo invece dell'intera pipeline</span>
+<span class="c"># /boss:plan   → PM + architetto</span>
+<span class="c"># /boss:review → revisione in sola lettura</span></pre>
+      </div>
+      <div class="obs"><b>Esercizio comparativo, molto formativo</b>
+      Dai la <em>stessa</em> consegna a BMAD e a boss-skill in due progetti separati, e confronta gli artefatti prodotti: dove finiscono, che forma hanno, quanto sono verificabili. Non serve a decretare un vincitore — serve a far vedere che «metodo strutturato per agenti» è ormai una categoria con più implementazioni, e che le differenze stanno nella forma delle prove che ciascuno lascia.</div>
+
+      <h4>C · Porting su altre piattaforme</h4>
+      <p>Se in aula qualcuno usa OpenClaw, esiste un porting del metodo come plugin di quella piattaforma, con strumenti propri per inizializzare il progetto, elencare e avviare i workflow, salvare gli artefatti e leggere lo stato. <b>Non</b> si installa con l'installer BMAD: si clona nella cartella delle estensioni della piattaforma e si dichiara nella sua configurazione.</p>
+      <div class="obs"><b>Il dettaglio di progettazione da raccontare</b>
+      Il master deve essere un agente di <em>primo livello</em> e non un sotto-agente, perché in quella piattaforma i sotto-agenti non possono generarne altri — e il master deve poter generare gli specialisti. È un ottimo esempio di come i vincoli della piattaforma sottostante si riflettano nell'architettura dell'imbracatura.</p></div>
+
+      <h4>D · Materiale da leggere, non da installare</h4>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:26%">Risorsa</th><th style="width:74%">Come usarla in aula</th></tr></thead>
+          <tbody>
+            <tr><td><b>message-center</b></td><td>Il più utile in assoluto per un corso. Un'applicazione minuscola il cui valore è il <em>percorso</em>: prima uno strato leggero di sviluppo guidato da specifica, poi un retrofit del metodo BMAD sullo stesso codice, con PRD, architettura e file di storia ciascuno con i propri criteri di accettazione e il registro di ciò che è stato verificato. Si legge in mezz'ora e si vede il processo <em>dal risultato</em>. Assegnalo come lettura fra due sessioni.</td></tr>
+            <tr><td><b>spec-compare</b></td><td>Confronto documentato fra strumenti di sviluppo guidato da specifica, con sito interattivo, matrice di funzionalità e guida decisionale. Utile per collocare BMAD rispetto alle alternative — e per far notare onestamente che per problemi piccoli esistono percorsi molto più corti.</td></tr>
+            <tr><td><b>bmad-method-tutorial</b></td><td>Due percorsi completi, greenfield e brownfield, con cinque casi di studio. È in cinese e riferito a una versione precedente, quindi i nomi delle skill non corrispondono più — ma la <em>struttura</em> dei percorsi è un buon modello da cui partire per costruire il proprio corso.</td></tr>
+            <tr><td><b>Finance-Guru</b></td><td>Esempio di progetto di dominio costruito attorno ad agenti e skill specialistiche. Da guardare quando la domanda in aula è «e se il mio dominio non è lo sviluppo software?».</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ES 9 -->
+  <div class="ex">
+    <div class="ex-hd"><div class="ex-n">ES · 9</div>
+      <div class="ex-t">Rimuovere tutto, pulito<small>Saper disinstallare è parte del saper installare</small></div>
+      <span class="ex-time">15 min</span><span class="ex-chev">&#9654;</span></div>
+    <div class="ex-bd">
+      <div class="goal"><b>Obiettivo.</b> Riportare il progetto allo stato iniziale. Serve a due cose: liberare la macchina d'aula fra una sessione e l'altra, e — soprattutto — verificare di aver capito davvero <em>cosa</em> era stato scritto e <em>dove</em>.</div>
+
+      <h4>L'orchestratore, che ha una procedura propria</h4>
+      <p>La documentazione del progetto descrive una procedura di rimozione che <b>inverte quello che l'inizializzazione aveva messo</b>: stato, skill, hook, voci del <code>.gitignore</code>, e infine la disinstallazione del programma. È l'ordine corretto, perché rimuovere prima il programma lascia gli hook registrati che poi falliscono in silenzio.</p>
+      <div class="code">
+        <div class="code-hd"><span>Il programma, dopo aver ripulito i progetti</span><button class="copy">Copia</button></div>
+<pre>uv tool uninstall bmad-loop</pre>
+      </div>
+
+      <h4>Il metodo — a mano, ed è istruttivo</h4>
+      <div class="code os os-mac">
+        <div class="code-hd"><span>macOS / WSL · esercizio a memoria, prima di guardare</span><button class="copy">Copia</button></div>
+<pre><span class="c"># prova a elencare le cartelle da togliere PRIMA di leggere sotto</span>
+
+rm -rf _bmad/
+rm -rf .claude/skills/bmad-*      <span class="c"># o la cartella del tuo strumento</span>
+<span class="c"># _bmad-output/ contiene il TUO lavoro: decidi tu</span>
+<span class="c"># AGENTS.md può contenere righe non messe da BMAD: guardalo prima</span>
+
+<span class="c"># l'orchestratore, se c'era</span>
+rm -rf .bmad-loop/
+rm -rf ~/.local/state/bmad-loop/</pre>
+      </div>
+      <div class="code os os-wsl">
+        <div class="code-hd"><span>WSL</span><button class="copy">Copia</button></div>
+<pre>rm -rf _bmad/
+rm -rf .claude/skills/bmad-*
+rm -rf .bmad-loop/
+rm -rf ~/.local/state/bmad-loop/</pre>
+      </div>
+      <div class="code os os-win">
+        <div class="code-hd"><span>Windows · PowerShell</span><button class="copy">Copia</button></div>
+<pre>Remove-Item -Recurse -Force _bmad\
+Remove-Item -Recurse -Force .claude\skills\bmad-*
+Remove-Item -Recurse -Force .bmad-loop\
+Remove-Item -Recurse -Force $env:LOCALAPPDATA\bmad-loop\state\</pre>
+      </div>
+
+      <div class="obs"><b>Le tre cose che restano, e vanno tolte a mano</b>
+      Le voci aggiunte al <code>.gitignore</code>; gli hook registrati nel file di impostazioni della tua CLI; e le eventuali skill installate <b>globalmente</b> nella home, che non appartengono a nessun progetto e quindi nessuna rimozione di progetto le tocca. Quest'ultima è la più insidiosa: rimuovi BMAD da un progetto, continui a vedere le skill, e non capisci perché.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TROUBLE ===== -->
+<section id="trouble">
+  <div class="eyebrow">Diagnosi</div>
+  <h2>Quando non funziona</h2>
+  <p class="sub">I sintomi che si presentano davvero in aula, con la causa quasi certa. Da tenere aperto sul proiettore durante il laboratorio.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th style="width:32%">Sintomo</th><th style="width:68%">Causa quasi sempre, e cosa fare</th></tr></thead>
+      <tbody>
+        <tr><td><b>L'installazione riesce, la prima skill si arresta</b></td><td><code>uv</code> non è nel PATH. L'installer avvisa ma non blocca — puoi vedere verde e poi fermarti. Installa <code>uv</code>, riapri il terminale, riprova: non serve reinstallare.</td></tr>
+        <tr><td><b>«Installato in una cartella che non ho mai digitato»</b></td><td>Era un difetto noto del prompt della cartella, corretto: il campo restituiva l'opzione evidenziata dal completamento invece del testo digitato, e un singolo tasto freccia selezionava silenziosamente l'ultima directory dell'elenco. Se ti capita, stai usando una versione vecchia dell'installer.</td></tr>
+        <tr><td><b>Un modulo è sparito dopo un aggiornamento</b></td><td><code>--modules</code> non è un delta: è l'insieme esatto finale. Rielenca tutti i moduli che vuoi tenere.</td></tr>
+        <tr><td><b>La CLI non vede le skill</b></td><td>Sono nella cartella di un altro strumento. Controlla con <code>--list-tools</code> qual è la destinazione della CLI che stai usando e reinstalla con il <code>--tools</code> giusto.</td></tr>
+        <tr><td><b>Ho personalizzato una skill e l'aggiornamento ha cancellato tutto</b></td><td>Hai modificato il <code>customize.toml</code> della skill invece di creare un file in <code>_bmad/custom/</code>. È la ragione per cui l'esercitazione 4 viene prima delle altre.</td></tr>
+        <tr><td><b>L'orchestratore va in timeout subito</b></td><td>La CLI di coding non è mai stata avviata in quel progetto e sta aspettando la conferma di fiducia del workspace. Avviala a mano una volta e accetta i dialoghi.</td></tr>
+        <tr><td><b>Un run non presidiato si rifiuta di partire</b></td><td>File di personalizzazione con un nome deprecato. Lo shim propone la migrazione ma pretende un'approvazione esplicita, che una sessione non presidiata non può dare, quindi si ferma invece di inoltrare. Rinomina il file a mano.</td></tr>
+        <tr><td><b>Dentro WSL sembra tutto Windows</b></td><td>Hai installato gli strumenti con l'interprete Windows: sono raggiungibili dal prompt bash e si comportano silenziosamente come Windows. Il comando che elenca i backend deve riportare <code>linux</code> come default di piattaforma; se dice <code>win32</code>, reinstalla dentro Linux.</td></tr>
+        <tr><td><b>Ho aggiornato l'orchestratore ma è tutto come prima</b></td><td>Su una sorgente git l'aggiornamento normale riusa il commit in cache. Serve <code>--reinstall</code>. E ricorda il secondo passo: ristendere le skill in ogni progetto.</td></tr>
+        <tr><td><b>Tutto è lentissimo su Windows</b></td><td>Stai lavorando su <code>/mnt/c/…</code> da WSL. Sposta il repository dentro il filesystem Linux.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== CHECKLIST ===== -->
+<section id="checklist">
+  <div class="eyebrow">Chiusura</div>
+  <h2>Checklist finale</h2>
+  <p class="sub">Da spuntare a fine giornata. Se una voce resta vuota, sai esattamente cosa ripassare.</p>
+  <div class="chk" id="chk"></div>
+
+  <div class="callout green">
+    <p><strong>La cosa da ricordare quando tutto il resto sarà cambiato.</strong> Quello che installi sono <em>file di testo che il tuo assistente legge</em>, più un paio di programmi Python che li orchestrano. Non c'è magia, non c'è un servizio, non c'è un modello. Ogni volta che qualcosa non funziona, la domanda giusta è sempre la stessa: <em>quale file avrebbe dovuto essere letto, e da dove?</em> Con la mappa della <a href="bmad-anatomia.html">parte 1</a> quella domanda ha quasi sempre una risposta in trenta secondi.</p>
+  </div>
+</section>
+
+<!-- ===== FONTI ===== -->
+<section id="fonti">
+  <div class="eyebrow">Riferimenti</div>
+  <h2>Fonti</h2>
+  <p class="sub">Ogni comando di questa pagina è stato letto nella documentazione ufficiale o nei repository. Dove una procedura è descritta a parole invece che con un comando esatto, è perché la fonte fa così.</p>
+  <ol class="src-list" id="fonti-box"></ol>
+
+  <div class="callout amb" style="margin-top:26px">
+    <p><strong>Avvertenza sulla deperibilità.</strong> Fra la stesura dell'articolo di riferimento del progetto e questa pagina sono passate sei settimane, e nel frattempo due componenti hanno cambiato nome e uno strumento è diventato un prerequisito obbligatorio. Il progetto dell'orchestratore è dichiaratamente pre-1.0 e si riserva modifiche non retrocompatibili in una release minore. <strong>Rifai una prova completa prima di ogni edizione del corso</strong>, e leggi le note di rilascio invece di dare per scontato che si possa saltare avanti.</p>
+  </div>
+</section>
+
+<!-- MARKER -->
+
+<section class="modbar" style="border-top:1px solid var(--line)"><div class="modbar-t">Il percorso completo del corso</div><div class="modbar-g"><a class="modbar-i" style="--mc:#ffb547" href="prompt-engineering-struttura.html"><em>Modulo 1</em><b>L'anatomia di un prompt</b><span>apri →</span></a><a class="modbar-i" style="--mc:#5eead4" href="memoria-e-contesto-ai.html"><em>Modulo 2</em><b>Memoria e contesto</b><span>apri →</span></a><a class="modbar-i" style="--mc:#7dd3fc" href="normativa-ai-scadenze-obblighi.html"><em>Modulo 3</em><b>Normativa UE e italiana</b><span>apri →</span></a><a class="modbar-i" style="--mc:#a78bfa" href="bmad-tre-flussi.html"><em>Modulo 4</em><b>BMad: i tre flussi</b><span>apri →</span></a><a class="modbar-i" style="--mc:#c084fc" href="bmad-workshop.html"><em>Laboratorio</em><b>BMad: flussi a confronto</b><span>apri →</span></a><a class="modbar-i" style="--mc:#fb7185" href="bmad-anatomia.html"><em>Install · 1</em><b>Concetti e anatomia</b><span>apri →</span></a><div class="modbar-i cur" style="--mc:#fb7185"><em>Install · 2</em><b>Laboratorio installazione</b><span>sei qui</span></div></div></section>
+
+</main>
+
+<footer>
+  Corso BMAD · Parte 2: laboratorio di installazione<br>
+  <span style="color:var(--line-2)">Comandi verificati su BMAD-METHOD v6.11.0, bmad-builder e bmad-loop 0.10.0 il 16 agosto 2026 · Pagina autonoma, funziona offline</span>
+</footer>
+
+<script>
+(function(){
+  const links=[...document.querySelectorAll('#nav a')], prog=document.getElementById('prog');
+  function upd(){
+    const h=document.documentElement;
+    prog.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+    let cur=null;
+    document.querySelectorAll('section[id]').forEach(s=>{if(s.getBoundingClientRect().top<220)cur=s.id;});
+    links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+  }
+  window.addEventListener('scroll',upd,{passive:true}); upd();
+})();
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.copy'); if(!b)return;
+  const pre=b.closest('.code').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(()=>{
+    const o=b.textContent;b.textContent='Copiato';b.classList.add('done');
+    setTimeout(()=>{b.textContent=o;b.classList.remove('done')},1600);
+  });
+});
+document.addEventListener('click',e=>{
+  const r=e.target.closest('.ref'); if(!r)return;
+  const el=document.getElementById('src-'+r.dataset.r);
+  if(el){el.scrollIntoView({behavior:'smooth',block:'center'});
+    el.style.background='rgba(251,113,133,.13)';setTimeout(()=>el.style.background='',1800);}
+});
+/* OS switch */
+(function(){
+  const NOTES={
+    mac:'Percorsi POSIX, tmux come multiplexer. Tutto supportato.',
+    wsl:'Dentro WSL vale integralmente la colonna macOS/Linux. È la strada consigliata su Windows.',
+    win:'Il metodo è pienamente supportato. L’orchestratore gira su backend sperimentale.'
+  };
+  const note=document.getElementById('osnote');
+  document.querySelectorAll('.osbtn').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.osbtn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    document.body.dataset.os=b.dataset.os;
+    note.textContent=NOTES[b.dataset.os];
+  }));
+  note.textContent=NOTES.mac;
+})();
+/* esercizi */
+document.querySelectorAll('.ex').forEach(x=>{
+  x.querySelector('.ex-hd').addEventListener('click',e=>{
+    if(e.target.closest('.copy'))return; x.classList.toggle('open');
+  });
+});
+/* checklist */
+(function(){
+  const C=[
+    ['Ho i quattro prerequisiti, verificati con il comando di versione','Node 20.12+, uv con Python 3.11+, git, una CLI di coding. Il quinto — il multiplexer — solo se userò l\'orchestratore.'],
+    ['So dire a memoria in quale cartella finiscono le skill del mio strumento','E so che non stanno dentro _bmad/.'],
+    ['So spiegare cosa contiene ciascuna delle quattro cartelle di progetto','.claude/skills (o equivalente), _bmad/, _bmad-output/, .bmad-loop/.'],
+    ['Ho deciso, con la mia squadra, cosa va in git e cosa no','In particolare la cartella degli artefatti: è una scelta, non un default.'],
+    ['So aggiungere un modulo senza rimuovere gli altri','--modules è l\'insieme esatto finale, non un delta.'],
+    ['So che core e bmm salgono solo cambiando versione dell\'installer','E che un pin su di loro non ha effetto.'],
+    ['So personalizzare senza toccare le skill','File sparsi in _bmad/custom/, mai una copia integrale del customize.toml.'],
+    ['So che l\'orchestratore sono due componenti, non uno','Le skill e il programma. Le skill da sole non fanno nulla.'],
+    ['So leggere il preflight e capire cosa manca','E so che fallisce legittimamente finché non c\'è una pianificazione.'],
+    ['So aggiornare l\'orchestratore in due passi','Programma con --reinstall, poi le skill in ogni progetto con --force-skills.'],
+    ['So distinguere un modulo da un sistema parallelo da del materiale da leggere','La domanda che smaschera tutto: dove si installa?'],
+    ['So rimuovere tutto, comprese le tre cose che restano','Voci nel .gitignore, hook nella CLI, skill installate globalmente nella home.']
+  ];
+  const w=document.getElementById('chk'); if(!w)return;
+  C.forEach(([t,s])=>{
+    const d=document.createElement('div'); d.className='chk-i';
+    d.innerHTML='<div class="chk-box">&#10003;</div><div class="chk-tx">'+t+'<small>'+s+'</small></div>';
+    d.addEventListener('click',()=>d.classList.toggle('done'));
+    w.appendChild(d);
+  });
+})();
+/* fonti */
+(function(){
+  const S=[
+    ['BMAD-METHOD — how-to/install-bmad','La fonte di tutti i comandi di installazione e aggiornamento di questa pagina: flusso interattivo e sue sei domande, i due assi di versionamento, il menu Quick Update / Modify Install, la classificazione degli aggiornamenti, il riferimento completo dei flag e le ricette non interattive.','https://docs.bmad-method.org/how-to/install-bmad/'],
+    ['BMAD-METHOD — how-to/customize-bmad','Il modello di override a tre strati, le regole di merge per forma del valore, e l\'avvertenza sul non copiare l\'intero customize.toml.','https://docs.bmad-method.org/how-to/customize-bmad/'],
+    ['BMAD-METHOD — tutorials/getting-started','Il kata usato come primo giro di prova e i comandi di installazione in forma non interattiva.','https://docs.bmad-method.org/tutorials/getting-started/'],
+    ['BMAD-METHOD — repository','Letti direttamente: bmad-modules.yaml per il catalogo dei moduli ufficiali, tools/installer per la mappa strumento → cartella, src/bmm-skills per la struttura. Versione letta: 6.11.0.','https://github.com/bmad-code-org/BMAD-METHOD'],
+    ['bmad-builder — repository','Il modulo di costruzione, le sue skill e le chiavi di configurazione che chiede all\'installazione.','https://github.com/bmad-code-org/bmad-builder'],
+    ['bmad-loop — README e docs/setup-guide.md','Prerequisiti di piattaforma, le due strade di installazione, i comandi di inizializzazione e preflight, la procedura di aggiornamento in due passi e quella di rimozione, i backend del multiplexer e le variabili d\'ambiente con i loro percorsi su Windows. Versione letta: 0.10.0.','https://github.com/bmad-code-org/bmad-loop'],
+    ['boss-skill — echoVic','Sistema alternativo installabile da npm, usato nell\'esercitazione 8 come termine di paragone.','https://github.com/echoVic/boss-skill'],
+    ['BMAD_Openclaw — ErwanLorteau','Porting del metodo come plugin OpenClaw: procedura di installazione nelle estensioni della piattaforma e vincolo architetturale sugli agenti di primo livello.','https://github.com/ErwanLorteau/BMAD_Openclaw'],
+    ['spec-driven-ai-project-message-center — RishoniDeSilva','L\'esempio applicato consigliato come lettura fra due sessioni.','https://github.com/RishoniDeSilva/spec-driven-ai-project-message-center'],
+    ['spec-compare — cameronsjo','Il confronto fra strumenti di sviluppo guidato da specifica, per collocare BMAD rispetto alle alternative.','https://github.com/cameronsjo/spec-compare'],
+    ['bmad-method-tutorial — ljxpython','Percorsi didattici greenfield e brownfield, riferiti a una versione precedente del metodo.','https://github.com/ljxpython/bmad-method-tutorial'],
+    ['Finance-Guru — AojdevStudio','Esempio di progetto di dominio costruito attorno ad agenti e skill specialistiche.','https://github.com/AojdevStudio/Finance-Guru']
+  ];
+  const w=document.getElementById('fonti-box'); if(!w)return;
+  S.forEach(([t,d,u],i)=>{
+    const li=document.createElement('li'); li.id='src-'+(i+1);
+    li.innerHTML='<a href="'+u+'" target="_blank" rel="noopener">'+t+'</a><span>'+d+'</span>';
+    w.appendChild(li);
+  });
+})();
+</script>
+</body>
+</html>
