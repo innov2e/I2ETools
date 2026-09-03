@@ -317,6 +317,85 @@ footer{
 </style>
 </head>
 <body>
+<!-- sito:menu --><style>
+.sito-bar{position:sticky;top:0;z-index:900;display:flex;align-items:center;gap:2px;flex-wrap:wrap;
+  padding:0 14px;background:#0b0d12;border-bottom:1px solid #262d3d;font:600 13px/1 -apple-system,
+  BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.sito-bar a{text-decoration:none}
+.sito-marchio{color:#e6e9f0;padding:11px 12px 11px 0;letter-spacing:.4px;white-space:nowrap}
+.sito-marchio b{color:var(--ac,#7dd3fc)}
+.sito-tema{position:relative}
+.sito-tema>button{background:none;border:0;color:#a2acc2;font:inherit;padding:11px 12px;cursor:pointer;
+  border-bottom:2px solid transparent}
+.sito-tema>button:hover,.sito-tema.aperto>button{color:#e6e9f0}
+.sito-tema.qui>button{color:var(--ac,#7dd3fc);border-bottom-color:var(--ac,#7dd3fc)}
+.sito-menu{display:none;position:absolute;left:0;top:100%;min-width:290px;background:#12151d;
+  border:1px solid #333c52;border-radius:0 0 10px 10px;border-top:0;padding:6px;
+  box-shadow:0 14px 34px rgba(0,0,0,.5)}
+.sito-tema.aperto .sito-menu{display:block}
+.sito-menu a,.sito-menu span.chiuso{display:block;padding:8px 10px;border-radius:7px;color:#c9d1de;font-weight:600}
+.sito-menu a:hover{background:#1b2030;color:#fff}
+.sito-menu a.qui{color:var(--ac,#7dd3fc)}
+.sito-menu small{display:block;color:#6d7891;font-weight:500;margin-top:2px;font-size:11.5px;line-height:1.4}
+.sito-menu span.chiuso{color:#6d7891;cursor:default}
+.sito-menu span.chiuso:before{content:'\1F512';margin-right:7px;opacity:.7}
+.sito-bar .sito-sp{flex:1}
+.sito-bar .sito-casa{color:#6d7891;padding:11px 0 11px 12px;white-space:nowrap}
+.sito-bar .sito-casa:hover{color:var(--ac,#7dd3fc)}
+@media(max-width:760px){.sito-marchio{padding-right:6px}.sito-tema>button{padding:11px 8px}
+  .sito-menu{position:static;min-width:0;border:0;box-shadow:none;background:#0f121a}}
+.sito-pie{border-top:1px solid #262d3d;margin-top:56px;padding:26px 20px 34px;color:#6d7891;
+  font:400 12.5px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:center}
+.sito-pie b{color:#a2acc2;font-weight:700}
+.sito-pie a{color:#6d7891;text-decoration:underline}
+.sito-pie .sito-lic{margin-top:6px;font-size:12px}
+@media print{.sito-bar{display:none}.sito-pie{border-color:#bbb;color:#333}}
+</style>
+<nav class="sito-bar" aria-label="Navigazione del sito">
+<a class="sito-marchio" href="index.html">INNOV2E <b>Strumenti formativi</b></a>
+<div class="sito-tema"><button type="button">Fondamenti</button><div class="sito-menu">
+<a class="" href="tipi-di-ai.html">I tipi di AI — guida per decision maker<small>La versione distesa della mappa: le stesse cinque distinzioni, spiegate per chi deve decidere.</small></a>
+<a class="" href="timeline_tecnologica.html">Le tappe che hanno cambiato il mondo<small>Linea del tempo interattiva, dagli automi dell&#x27;antichità a ChatGPT, con vista lineare o logaritmica per mettere in evidenza l&#x27;accelerazione.</small></a>
+<a class="" href="tipi-di-ai-index.html">Tipi di Intelligenza Artificiale<small>Cinque assi indipendenti per orientarsi tra ANI/AGI/ASI, machine learning, AI debole/forte e il Regolamento UE sull&#x27;IA.</small></a>
+</div></div>
+<div class="sito-tema qui"><button type="button">Alfabetizzazione sull&#x27;AI</button><div class="sito-menu">
+<a class="qui" href="prompt-engineering-struttura.html">L&#x27;anatomia di un prompt<small>Struttura e buone pratiche del prompt: che cosa cambia davvero il risultato e che cosa è folklore.</small></a>
+<a class="" href="memoria-e-contesto-ai.html">La memoria dell&#x27;AI<small>Un&#x27;AI non ha una memoria. Ne ha sette. E nessuna delle sette funziona come la memoria umana.</small></a>
+<a class="" href="normativa-ai-scadenze-obblighi.html">La normativa: cosa devo fare, entro quando<small>AI Act, Omnibus, legge 132/2025 e decreto attuativo: obblighi, scadenze e chi è obbligato a cosa.</small></a>
+</div></div>
+<div class="sito-tema"><button type="button">Guide operative</button><div class="sito-menu">
+<a class="" href="Il Libro dei Prompting.html">Il Libro dei Prompting<small>360 prompt operativi su 8 livelli per un incarico di AI strategy enterprise: dalla prontezza dei dati al change management.</small></a>
+</div></div>
+<div class="sito-tema"><button type="button">BMAD</button><div class="sito-menu">
+<a class="" href="bmad-anatomia.html">BMAD: cos&#x27;è e anatomia dell&#x27;installazione<small>Cos&#x27;è BMAD, come si colloca nell&#x27;harness engineering, il vocabolario prima dei comandi e dove finiscono davvero i file.</small></a>
+<a class="" href="bmad-install-lab.html">BMAD: laboratorio di installazione<small>Nove esercitazioni su macOS e Windows: prerequisiti, primo giro di prova, moduli, orchestratore, personalizzazione, aggiornamento.</small></a>
+</div></div>
+<div class="sito-tema"><button type="button">Corsi in aula</button><div class="sito-menu">
+<span class="chiuso">Prompting avanzato per funzioni — Modulo 1<small>Tronco comune più quattro percorsi verticali, ciascuno con la propria data room e i propri esercizi.</small></span>
+<span class="chiuso">Tecniche di base di prompt engineering<small>Cinque lezioni: dal prompt vago alla libreria di prompt collaudati. Ogni lezione ha slide, laboratorio, strumenti e verifica.</small></span>
+</div></div>
+<span class="sito-sp"></span>
+<a class="sito-casa" href="index.html">Tutti i contenuti &#8594;</a>
+</nav>
+<script>
+(function(){
+  var bar=document.querySelector('.sito-bar'); if(!bar) return;
+  bar.querySelectorAll('.sito-tema>button').forEach(function(b){
+    b.onclick=function(e){
+      e.stopPropagation();
+      var t=b.parentNode, era=t.classList.contains('aperto');
+      bar.querySelectorAll('.sito-tema').forEach(function(x){x.classList.remove('aperto')});
+      t.classList.toggle('aperto', !era);
+    };
+  });
+  document.addEventListener('click',function(){
+    bar.querySelectorAll('.sito-tema').forEach(function(x){x.classList.remove('aperto')});
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape') bar.querySelectorAll('.sito-tema').forEach(function(x){x.classList.remove('aperto')});
+  });
+})();
+</script><!-- /sito:menu -->
 
 <div class="progress" id="prog"></div>
 <div class="topbar">
@@ -1602,5 +1681,8 @@ document.addEventListener('click',e=>{
   });
 })();
 </script>
+<!-- sito:pie -->
+<footer class="sito-pie"><b>INNOV2E</b> &middot; aggiornato al 20 agosto 2026 &middot; <a href="https://innov2e.github.io/I2ETools/prompt-engineering-struttura.html">versione online sempre aggiornata</a><div class="sito-lic">Uso consentito con citazione della fonte. Vietata la rivendita.</div></footer>
+<!-- /sito:pie -->
 </body>
 </html>

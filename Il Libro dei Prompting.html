@@ -128,6 +128,85 @@ td:nth-child(2){white-space:nowrap;color:var(--tx)}
 </style>
 </head>
 <body>
+<!-- sito:menu --><style>
+.sito-bar{position:sticky;top:0;z-index:900;display:flex;align-items:center;gap:2px;flex-wrap:wrap;
+  padding:0 14px;background:#0b0d12;border-bottom:1px solid #262d3d;font:600 13px/1 -apple-system,
+  BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.sito-bar a{text-decoration:none}
+.sito-marchio{color:#e6e9f0;padding:11px 12px 11px 0;letter-spacing:.4px;white-space:nowrap}
+.sito-marchio b{color:var(--ac,#7dd3fc)}
+.sito-tema{position:relative}
+.sito-tema>button{background:none;border:0;color:#a2acc2;font:inherit;padding:11px 12px;cursor:pointer;
+  border-bottom:2px solid transparent}
+.sito-tema>button:hover,.sito-tema.aperto>button{color:#e6e9f0}
+.sito-tema.qui>button{color:var(--ac,#7dd3fc);border-bottom-color:var(--ac,#7dd3fc)}
+.sito-menu{display:none;position:absolute;left:0;top:100%;min-width:290px;background:#12151d;
+  border:1px solid #333c52;border-radius:0 0 10px 10px;border-top:0;padding:6px;
+  box-shadow:0 14px 34px rgba(0,0,0,.5)}
+.sito-tema.aperto .sito-menu{display:block}
+.sito-menu a,.sito-menu span.chiuso{display:block;padding:8px 10px;border-radius:7px;color:#c9d1de;font-weight:600}
+.sito-menu a:hover{background:#1b2030;color:#fff}
+.sito-menu a.qui{color:var(--ac,#7dd3fc)}
+.sito-menu small{display:block;color:#6d7891;font-weight:500;margin-top:2px;font-size:11.5px;line-height:1.4}
+.sito-menu span.chiuso{color:#6d7891;cursor:default}
+.sito-menu span.chiuso:before{content:'\1F512';margin-right:7px;opacity:.7}
+.sito-bar .sito-sp{flex:1}
+.sito-bar .sito-casa{color:#6d7891;padding:11px 0 11px 12px;white-space:nowrap}
+.sito-bar .sito-casa:hover{color:var(--ac,#7dd3fc)}
+@media(max-width:760px){.sito-marchio{padding-right:6px}.sito-tema>button{padding:11px 8px}
+  .sito-menu{position:static;min-width:0;border:0;box-shadow:none;background:#0f121a}}
+.sito-pie{border-top:1px solid #262d3d;margin-top:56px;padding:26px 20px 34px;color:#6d7891;
+  font:400 12.5px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:center}
+.sito-pie b{color:#a2acc2;font-weight:700}
+.sito-pie a{color:#6d7891;text-decoration:underline}
+.sito-pie .sito-lic{margin-top:6px;font-size:12px}
+@media print{.sito-bar{display:none}.sito-pie{border-color:#bbb;color:#333}}
+</style>
+<nav class="sito-bar" aria-label="Navigazione del sito">
+<a class="sito-marchio" href="index.html">INNOV2E <b>Strumenti formativi</b></a>
+<div class="sito-tema"><button type="button">Fondamenti</button><div class="sito-menu">
+<a class="" href="tipi-di-ai.html">I tipi di AI — guida per decision maker<small>La versione distesa della mappa: le stesse cinque distinzioni, spiegate per chi deve decidere.</small></a>
+<a class="" href="timeline_tecnologica.html">Le tappe che hanno cambiato il mondo<small>Linea del tempo interattiva, dagli automi dell&#x27;antichità a ChatGPT, con vista lineare o logaritmica per mettere in evidenza l&#x27;accelerazione.</small></a>
+<a class="" href="tipi-di-ai-index.html">Tipi di Intelligenza Artificiale<small>Cinque assi indipendenti per orientarsi tra ANI/AGI/ASI, machine learning, AI debole/forte e il Regolamento UE sull&#x27;IA.</small></a>
+</div></div>
+<div class="sito-tema"><button type="button">Alfabetizzazione sull&#x27;AI</button><div class="sito-menu">
+<a class="" href="prompt-engineering-struttura.html">L&#x27;anatomia di un prompt<small>Struttura e buone pratiche del prompt: che cosa cambia davvero il risultato e che cosa è folklore.</small></a>
+<a class="" href="memoria-e-contesto-ai.html">La memoria dell&#x27;AI<small>Un&#x27;AI non ha una memoria. Ne ha sette. E nessuna delle sette funziona come la memoria umana.</small></a>
+<a class="" href="normativa-ai-scadenze-obblighi.html">La normativa: cosa devo fare, entro quando<small>AI Act, Omnibus, legge 132/2025 e decreto attuativo: obblighi, scadenze e chi è obbligato a cosa.</small></a>
+</div></div>
+<div class="sito-tema qui"><button type="button">Guide operative</button><div class="sito-menu">
+<a class="qui" href="Il Libro dei Prompting.html">Il Libro dei Prompting<small>360 prompt operativi su 8 livelli per un incarico di AI strategy enterprise: dalla prontezza dei dati al change management.</small></a>
+</div></div>
+<div class="sito-tema"><button type="button">BMAD</button><div class="sito-menu">
+<a class="" href="bmad-anatomia.html">BMAD: cos&#x27;è e anatomia dell&#x27;installazione<small>Cos&#x27;è BMAD, come si colloca nell&#x27;harness engineering, il vocabolario prima dei comandi e dove finiscono davvero i file.</small></a>
+<a class="" href="bmad-install-lab.html">BMAD: laboratorio di installazione<small>Nove esercitazioni su macOS e Windows: prerequisiti, primo giro di prova, moduli, orchestratore, personalizzazione, aggiornamento.</small></a>
+</div></div>
+<div class="sito-tema"><button type="button">Corsi in aula</button><div class="sito-menu">
+<span class="chiuso">Prompting avanzato per funzioni — Modulo 1<small>Tronco comune più quattro percorsi verticali, ciascuno con la propria data room e i propri esercizi.</small></span>
+<span class="chiuso">Tecniche di base di prompt engineering<small>Cinque lezioni: dal prompt vago alla libreria di prompt collaudati. Ogni lezione ha slide, laboratorio, strumenti e verifica.</small></span>
+</div></div>
+<span class="sito-sp"></span>
+<a class="sito-casa" href="index.html">Tutti i contenuti &#8594;</a>
+</nav>
+<script>
+(function(){
+  var bar=document.querySelector('.sito-bar'); if(!bar) return;
+  bar.querySelectorAll('.sito-tema>button').forEach(function(b){
+    b.onclick=function(e){
+      e.stopPropagation();
+      var t=b.parentNode, era=t.classList.contains('aperto');
+      bar.querySelectorAll('.sito-tema').forEach(function(x){x.classList.remove('aperto')});
+      t.classList.toggle('aperto', !era);
+    };
+  });
+  document.addEventListener('click',function(){
+    bar.querySelectorAll('.sito-tema').forEach(function(x){x.classList.remove('aperto')});
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape') bar.querySelectorAll('.sito-tema').forEach(function(x){x.classList.remove('aperto')});
+  });
+})();
+</script><!-- /sito:menu -->
 <div class="gold-bar"></div>
 
 <header class="site-header">
@@ -153,13 +232,6 @@ td:nth-child(2){white-space:nowrap;color:var(--tx)}
   </div>
 </section>
 
-<section class="read-book-strip">
-  <div class="container content-width">
-    <p class="read-book-line">La guida completa è qui sotto, gratuita. Quando sei pronto a usarla con il tuo team di leadership:</p>
-    <a href="https://cal.com/grant-baldwin/calendar?utm_source=guide&amp;utm_campaign=360-prompt-book" class="read-book-cta">Prenota 30 minuti →</a>
-    <p class="read-book-note">Niente slide. Niente pitch. Solo una conversazione.</p>
-  </div>
-</section>
 
 <section class="read-content-section">
 <div class="container content-width">
@@ -180,41 +252,14 @@ td:nth-child(2){white-space:nowrap;color:var(--tx)}
     <li><a href="#livello-8">Livello 8: Change management, adozione e allineamento esecutivo</a></li>
     <li><a href="#settimana-reale">Come far girare il sistema in una settimana reale</a></li>
     <li><a href="#cosa-viene-dopo">Cosa viene dopo</a></li>
-    <li><a href="#su-geniant">Chi è geniant</a></li>
     <li><a href="#due-strade">Due strade per andare avanti</a></li>
   </ol>
 </nav>
 
 <article class="magnet-article">
 
-<p><em>Il livello analitico di un incarico di AI strategy enterprise da 1,5 milioni di dollari, ricostruito come prompt copia-e-incolla per chi opera sul campo.</em><br>
-Di Grant Baldwin — geniant</p>
-
-<hr>
-
 <h2 id="perche-esiste">Perché esiste questa guida</h2>
-<p>1,5 milioni di dollari.</p>
-<p>È quello che la Big Consulting può farsi pagare per il solo livello analitico di un incarico di AI strategy enterprise.</p>
-<p>Non il sistema in produzione. Non il cambiamento dell'operating model. Non il rilascio.</p>
-<p>Il livello analitico: interviste agli stakeholder, modelli di maturità, mappe di processo, issue tree, matrici di prioritizzazione, heat map di prontezza, logica make-or-buy, slide di governance e roadmap dei piloti.</p>
-<p>Centinaia di pagine di pensiero strutturato, impacchettate benissimo, consegnate lentamente e prezzate come se i framework stessi fossero ancora una rarità.</p>
-<p>Non lo sono.</p>
-<p>Questa è la parte scomoda.</p>
-<p>I framework stanno diventando asset di massa. L'analisi di primo passaggio sta diventando output di massa. La vecchia macchina della consulenza è stata costruita per un mondo in cui il lavoro necessario a sintetizzare 200 documenti, estrarre pattern dalle interviste, confrontare casi d'uso e redigere raccomandazioni pronte per il vertice era costoso.</p>
-<p>Quel lavoro sta cambiando. Claude può fare il primo passaggio. ChatGPT può strutturare le opzioni. L'AI può trasformare input operativi disordinati in analisi utilizzabili più in fretta di quanto un team di consulenti junior riesca a fissare il primo giro di interviste.</p>
-<p>Questo non significa che l'AI sostituisca la trasformazione.</p>
-<p>Significa che la parte costosa della trasformazione si sposta.</p>
-<p>Il valore non sta più nel produrre la prima versione della matrice. Il valore sta nel capire se quella matrice ti sta mentendo.</p>
-<p>Un prompt può costruire l'issue tree. Non può dirti quale dirigente bloccherà silenziosamente l'operating model perché il nuovo flusso di lavoro gli toglie un punto di controllo.</p>
-<p>Un prompt può ordinare i casi d'uso. Non può dirti quale team in prima linea ha abbastanza fiducia per sopravvivere all'impatto con un flusso assistito dall'AI.</p>
-<p>Un prompt può redigere la roadmap. Non può sostenere il costo politico di dire al consiglio che l'agente customer-facing luccicante deve aspettare finché i dati di sinistri, finance o supply chain non sono sistemati.</p>
-<p>Quello è il confine.</p>
-<p>Il livello di analisi costa meno ogni settimana che passa.</p>
-<p>Il livello di giudizio vale di più ogni settimana che passa.</p>
-<p>Questa guida ti dà il livello analitico. Non come teoria. Come 360 prompt su tutto lo stack di AI strategy della Big Consulting.</p>
-<p>Usali per comprimere il lavoro.</p>
-<p>Usali per far emergere i vincoli veri.</p>
-<p>Usali per arrivare all'unica parte che conta davvero:</p>
+
 <p><strong>Capire il lavoro. Costruire il target operating model. Costruire lo strumento.</strong></p>
 <p>In quest'ordine.</p>
 
@@ -935,32 +980,6 @@ esperti che hanno già visto rollout software fatti male.</code><button class="c
 <p>Il livello di analisi è ormai una commodity.</p>
 <p>Chi opera sul campo no.</p>
 
-<hr>
-
-<h2 id="su-geniant">Chi è geniant</h2>
-<p>geniant è la società che prima di tutto capisce il lavoro.</p>
-<p>Da 15 anni aiutiamo le aziende a passare dalla strategia alla produzione con un unico team integrato: experience design, workflow intelligence, progettazione dell'operating model e sviluppo abilitato dall'AI.</p>
-<p>Lavoriamo dove la posta in gioco è alta, i sistemi sono complessi e il lavoro non può essere ridotto a un generico rollout software: banche globali, grandi compagnie aeree e di trasporto, grandi manifatture, organizzazioni sanitarie, retailer, agenzie federali e imprese mid-market complesse.</p>
-<p>Il nostro vantaggio non è avere una presentazione di strategia più bella.</p>
-<p>Il nostro vantaggio è che colleghiamo tutta la catena:</p>
-<p><strong>Capire il lavoro.</strong></p>
-<p>Mappare il processo reale. Ogni passaggio di consegna. Ogni eccezione. Ogni scorciatoia. Ogni dipendenza dai dati. Ogni punto di giudizio umano.</p>
-<p><strong>Costruire il target operating model.</strong></p>
-<p>Definire come il business deve funzionare con l'AI dentro il processo: ruoli, diritti decisionali, percorsi di escalation, governance, metriche, adozione e change management.</p>
-<p><strong>Costruire lo strumento.</strong></p>
-<p>Progettare e rilasciare il sistema abilitato dall'AI attorno all'operating model, non il contrario.</p>
-<p>Un solo team.</p>
-<p>Nessun passaggio di consegna tra strategia, design e sviluppo.</p>
-<p>Nessuna finzione che lo strumento sistemi il processo da solo.</p>
-<p>Quattro studi: Dallas, Chicago, San Francisco, Londra.</p>
-<p>La sequenza non cambia.</p>
-<p>Capire il lavoro.</p>
-<p>Costruire il target operating model.</p>
-<p>Costruire lo strumento.</p>
-<p>In quest'ordine.</p>
-
-<hr>
-
 <h2 id="due-strade">Due strade per andare avanti</h2>
 <p><strong>Opzione 1: fallo da solo.</strong></p>
 <p>Usa il Prompt Book. Scegli un processo. Esegui lo sprint analitico di una settimana. Valida ogni output con le persone che il lavoro lo fanno davvero.</p>
@@ -1030,5 +1049,8 @@ window.addEventListener('scroll', function(){
 });
 toTop.addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); });
 </script>
+<!-- sito:pie -->
+<footer class="sito-pie"><b>INNOV2E</b> &middot; aggiornato al 3 settembre 2026 &middot; <a href="https://innov2e.github.io/I2ETools/Il%20Libro%20dei%20Prompting.html">versione online sempre aggiornata</a><div class="sito-lic">Uso consentito con citazione della fonte. Vietata la rivendita.</div></footer>
+<!-- /sito:pie -->
 </body>
 </html>

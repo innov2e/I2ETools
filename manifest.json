@@ -1,0 +1,159 @@
+{
+  "sito": {
+    "nome": "INNOV2E",
+    "titolo": "Strumenti formativi",
+    "licenza": "Uso consentito con citazione della fonte. Vietata la rivendita.",
+    "base": "https://innov2e.github.io/I2ETools/"
+  },
+
+  "temi": [
+    { "id": "fondamenti",       "titolo": "Fondamenti",              "descrizione": "Orientarsi: che cosa è un sistema di AI, come si classifica, da dove viene." },
+    { "id": "alfabetizzazione", "titolo": "Alfabetizzazione sull'AI", "descrizione": "Il corso: come si scrive un prompt, dove vive il contesto, quali obblighi si applicano." },
+    { "id": "guide",            "titolo": "Guide operative",          "descrizione": "Materiale da usare sul lavoro, non da studiare." },
+    { "id": "bmad",             "titolo": "BMAD",                     "descrizione": "Che cos'è, come si installa, come si usa." },
+    { "id": "aula",             "titolo": "Corsi in aula",            "descrizione": "Percorsi condotti. Il materiale si riceve partecipando." }
+  ],
+
+  "artefatti": [
+    {
+      "id": "tipi-di-ai-mappa",
+      "titolo": "Tipi di Intelligenza Artificiale",
+      "etichetta": "Mappa visuale",
+      "descrizione": "Cinque assi indipendenti per orientarsi tra ANI/AGI/ASI, machine learning, AI debole/forte e il Regolamento UE sull'IA.",
+      "tipo": "deep-dive",
+      "tema": "fondamenti",
+      "indirizzo": "tipi-di-ai-index.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-16"
+    },
+    {
+      "id": "tipi-di-ai-guida",
+      "titolo": "I tipi di AI — guida per decision maker",
+      "etichetta": "Guida di orientamento",
+      "descrizione": "La versione distesa della mappa: le stesse cinque distinzioni, spiegate per chi deve decidere.",
+      "tipo": "deep-dive",
+      "tema": "fondamenti",
+      "indirizzo": "tipi-di-ai.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-16"
+    },
+    {
+      "id": "timeline",
+      "titolo": "Le tappe che hanno cambiato il mondo",
+      "etichetta": "Timeline",
+      "descrizione": "Linea del tempo interattiva, dagli automi dell'antichità a ChatGPT, con vista lineare o logaritmica per mettere in evidenza l'accelerazione.",
+      "tipo": "deep-dive",
+      "tema": "fondamenti",
+      "indirizzo": "timeline_tecnologica.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-16"
+    },
+
+    {
+      "id": "prompt-struttura",
+      "titolo": "L'anatomia di un prompt",
+      "etichetta": "Modulo fondamentale",
+      "descrizione": "Struttura e buone pratiche del prompt: che cosa cambia davvero il risultato e che cosa è folklore.",
+      "tipo": "deep-dive",
+      "tema": "alfabetizzazione",
+      "indirizzo": "prompt-engineering-struttura.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-20",
+      "ordine": 1
+    },
+    {
+      "id": "memoria-contesto",
+      "titolo": "La memoria dell'AI",
+      "etichetta": "Modulo 2",
+      "descrizione": "Un'AI non ha una memoria. Ne ha sette. E nessuna delle sette funziona come la memoria umana.",
+      "tipo": "deep-dive",
+      "tema": "alfabetizzazione",
+      "indirizzo": "memoria-e-contesto-ai.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-07-31",
+      "ordine": 2,
+      "manipolabile": true
+    },
+    {
+      "id": "normativa",
+      "titolo": "La normativa: cosa devo fare, entro quando",
+      "etichetta": "Modulo 3",
+      "descrizione": "AI Act, Omnibus, legge 132/2025 e decreto attuativo: obblighi, scadenze e chi è obbligato a cosa.",
+      "tipo": "deep-dive",
+      "tema": "alfabetizzazione",
+      "indirizzo": "normativa-ai-scadenze-obblighi.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-07-27",
+      "ordine": 3,
+      "manipolabile": true
+    },
+
+    {
+      "id": "libro-prompting",
+      "titolo": "Il Libro dei Prompting",
+      "etichetta": "Prompt Book",
+      "descrizione": "360 prompt operativi su 8 livelli per un incarico di AI strategy enterprise: dalla prontezza dei dati al change management.",
+      "tipo": "deep-dive",
+      "tema": "guide",
+      "indirizzo": "Il Libro dei Prompting.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-09-03"
+    },
+
+    {
+      "id": "bmad-anatomia",
+      "titolo": "BMAD: cos'è e anatomia dell'installazione",
+      "etichetta": "Parte 1 di 2",
+      "descrizione": "Cos'è BMAD, come si colloca nell'harness engineering, il vocabolario prima dei comandi e dove finiscono davvero i file.",
+      "tipo": "deep-dive",
+      "tema": "bmad",
+      "indirizzo": "bmad-anatomia.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-16",
+      "ordine": 1
+    },
+    {
+      "id": "bmad-lab",
+      "titolo": "BMAD: laboratorio di installazione",
+      "etichetta": "Parte 2 di 2",
+      "descrizione": "Nove esercitazioni su macOS e Windows: prerequisiti, primo giro di prova, moduli, orchestratore, personalizzazione, aggiornamento.",
+      "tipo": "deep-dive",
+      "tema": "bmad",
+      "indirizzo": "bmad-install-lab.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-16",
+      "ordine": 2,
+      "prerequisiti": ["bmad-anatomia"]
+    },
+
+    {
+      "id": "corso-prompting-base",
+      "titolo": "Tecniche di base di prompt engineering",
+      "etichetta": "Corso completo",
+      "descrizione": "Cinque lezioni: dal prompt vago alla libreria di prompt collaudati. Ogni lezione ha slide, laboratorio, strumenti e verifica.",
+      "tipo": "corso",
+      "tema": "aula",
+      "indirizzo": null,
+      "accesso": "riservato",
+      "aggiornato": "2026-08-20",
+      "durata": "10 ore",
+      "lezioni": 5,
+      "livello": "base",
+      "bok": "Body of Knowledge in 10 aree, descrittori EQF"
+    },
+    {
+      "id": "corso-prompting-avanzato",
+      "titolo": "Prompting avanzato per funzioni — Modulo 1",
+      "etichetta": "Il prompt come specifica",
+      "descrizione": "Tronco comune più quattro percorsi verticali, ciascuno con la propria data room e i propri esercizi.",
+      "tipo": "corso",
+      "tema": "aula",
+      "indirizzo": null,
+      "accesso": "riservato",
+      "aggiornato": "2026-08-20",
+      "livello": "avanzato",
+      "percorsi": ["finance", "sales", "legal", "project"],
+      "prerequisiti": ["corso-prompting-base"]
+    }
+  ]
+}

@@ -138,9 +138,118 @@
     .hero{padding:52px 0 34px}     /* meno spazio verticale su mobile */
     .wrap{padding:0 18px 70px}     /* meno margine laterale su mobile */
   }
+
+  /* ---- gruppi tematici del catalogo, generati da manifest.json ---- */
+  .cat-tema{
+    /* un gruppo per tema: titolo, sottotitolo, griglia di schede */
+    margin-top:64px;
+  }
+  .cat-tema:first-of-type{margin-top:8px}
+  .cat-tema h2{
+    font-size:23px;font-weight:800;letter-spacing:-.02em;margin:0;
+    padding-bottom:12px;border-bottom:1px solid var(--line);
+  }
+  .cat-sub{
+    /* descrizione del tema, sotto il titolo */
+    margin:12px 0 0;color:var(--muted);font-size:14.5px;max-width:70ch;
+  }
+  .cat-tema .grid{margin-top:26px}
+  .cat-meta{
+    /* durata, numero di lezioni, percorsi: solo dove esistono */
+    font-size:12px;color:var(--muted);letter-spacing:.02em;
+  }
+  .card.chiuso{
+    /* artefatto riservato: visibile nel catalogo, non apribile */
+    opacity:.72;border-left-style:dashed;
+  }
+  .card.chiuso:hover{transform:none;box-shadow:none}
+  .go.chiuso{
+    /* al posto del pulsante: si vede che esiste e che è chiuso */
+    color:var(--muted);background:transparent;border-style:dashed;cursor:default;
+  }
+  .go.chiuso:before{content:'\1F512';margin-right:2px;opacity:.75}
 </style>
 </head>
 <body>
+<!-- sito:menu --><style>
+.sito-bar{position:sticky;top:0;z-index:900;display:flex;align-items:center;gap:2px;flex-wrap:wrap;
+  padding:0 14px;background:#0b0d12;border-bottom:1px solid #262d3d;font:600 13px/1 -apple-system,
+  BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.sito-bar a{text-decoration:none}
+.sito-marchio{color:#e6e9f0;padding:11px 12px 11px 0;letter-spacing:.4px;white-space:nowrap}
+.sito-marchio b{color:var(--ac,#7dd3fc)}
+.sito-tema{position:relative}
+.sito-tema>button{background:none;border:0;color:#a2acc2;font:inherit;padding:11px 12px;cursor:pointer;
+  border-bottom:2px solid transparent}
+.sito-tema>button:hover,.sito-tema.aperto>button{color:#e6e9f0}
+.sito-tema.qui>button{color:var(--ac,#7dd3fc);border-bottom-color:var(--ac,#7dd3fc)}
+.sito-menu{display:none;position:absolute;left:0;top:100%;min-width:290px;background:#12151d;
+  border:1px solid #333c52;border-radius:0 0 10px 10px;border-top:0;padding:6px;
+  box-shadow:0 14px 34px rgba(0,0,0,.5)}
+.sito-tema.aperto .sito-menu{display:block}
+.sito-menu a,.sito-menu span.chiuso{display:block;padding:8px 10px;border-radius:7px;color:#c9d1de;font-weight:600}
+.sito-menu a:hover{background:#1b2030;color:#fff}
+.sito-menu a.qui{color:var(--ac,#7dd3fc)}
+.sito-menu small{display:block;color:#6d7891;font-weight:500;margin-top:2px;font-size:11.5px;line-height:1.4}
+.sito-menu span.chiuso{color:#6d7891;cursor:default}
+.sito-menu span.chiuso:before{content:'\1F512';margin-right:7px;opacity:.7}
+.sito-bar .sito-sp{flex:1}
+.sito-bar .sito-casa{color:#6d7891;padding:11px 0 11px 12px;white-space:nowrap}
+.sito-bar .sito-casa:hover{color:var(--ac,#7dd3fc)}
+@media(max-width:760px){.sito-marchio{padding-right:6px}.sito-tema>button{padding:11px 8px}
+  .sito-menu{position:static;min-width:0;border:0;box-shadow:none;background:#0f121a}}
+.sito-pie{border-top:1px solid #262d3d;margin-top:56px;padding:26px 20px 34px;color:#6d7891;
+  font:400 12.5px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:center}
+.sito-pie b{color:#a2acc2;font-weight:700}
+.sito-pie a{color:#6d7891;text-decoration:underline}
+.sito-pie .sito-lic{margin-top:6px;font-size:12px}
+@media print{.sito-bar{display:none}.sito-pie{border-color:#bbb;color:#333}}
+</style>
+<nav class="sito-bar" aria-label="Navigazione del sito">
+<a class="sito-marchio" href="index.html">INNOV2E <b>Strumenti formativi</b></a>
+<div class="sito-tema"><button type="button">Fondamenti</button><div class="sito-menu">
+<a class="" href="tipi-di-ai.html">I tipi di AI — guida per decision maker<small>La versione distesa della mappa: le stesse cinque distinzioni, spiegate per chi deve decidere.</small></a>
+<a class="" href="timeline_tecnologica.html">Le tappe che hanno cambiato il mondo<small>Linea del tempo interattiva, dagli automi dell&#x27;antichità a ChatGPT, con vista lineare o logaritmica per mettere in evidenza l&#x27;accelerazione.</small></a>
+<a class="" href="tipi-di-ai-index.html">Tipi di Intelligenza Artificiale<small>Cinque assi indipendenti per orientarsi tra ANI/AGI/ASI, machine learning, AI debole/forte e il Regolamento UE sull&#x27;IA.</small></a>
+</div></div>
+<div class="sito-tema"><button type="button">Alfabetizzazione sull&#x27;AI</button><div class="sito-menu">
+<a class="" href="prompt-engineering-struttura.html">L&#x27;anatomia di un prompt<small>Struttura e buone pratiche del prompt: che cosa cambia davvero il risultato e che cosa è folklore.</small></a>
+<a class="" href="memoria-e-contesto-ai.html">La memoria dell&#x27;AI<small>Un&#x27;AI non ha una memoria. Ne ha sette. E nessuna delle sette funziona come la memoria umana.</small></a>
+<a class="" href="normativa-ai-scadenze-obblighi.html">La normativa: cosa devo fare, entro quando<small>AI Act, Omnibus, legge 132/2025 e decreto attuativo: obblighi, scadenze e chi è obbligato a cosa.</small></a>
+</div></div>
+<div class="sito-tema"><button type="button">Guide operative</button><div class="sito-menu">
+<a class="" href="Il Libro dei Prompting.html">Il Libro dei Prompting<small>360 prompt operativi su 8 livelli per un incarico di AI strategy enterprise: dalla prontezza dei dati al change management.</small></a>
+</div></div>
+<div class="sito-tema"><button type="button">BMAD</button><div class="sito-menu">
+<a class="" href="bmad-anatomia.html">BMAD: cos&#x27;è e anatomia dell&#x27;installazione<small>Cos&#x27;è BMAD, come si colloca nell&#x27;harness engineering, il vocabolario prima dei comandi e dove finiscono davvero i file.</small></a>
+<a class="" href="bmad-install-lab.html">BMAD: laboratorio di installazione<small>Nove esercitazioni su macOS e Windows: prerequisiti, primo giro di prova, moduli, orchestratore, personalizzazione, aggiornamento.</small></a>
+</div></div>
+<div class="sito-tema"><button type="button">Corsi in aula</button><div class="sito-menu">
+<span class="chiuso">Prompting avanzato per funzioni — Modulo 1<small>Tronco comune più quattro percorsi verticali, ciascuno con la propria data room e i propri esercizi.</small></span>
+<span class="chiuso">Tecniche di base di prompt engineering<small>Cinque lezioni: dal prompt vago alla libreria di prompt collaudati. Ogni lezione ha slide, laboratorio, strumenti e verifica.</small></span>
+</div></div>
+<span class="sito-sp"></span>
+<a class="sito-casa" href="index.html">Tutti i contenuti &#8594;</a>
+</nav>
+<script>
+(function(){
+  var bar=document.querySelector('.sito-bar'); if(!bar) return;
+  bar.querySelectorAll('.sito-tema>button').forEach(function(b){
+    b.onclick=function(e){
+      e.stopPropagation();
+      var t=b.parentNode, era=t.classList.contains('aperto');
+      bar.querySelectorAll('.sito-tema').forEach(function(x){x.classList.remove('aperto')});
+      t.classList.toggle('aperto', !era);
+    };
+  });
+  document.addEventListener('click',function(){
+    bar.querySelectorAll('.sito-tema').forEach(function(x){x.classList.remove('aperto')});
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape') bar.querySelectorAll('.sito-tema').forEach(function(x){x.classList.remove('aperto')});
+  });
+})();
+</script><!-- /sito:menu -->
 <div class="wrap">
 
   <!-- ============ INTESTAZIONE ============ -->
@@ -151,132 +260,112 @@
     <p class="lede">Ogni scheda qui sotto apre una pagina pubblicata su questo sito. Cliccate un link per andare al documento.</p>
   </div>
 
-  <!-- ============ GRIGLIA DELLE SCHEDE ============ -->
-  <!-- Ogni pagina .html del repository ha qui la sua scheda. -->
-  <!-- Per aggiungere una nuova pagina: copiate un blocco <div class="card">...</div> -->
-  <!-- completo (compreso il commento "SCHEDA" sopra e sotto) e modificate solo i punti -->
-  <!-- marcati con [DA MODIFICARE]. -->
+  <!-- ============ CATALOGO ============ -->
+  <!-- Generato da manifest.json: non si modifica a mano.
+       Per aggiungere un contenuto: una voce in manifest.json, poi
+           python3 tools/costruisci-sito.py                                -->
+  <!-- sito:catalogo -->
+<section class="cat-tema">
+  <h2>Fondamenti</h2>
+  <p class="cat-sub">Orientarsi: che cosa è un sistema di AI, come si classifica, da dove viene.</p>
   <div class="grid">
-
-    <!-- ========== SCHEDA: DUPLICARE QUESTO BLOCCO PER AGGIUNGERE UNA VOCE ========== -->
-    <!-- style="--accent:..." sceglie il colore della scheda: usate una delle variabili -->
-    <!-- definite sopra (--a1 arancio, --a2 azzurro, --a3 viola, --a4 verde, --a5 rosso) -->
-    <!-- [DA MODIFICARE] colore della scheda -->
-    <div class="card" style="--accent:var(--a1)">
-      <!-- [DA MODIFICARE] etichetta categoria, breve (2-3 parole) -->
-      <span class="tag">Mappa visuale</span>
-      <!-- [DA MODIFICARE] titolo della pagina collegata -->
-      <h3>Tipi di Intelligenza Artificiale</h3>
-      <!-- [DA MODIFICARE] descrizione breve, una o due frasi -->
-      <p>Cinque assi indipendenti per orientarsi tra ANI/AGI/ASI, machine learning, AI debole/forte e il Regolamento UE sull'IA. Schede cliccabili con link diretti alla guida completa.</p>
-      <!-- riga dei link: potete mettere uno o più link per la stessa scheda -->
-      <div class="links">
-        <!-- [DA MODIFICARE] href = nome file .html della mappa visuale, testo = etichetta del pulsante -->
-        <a class="go" href="tipi-di-ai-index.html">Apri la mappa →</a>
-        <!-- [DA MODIFICARE] href = nome file .html del documento esteso (opzionale, cancellare la riga se non serve) -->
-        <a class="go" href="tipi-di-ai.html">Guida completa →</a>
-      </div>
+    <div class="card">
+      <div class="tag">Guida di orientamento</div>
+      <h3>I tipi di AI — guida per decision maker</h3>
+      <p>La versione distesa della mappa: le stesse cinque distinzioni, spiegate per chi deve decidere.</p>
+      <a class="go" href="tipi-di-ai.html">Apri &#8594;</a>
     </div>
-    <!-- ========== FINE SCHEDA ========== -->
-
-    <!-- ========== SCHEDA: DUPLICARE QUESTO BLOCCO PER AGGIUNGERE UNA VOCE ========== -->
-    <!-- [DA MODIFICARE] colore della scheda -->
-    <div class="card" style="--accent:var(--a3)">
-      <!-- [DA MODIFICARE] etichetta categoria -->
-      <span class="tag">Timeline</span>
-      <!-- [DA MODIFICARE] titolo della pagina collegata -->
+    <div class="card">
+      <div class="tag">Timeline</div>
       <h3>Le tappe che hanno cambiato il mondo</h3>
-      <!-- [DA MODIFICARE] descrizione breve -->
-      <p>Linea del tempo interattiva, dagli automi dell'antichità a ChatGPT, con vista lineare o logaritmica per mettere in evidenza l'accelerazione del progresso.</p>
-      <div class="links">
-        <!-- [DA MODIFICARE] href = nome file .html, testo del pulsante -->
-        <a class="go" href="timeline_tecnologica.html">Apri la timeline →</a>
-      </div>
+      <p>Linea del tempo interattiva, dagli automi dell&#x27;antichità a ChatGPT, con vista lineare o logaritmica per mettere in evidenza l&#x27;accelerazione.</p>
+      <a class="go" href="timeline_tecnologica.html">Apri &#8594;</a>
     </div>
-    <!-- ========== FINE SCHEDA ========== -->
-
-    <!-- ========== SCHEDA: DUPLICARE QUESTO BLOCCO PER AGGIUNGERE UNA VOCE ========== -->
-    <div class="card" style="--accent:var(--a4)">
-      <span class="tag">Prompt Engineering</span>
-      <h3>Prompt Engineering: struttura</h3>
-      <p>Prompt Engineering: struttura e best practices.</p>
-      <div class="links">
-        <a class="go" href="prompt-engineering-struttura.html">Apri →</a>
-      </div>
+    <div class="card">
+      <div class="tag">Mappa visuale</div>
+      <h3>Tipi di Intelligenza Artificiale</h3>
+      <p>Cinque assi indipendenti per orientarsi tra ANI/AGI/ASI, machine learning, AI debole/forte e il Regolamento UE sull&#x27;IA.</p>
+      <a class="go" href="tipi-di-ai-index.html">Apri &#8594;</a>
     </div>
-    <!-- ========== FINE SCHEDA ========== -->
-
-    <!-- ========== SCHEDA: DUPLICARE QUESTO BLOCCO PER AGGIUNGERE UNA VOCE ========== -->
-    <div class="card" style="--accent:var(--a2)">
-      <span class="tag">Memoria &amp; Contesto</span>
-      <h3>La memoria dell'AI</h3>
-      <p>Un'AI non ha una memoria. Ne ha sette. E nessuna delle sette funziona come la memoria umana.</p>
-      <div class="links">
-        <a class="go" href="memoria-e-contesto-ai.html">Apri →</a>
-      </div>
-    </div>
-    <!-- ========== FINE SCHEDA ========== -->
-
-    <!-- ========== SCHEDA: DUPLICARE QUESTO BLOCCO PER AGGIUNGERE UNA VOCE ========== -->
-    <div class="card" style="--accent:var(--a5)">
-      <span class="tag">Normativa</span>
-      <h3>La normativa: cosa devo fare, entro quando</h3>
-      <p>Una panoramica sulla normativa vigente e le disposizioni da adottare.</p>
-      <div class="links">
-        <a class="go" href="normativa-ai-scadenze-obblighi.html">Apri →</a>
-      </div>
-    </div>
-    <!-- ========== FINE SCHEDA ========== -->
-
-    <!-- ========== SCHEDA: DUPLICARE QUESTO BLOCCO PER AGGIUNGERE UNA VOCE ========== -->
-    <div class="card" style="--accent:var(--a3)">
-      <span class="tag">BMAD · Fondamenti</span>
-      <h3>BMAD: cos'è e anatomia dell'installazione</h3>
-      <p>Cos'è BMAD, come si colloca nella disciplina dell'harness engineering, il vocabolario prima dei comandi e dove finiscono davvero i file sul vostro computer.</p>
-      <div class="links">
-        <a class="go" href="bmad-anatomia.html">Apri →</a>
-      </div>
-    </div>
-    <!-- ========== FINE SCHEDA ========== -->
-
-    <!-- ========== SCHEDA: DUPLICARE QUESTO BLOCCO PER AGGIUNGERE UNA VOCE ========== -->
-    <div class="card" style="--accent:var(--a4)">
-      <span class="tag">BMAD · Laboratorio</span>
-      <h3>BMAD: laboratorio di installazione</h3>
-      <p>Nove esercitazioni pratiche su macOS e Windows: prerequisiti, primo giro di prova, moduli aggiuntivi, orchestratore, personalizzazione, aggiornamento e rimozione pulita.</p>
-      <div class="links">
-        <a class="go" href="bmad-install-lab.html">Apri il laboratorio →</a>
-      </div>
-    </div>
-    <!-- ========== FINE SCHEDA ========== -->
-
-    <!-- ========== SCHEDA: DUPLICARE QUESTO BLOCCO PER AGGIUNGERE UNA VOCE ========== -->
-    <div class="card" style="--accent:var(--a1)">
-      <span class="tag">Prompt Book</span>
-      <h3>Il Libro dei Prompting</h3>
-      <p>360 prompt operativi su 8 livelli per un incarico di AI strategy enterprise: dalla prontezza dei dati al change management, pronti da copiare e incollare.</p>
-      <div class="links">
-        <a class="go" href="Il%20Libro%20dei%20Prompting.html">Apri la guida →</a>
-      </div>
-    </div>
-    <!-- ========== FINE SCHEDA ========== -->
-
-    <!--
-      ========== MODELLO VUOTO DA COPIARE PER UNA NUOVA PAGINA ==========
-      Incollate questo blocco (togliendo i simboli di commento HTML )
-      dentro <div class="grid"> ... </div> qui sopra, poi compilate i campi:
-
-      <div class="card" style="--accent:var(--a4)">
-        <span class="tag">CATEGORIA</span>
-        <h3>TITOLO DELLA PAGINA</h3>
-        <p>Descrizione breve della pagina, una o due frasi.</p>
-        <div class="links">
-          <a class="go" href="nome-file.html">Apri →</a>
-        </div>
-      </div>
-    -->
-
   </div>
+</section>
+
+<section class="cat-tema">
+  <h2>Alfabetizzazione sull&#x27;AI</h2>
+  <p class="cat-sub">Il corso: come si scrive un prompt, dove vive il contesto, quali obblighi si applicano.</p>
+  <div class="grid">
+    <div class="card">
+      <div class="tag">Modulo fondamentale</div>
+      <h3>L&#x27;anatomia di un prompt</h3>
+      <p>Struttura e buone pratiche del prompt: che cosa cambia davvero il risultato e che cosa è folklore.</p>
+      <a class="go" href="prompt-engineering-struttura.html">Apri &#8594;</a>
+    </div>
+    <div class="card">
+      <div class="tag">Modulo 2</div>
+      <h3>La memoria dell&#x27;AI</h3>
+      <p>Un&#x27;AI non ha una memoria. Ne ha sette. E nessuna delle sette funziona come la memoria umana.</p>
+      <a class="go" href="memoria-e-contesto-ai.html">Apri &#8594;</a>
+    </div>
+    <div class="card">
+      <div class="tag">Modulo 3</div>
+      <h3>La normativa: cosa devo fare, entro quando</h3>
+      <p>AI Act, Omnibus, legge 132/2025 e decreto attuativo: obblighi, scadenze e chi è obbligato a cosa.</p>
+      <a class="go" href="normativa-ai-scadenze-obblighi.html">Apri &#8594;</a>
+    </div>
+  </div>
+</section>
+
+<section class="cat-tema">
+  <h2>Guide operative</h2>
+  <p class="cat-sub">Materiale da usare sul lavoro, non da studiare.</p>
+  <div class="grid">
+    <div class="card">
+      <div class="tag">Prompt Book</div>
+      <h3>Il Libro dei Prompting</h3>
+      <p>360 prompt operativi su 8 livelli per un incarico di AI strategy enterprise: dalla prontezza dei dati al change management.</p>
+      <a class="go" href="Il%20Libro%20dei%20Prompting.html">Apri &#8594;</a>
+    </div>
+  </div>
+</section>
+
+<section class="cat-tema">
+  <h2>BMAD</h2>
+  <p class="cat-sub">Che cos&#x27;è, come si installa, come si usa.</p>
+  <div class="grid">
+    <div class="card">
+      <div class="tag">Parte 1 di 2</div>
+      <h3>BMAD: cos&#x27;è e anatomia dell&#x27;installazione</h3>
+      <p>Cos&#x27;è BMAD, come si colloca nell&#x27;harness engineering, il vocabolario prima dei comandi e dove finiscono davvero i file.</p>
+      <a class="go" href="bmad-anatomia.html">Apri &#8594;</a>
+    </div>
+    <div class="card">
+      <div class="tag">Parte 2 di 2</div>
+      <h3>BMAD: laboratorio di installazione</h3>
+      <p>Nove esercitazioni su macOS e Windows: prerequisiti, primo giro di prova, moduli, orchestratore, personalizzazione, aggiornamento.</p>
+      <a class="go" href="bmad-install-lab.html">Apri &#8594;</a>
+    </div>
+  </div>
+</section>
+
+<section class="cat-tema">
+  <h2>Corsi in aula</h2>
+  <p class="cat-sub">Percorsi condotti. Il materiale si riceve partecipando.</p>
+  <div class="grid">
+    <div class="card chiuso">
+      <div class="tag">Il prompt come specifica</div>
+      <h3>Prompting avanzato per funzioni — Modulo 1</h3>
+      <p>Tronco comune più quattro percorsi verticali, ciascuno con la propria data room e i propri esercizi.</p><div class="cat-meta">4 percorsi</div>
+      <span class="go chiuso">Riservato ai partecipanti</span>
+    </div>
+    <div class="card chiuso">
+      <div class="tag">Corso completo</div>
+      <h3>Tecniche di base di prompt engineering</h3>
+      <p>Cinque lezioni: dal prompt vago alla libreria di prompt collaudati. Ogni lezione ha slide, laboratorio, strumenti e verifica.</p><div class="cat-meta">10 ore &middot; 5 lezioni</div>
+      <span class="go chiuso">Riservato ai partecipanti</span>
+    </div>
+  </div>
+</section>
+<!-- /sito:catalogo -->
 
   <!-- ============ PIÈ DI PAGINA ============ -->
   <!-- [DA MODIFICARE] testo del footer, se cambia la fonte o l'anno -->
