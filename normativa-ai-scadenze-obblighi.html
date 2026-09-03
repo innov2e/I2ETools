@@ -208,6 +208,59 @@ td b{color:var(--tx)}
 footer{border-top:1px solid var(--line);padding:36px 28px;text-align:center;color:var(--tx-3);font-size:13px}
 .law-chip{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:5px;
   background:var(--bg-3);border:1px solid var(--line-2);color:var(--tx-2);margin-right:5px}
+
+/* ===== configuratore: dove cade il tuo sistema ===== */
+.cfg{background:linear-gradient(180deg,var(--bg-2),var(--bg-3));border:1px solid var(--line-2);border-radius:14px;padding:24px;margin:28px 0}
+.cfg-hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.cfg-tag{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--ac);font-weight:700}
+.cfg-hint{font-size:12px;color:var(--tx-3)}
+.cfg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px 26px}
+.cfg-f{display:flex;flex-direction:column;gap:7px}
+.cfg-f > span{font-size:12px;font-weight:700;color:var(--tx-2);letter-spacing:.2px}
+.cfg-f select{background:var(--bg);border:1px solid var(--line-2);color:var(--tx);font:inherit;font-size:13.5px;border-radius:8px;padding:9px 11px}
+.cfg-f select:focus{outline:none;border-color:var(--ac)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{background:var(--bg);border:1px solid var(--line-2);color:var(--tx-3);font:inherit;font-size:12.5px;font-weight:600;border-radius:8px;padding:7px 12px;cursor:pointer;transition:.12s}
+.seg button:hover{color:var(--tx-2);border-color:var(--tx-3)}
+.seg button.on{background:var(--ac);border-color:var(--ac);color:#06131c}
+.cfg-nota{font-size:11.5px;color:var(--tx-3);line-height:1.45}
+.cfg-esito{margin-top:24px;border-radius:12px;border:1px solid var(--line-2);background:var(--bg);overflow:hidden}
+.cfg-badge{padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.cfg-badge .liv{font-size:20px;font-weight:800;letter-spacing:.2px}
+.cfg-badge .art{font-family:var(--mono);font-size:12px;color:var(--tx-3);border:1px solid var(--line-2);border-radius:20px;padding:3px 10px}
+.cfg-esito.vietato .liv{color:var(--no)} .cfg-esito.vietato{border-color:var(--no)}
+.cfg-esito.alto .liv{color:var(--org)} .cfg-esito.alto{border-color:var(--org)}
+.cfg-esito.trasp .liv{color:var(--amb)}
+.cfg-esito.minimo .liv{color:var(--ok)}
+.cfg-corpo{display:grid;grid-template-columns:1fr 1fr;gap:0}
+@media(max-width:780px){.cfg-corpo{grid-template-columns:1fr}}
+.cfg-col{padding:18px 20px}
+.cfg-col + .cfg-col{border-left:1px solid var(--line)}
+@media(max-width:780px){.cfg-col + .cfg-col{border-left:none;border-top:1px solid var(--line)}}
+.cfg-col h4{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--tx-3);font-weight:700;margin:0 0 10px}
+.cfg-catena{list-style:none;margin:0;padding:0}
+.cfg-catena li{position:relative;padding-left:20px;font-size:13.5px;margin-bottom:9px;line-height:1.55;color:var(--tx-2)}
+.cfg-catena li:before{content:'';position:absolute;left:0;top:7px;width:7px;height:7px;border-radius:2px;background:var(--tx-3)}
+.cfg-catena li.si:before{background:var(--org)} .cfg-catena li.no:before{background:var(--ok)}
+.cfg-catena li b{color:var(--tx)}
+.cfg-obb{list-style:none;margin:0;padding:0}
+.cfg-obb li{font-size:13px;padding:7px 0;border-bottom:1px dashed var(--line);color:var(--tx-2)}
+.cfg-obb li:last-child{border-bottom:none}
+.cfg-obb li span{font-family:var(--mono);font-size:11px;color:var(--tx-3);display:block;margin-top:2px}
+.cfg-fondo{border-top:1px solid var(--line);padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}
+.cfg-fondo .k{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--tx-3);font-weight:700}
+.cfg-fondo .v{font-size:15px;font-weight:700;margin-top:5px;color:var(--tx)}
+.cfg-fondo .v.no{color:var(--no)} .cfg-fondo .v.org{color:var(--org)} .cfg-fondo .v.ok{color:var(--ok)}
+.cfg-sposta{margin-top:20px;border-left:3px solid var(--ac);background:rgba(125,211,252,.06);border-radius:0 10px 10px 0;padding:14px 18px}
+.cfg-sposta h4{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ac);font-weight:700;margin:0 0 10px}
+.cfg-sposta ul{list-style:none;margin:0;padding:0}
+.cfg-sposta li{margin-bottom:8px;font-size:13.5px;line-height:1.5}
+.cfg-sposta li:last-child{margin-bottom:0}
+.cfg-sposta button{background:none;border:none;border-bottom:1px dashed var(--ac);color:var(--ac);font:inherit;font-size:13.5px;padding:0;cursor:pointer;text-align:left}
+.cfg-sposta button:hover{background:rgba(125,211,252,.12)}
+.cfg-sposta .arr{color:var(--tx-2)}
+.cfg-act{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.cfg-note{font-size:11.5px;color:var(--tx-3);margin-top:14px;line-height:1.55}
 </style>
 </head>
 <body>
@@ -324,6 +377,94 @@ footer{border-top:1px solid var(--line);padding:36px 28px;text-align:center;colo
 
   <div class="callout amb">
     <p><strong>Novità dell'Omnibus sul concetto di "componente di sicurezza".</strong> Il Reg. UE 2026/1744 chiarisce che i sistemi di IA usati <em>esclusivamente</em> per aspetti non attinenti alla sicurezza — assistenza agli utenti, ottimizzazione delle prestazioni, efficienza dei servizi, automazione, praticità, controllo qualità — non sono componenti di sicurezza, e quindi non diventano ad alto rischio per quella via. Resta però la deroga alla deroga: se il guasto o il malfunzionamento metterebbe comunque a rischio salute o sicurezza, il sistema torna a essere componente di sicurezza. Per molte imprese manifatturiere questa singola precisazione vale più di tutto il resto del regolamento di semplificazione.</p>
+  </div>
+
+  <h3>Configura un sistema e guarda dove cade</h3>
+  <p>Il test qui sopra è in tre domande, ma nella pratica l'esito dipende da come il sistema è <em>progettato</em>, non solo da cosa fa. Qui sotto puoi montarne uno pezzo per pezzo. Cambia una scelta alla volta e osserva la riga più importante di tutte, in fondo: <strong>quale singola decisione ti sposta oltre la linea dell'alto rischio</strong>.</p>
+
+  <div class="cfg" id="cfg">
+    <div class="cfg-hd">
+      <span class="cfg-tag">Configuratore — nessun dato esce da questa pagina</span>
+      <span class="cfg-hint">ogni scelta ricalcola tutto</span>
+    </div>
+
+    <div class="cfg-grid">
+      <label class="cfg-f">
+        <span>1. A cosa serve il sistema</span>
+        <select id="k-uso"></select>
+        <span class="cfg-nota" id="n-uso">&nbsp;</span>
+      </label>
+
+      <div class="cfg-f">
+        <span>2. Che posizione occupi</span>
+        <div class="seg" id="k-ruolo"></div>
+        <span class="cfg-nota" id="n-ruolo">&nbsp;</span>
+      </div>
+
+      <div class="cfg-f">
+        <span>3. Quanto decide da solo</span>
+        <div class="seg" id="k-autonomia"></div>
+        <span class="cfg-nota">La deroga dell'art. 6, § 3 vale solo per compiti procedurali ristretti, supporto preparatorio o miglioramento di un lavoro umano già concluso.</span>
+      </div>
+
+      <div class="cfg-f">
+        <span>4. Profila persone fisiche</span>
+        <div class="seg" id="k-profila"></div>
+        <span class="cfg-nota">Se profila, la deroga dell'art. 6, § 3 non è mai disponibile. È il singolo interruttore più pesante del regolamento.</span>
+      </div>
+
+      <div class="cfg-f">
+        <span>5. Parla con le persone o genera contenuti</span>
+        <div class="seg" id="k-contatto"></div>
+        <span class="cfg-nota">Chatbot, testi, immagini, audio, video sintetici: fa scattare l'art. 50 a prescindere dal livello di rischio.</span>
+      </div>
+
+      <div class="cfg-f">
+        <span>6. Ci metti il tuo marchio o ne cambi la finalità</span>
+        <div class="seg" id="k-marchio"></div>
+        <span class="cfg-nota">Art. 25: chi lo fa su un sistema ad alto rischio diventa <em>fornitore</em>, e il fornitore originario esce di scena.</span>
+      </div>
+    </div>
+
+    <div class="cfg-esito" id="esito">
+      <div class="cfg-badge">
+        <span class="liv" id="e-liv">—</span>
+        <span class="art" id="e-art">—</span>
+        <span class="cfg-hint" id="e-sotto"></span>
+      </div>
+
+      <div class="cfg-corpo">
+        <div class="cfg-col">
+          <h4>Perché finisce lì</h4>
+          <ul class="cfg-catena" id="e-catena"></ul>
+        </div>
+        <div class="cfg-col">
+          <h4>Cosa devi fare</h4>
+          <ul class="cfg-obb" id="e-obblighi"></ul>
+        </div>
+      </div>
+
+      <div class="cfg-fondo">
+        <div><div class="k">Da quando</div><div class="v" id="e-data">—</div></div>
+        <div><div class="k">Esposizione sanzionatoria</div><div class="v" id="e-sanzione">—</div></div>
+        <div><div class="k">Registrazione banca dati UE</div><div class="v" id="e-registro">—</div></div>
+      </div>
+    </div>
+
+    <div class="cfg-sposta">
+      <h4>Cosa sposterebbe l'esito</h4>
+      <ul id="e-sposta"></ul>
+    </div>
+
+    <div class="cfg-act">
+      <button class="xbtn" data-caso="curriculum">Caso: selezione del personale</button>
+      <button class="xbtn" data-caso="chatbot">Caso: chatbot di assistenza</button>
+      <button class="xbtn" data-caso="macchinario">Caso: controllo qualità in fabbrica</button>
+      <button class="xbtn" data-caso="emozioni">Caso: analisi del tono in call center</button>
+      <button class="xbtn" id="cfg-link">Copia link a questa configurazione</button>
+    </div>
+
+    <p class="cfg-note"><strong>A cosa serve e a cosa no.</strong> È uno strumento didattico costruito sulle regole citate in questa pagina — art. 5, art. 6 § 3, allegato III, art. 25, art. 50, art. 99 e le precisazioni del Reg. UE 2026/1744. Ricostruisce il ragionamento e mostra quali scelte progettuali spostano la classificazione: non è una valutazione di conformità, non sostituisce l'analisi del caso concreto e non tiene conto delle normative di settore che possono applicarsi in parallelo.</p>
   </div>
 </section>
 
@@ -1043,6 +1184,325 @@ mkAcc('ag',[
     li.innerHTML='<a href="'+u+'" target="_blank" rel="noopener">'+t+'</a><span>'+d+'</span>';
     w.appendChild(li);
   });
+})();
+</script>
+<script>
+/* ===== Configuratore AI Act: dove cade il sistema che stai progettando =====
+   Le regole sono quelle citate in questa pagina. La classificazione e' una
+   funzione pura della configurazione: e' cio' che permette di calcolare, invece
+   di scriverli a mano, i controfattuali in fondo ("cosa sposterebbe l'esito"). */
+(function(){
+  const root = document.getElementById('cfg');
+  if(!root) return;
+  const $ = id => document.getElementById(id);
+
+  // ---------------------------------------------------------------- vocabolario
+  const USI = [
+    {v:'scoring',    g:'Pratiche vietate (art. 5)', t:'Punteggio sociale dei cittadini', vietato:'punteggio sociale'},
+    {v:'emozioni',   g:'Pratiche vietate (art. 5)', t:'Riconoscimento delle emozioni sul lavoro', vietato:'riconoscimento delle emozioni sul luogo di lavoro'},
+    {v:'manipola',   g:'Pratiche vietate (art. 5)', t:'Tecniche subliminali o manipolative', vietato:'tecniche manipolative'},
+
+    {v:'selezione',  g:'Allegato III', t:'Selezione, promozione o valutazione del personale', allegato:'occupazione e gestione dei lavoratori'},
+    {v:'credito',    g:'Allegato III', t:'Merito creditizio delle persone fisiche', allegato:'accesso a servizi essenziali'},
+    {v:'istruzione', g:'Allegato III', t:'Valutazione o ammissione nell’istruzione', allegato:'istruzione e formazione'},
+    {v:'critiche',   g:'Allegato III', t:'Gestione di infrastrutture critiche', allegato:'infrastrutture critiche'},
+    {v:'biometria',  g:'Allegato III', t:'Identificazione biometrica a distanza', allegato:'biometria'},
+
+    {v:'sicurezza',  g:'Componente di prodotto', t:'Componente di sicurezza di un macchinario o dispositivo', prodotto:true},
+    {v:'qualita',    g:'Componente di prodotto', t:'Controllo qualità o efficienza di produzione', prodotto:true, nonSicurezza:true},
+
+    {v:'interno',    g:'Usi generici', t:'Supporto interno: sintesi, bozze, ricerca documentale'},
+    {v:'marketing',  g:'Usi generici', t:'Marketing e generazione di contenuti'},
+    {v:'assistenza', g:'Usi generici', t:'Assistenza clienti conversazionale'}
+  ];
+  const RUOLI = [
+    {v:'deployer',  t:'Deployer (lo usi)'},
+    {v:'fornitore', t:'Fornitore (lo sviluppi o lo immetti)'},
+    {v:'distrib',   t:'Importatore o distributore'}
+  ];
+  const AUTONOMIE = [
+    {v:'preparatorio', t:'Prepara materiale, decide un umano'},
+    {v:'raccomanda',   t:'Raccomanda, un umano approva'},
+    {v:'esegue',       t:'Esegue e produce l’esito finale'}
+  ];
+  const SI_NO = [{v:'no', t:'No'}, {v:'si', t:'Sì'}];
+
+  const DEF = {uso:'selezione', ruolo:'deployer', autonomia:'esegue', profila:'si', contatto:'no', marchio:'no'};
+  const CASI = {
+    curriculum:  {uso:'selezione',  ruolo:'deployer',  autonomia:'esegue',        profila:'si', contatto:'no', marchio:'no'},
+    chatbot:     {uso:'assistenza', ruolo:'deployer',  autonomia:'esegue',        profila:'no', contatto:'si', marchio:'no'},
+    macchinario: {uso:'qualita',    ruolo:'fornitore', autonomia:'esegue',        profila:'no', contatto:'no', marchio:'si'},
+    emozioni:    {uso:'emozioni',   ruolo:'deployer',  autonomia:'raccomanda',    profila:'si', contatto:'no', marchio:'no'}
+  };
+  const st = Object.assign({}, DEF);
+  const uso = v => USI.find(u => u.v === v);
+
+  // ---------------------------------------------------------------- le regole
+  function classifica(s){
+    const u = uso(s.uso), catena = [], obblighi = [];
+    let livello, articolo, sotto = '', registro = 'non richiesta';
+
+    // (1) art. 5 — i divieti vengono prima di tutto
+    if(u.vietato){
+      catena.push({si:true, t:`L'uso ricade fra le pratiche vietate: <b>${u.vietato}</b>.`});
+      catena.push({t:'Nessuna configurazione successiva rileva: il divieto non ammette mitigazioni tecniche o consenso.'});
+      obblighi.push(['Non immettere sul mercato e non utilizzare', 'AI Act, art. 5']);
+      obblighi.push(['Se il sistema è già in uso: dismissione', 'divieti applicabili dal 2 agosto 2025']);
+      return {livello:'Pratica vietata', classe:'vietato', articolo:'art. 5',
+              sotto:'in vigore dal 2 agosto 2025', catena, obblighi,
+              data:'2 agosto 2025 — già applicabile', sanzione:'fino a 35 M€ o 7% del fatturato mondiale',
+              classeSanzione:'no', registro:'irrilevante: il sistema non può essere immesso'};
+    }
+
+    // (2) componente di sicurezza di un prodotto gia' normato
+    let alto = false, viaProdotto = false, deroga = false;
+    if(u.prodotto){
+      if(u.nonSicurezza){
+        catena.push({no:true, t:'È un sistema di prodotto usato <b>esclusivamente per aspetti non attinenti alla sicurezza</b>: il Reg. UE 2026/1744 esclude che sia componente di sicurezza.'});
+        catena.push({t:'Attenzione alla deroga alla deroga: se un guasto mettesse comunque a rischio salute o sicurezza, il sistema torna componente di sicurezza e diventa ad alto rischio.'});
+      } else {
+        alto = true; viaProdotto = true;
+        catena.push({si:true, t:'È <b>componente di sicurezza</b> di un prodotto già soggetto a normativa UE con valutazione di terzi.'});
+        articolo = 'art. 6, § 1';
+      }
+    }
+
+    // (3) allegato III, e la valvola dell'art. 6 § 3
+    if(u.allegato){
+      catena.push({si:true, t:`Ricade nell'allegato III: <b>${u.allegato}</b>.`});
+      const leggero = s.autonomia === 'preparatorio';
+      if(s.profila === 'si'){
+        alto = true;
+        catena.push({si:true, t:'<b>Profila persone fisiche</b>: la deroga dell’art. 6, § 3 non è disponibile, qualunque sia il grado di autonomia.'});
+      } else if(leggero){
+        deroga = true;
+        catena.push({no:true, t:'Si limita al <b>supporto preparatorio</b> e non profila: la deroga dell’art. 6, § 3 è applicabile.'});
+        catena.push({t:'Non è un’autoassoluzione: la valutazione va <b>documentata prima</b> dell’immissione e la registrazione nella banca dati UE resta dovuta.'});
+        registro = 'dovuta comunque (art. 6, § 4)';
+        obblighi.push(['Documentare la valutazione che giustifica la deroga', 'AI Act, art. 6, § 3']);
+        obblighi.push(['Registrarsi nella banca dati UE nonostante la deroga', 'AI Act, art. 6, § 4']);
+      } else {
+        alto = true;
+        catena.push({si:true, t:`Il sistema <b>${s.autonomia === 'esegue' ? 'produce l’esito finale' : 'formula la raccomandazione su cui si decide'}</b>: non è supporto preparatorio, quindi la deroga dell’art. 6, § 3 non si applica.`});
+      }
+      articolo = articolo || 'allegato III';
+    }
+
+    if(!u.allegato && !u.prodotto)
+      catena.push({no:true, t:'L’uso non ricade né fra i divieti, né nell’allegato III, né fra i componenti di sicurezza di prodotti normati.'});
+
+    // (4) art. 25 — chi ci mette il marchio diventa fornitore
+    let ruoloEffettivo = s.ruolo;
+    if(alto && s.marchio === 'si' && s.ruolo !== 'fornitore'){
+      ruoloEffettivo = 'fornitore';
+      catena.push({si:true, t:'Apponendo il tuo marchio o cambiandone la finalità su un sistema ad alto rischio <b>diventi fornitore</b>: gli obblighi pesanti passano a te, il fornitore originario esce di scena.'});
+    }
+
+    // (5) art. 50 — trasparenza, indipendente dal livello
+    const trasparenza = s.contatto === 'si';
+    if(trasparenza){
+      obblighi.push(['Dichiarare che l’interlocutore sta parlando con un sistema di IA', 'AI Act, art. 50 — dal 2 agosto 2026']);
+      obblighi.push(['Marcare i contenuti sintetici in formato leggibile dalla macchina', 'AI Act, art. 50']);
+    }
+
+    // obblighi per livello e ruolo
+    if(alto){
+      registro = 'obbligatoria';
+      if(ruoloEffettivo === 'fornitore'){
+        obblighi.push(['Sistema di gestione dei rischi lungo tutto il ciclo di vita', 'AI Act, art. 9']);
+        obblighi.push(['Governo dei dati di addestramento e prova', 'AI Act, art. 10']);
+        obblighi.push(['Documentazione tecnica e registrazioni automatiche', 'AI Act, artt. 11-12']);
+        obblighi.push(['Valutazione di conformità e marcatura CE', 'AI Act, artt. 43 e 48']);
+        obblighi.push(['Registrazione nella banca dati UE prima dell’immissione', 'AI Act, art. 49']);
+        obblighi.push(['Sorveglianza post-commercializzazione e segnalazione incidenti', 'AI Act, artt. 72-73']);
+      } else if(ruoloEffettivo === 'deployer'){
+        obblighi.push(['Usare il sistema secondo le istruzioni del fornitore', 'AI Act, art. 26']);
+        obblighi.push(['Garantire sorveglianza umana con persone competenti', 'AI Act, art. 26, § 2']);
+        obblighi.push(['Conservare i log per almeno sei mesi', 'AI Act, art. 26, § 6']);
+        obblighi.push(['Informare i lavoratori prima della messa in servizio', 'AI Act, art. 26, § 7']);
+        if(uso(s.uso).allegato)
+          obblighi.push(['Valutazione d’impatto sui diritti fondamentali, se sei ente pubblico o eroghi servizi essenziali', 'AI Act, art. 27']);
+      } else {
+        obblighi.push(['Verificare marcatura CE, documentazione e registrazione prima di immettere', 'AI Act, artt. 23-24']);
+        obblighi.push(['Non immettere se sai che il sistema non è conforme', 'AI Act, art. 23, § 2']);
+      }
+      livello = 'Alto rischio';
+      sotto = viaProdotto ? 'obblighi pesanti dal 2 agosto 2028 (allegato I)' : 'obblighi pesanti dal 2 dicembre 2027';
+    } else if(deroga){
+      livello = 'Alto rischio escluso'; articolo = 'art. 6, § 3';
+      sotto = 'esce dall’alto rischio, ma con oneri documentali';
+    } else if(trasparenza){
+      livello = 'Obblighi di trasparenza'; articolo = 'art. 50'; sotto = 'non è alto rischio, ma non è esente';
+    } else {
+      livello = 'Rischio minimo'; articolo = 'nessun obbligo specifico'; sotto = 'restano gli obblighi generali';
+    }
+
+    if(!obblighi.length)
+      obblighi.push(['Nessun obbligo specifico dell’AI Act per questa configurazione', 'restano privacy, sicurezza sul lavoro e normative di settore']);
+    obblighi.push(['Alfabetizzazione del personale che usa il sistema', 'AI Act, art. 4 — già applicabile']);
+
+    return {
+      livello, classe: alto ? 'alto' : (deroga || trasparenza) ? 'trasp' : 'minimo',
+      articolo: articolo || 'art. 50', sotto, catena, obblighi,
+      data: alto ? (viaProdotto ? '2 agosto 2028 (allegato I) — art. 4 già oggi'
+                                : '2 dicembre 2027 (allegato III) — art. 4 già oggi')
+          : deroga ? 'la documentazione della deroga serve prima dell’immissione'
+          : trasparenza ? '2 agosto 2026 (art. 50) — art. 4 già oggi'
+          : 'art. 4 già applicabile dal 2 febbraio 2025',
+      sanzione: (alto || trasparenza || deroga) ? 'fino a 15 M€ o 3% del fatturato mondiale'
+              : 'nessuna fascia specifica per la classificazione',
+      classeSanzione: alto ? 'org' : (trasparenza || deroga) ? 'org' : 'ok',
+      registro
+    };
+  }
+
+  // ---------------------------------------------------------------- interfaccia
+  function segmenti(contenitore, chiave, voci){
+    $(contenitore).innerHTML = voci.map(o =>
+      `<button data-v="${o.v}">${o.t}</button>`).join('');
+    $(contenitore).querySelectorAll('button').forEach(b =>
+      b.onclick = () => { st[chiave] = b.dataset.v; disegna(); });
+  }
+
+  $('k-uso').innerHTML = [...new Set(USI.map(u => u.g))].map(g =>
+    `<optgroup label="${g}">` + USI.filter(u => u.g === g)
+      .map(u => `<option value="${u.v}">${u.t}</option>`).join('') + '</optgroup>').join('');
+  $('k-uso').onchange = e => { st.uso = e.target.value; disegna(); };
+  segmenti('k-ruolo', 'ruolo', RUOLI);
+  segmenti('k-autonomia', 'autonomia', AUTONOMIE);
+  segmenti('k-profila', 'profila', SI_NO);
+  segmenti('k-contatto', 'contatto', SI_NO);
+  segmenti('k-marchio', 'marchio', SI_NO);
+
+  const ETICHETTE = {
+    uso:'la finalità', ruolo:'la posizione nella catena', autonomia:'il grado di autonomia',
+    profila:'la profilazione di persone', contatto:'il contatto diretto con le persone', marchio:'il marchio proprio'
+  };
+  const valore = (k, v) => k === 'uso' ? uso(v).t
+    : k === 'ruolo' ? RUOLI.find(r => r.v === v).t
+    : k === 'autonomia' ? AUTONOMIE.find(a => a.v === v).t
+    : v === 'si' ? 'Sì' : 'No';
+
+  // il pezzo che conta: quali modifiche cambierebbero l'esito.
+  // Prima le singole; se nessuna basta, le coppie — perche' spesso e' proprio
+  // quella la lezione: una leva sola non ti porta fuori.
+  const ORDINE = {'Pratica vietata':0, 'Alto rischio':1, 'Alto rischio escluso':2,
+                  'Obblighi di trasparenza':3, 'Rischio minimo':4};
+  const LEVE = Object.keys(DEF).filter(k => k !== 'uso');   // cambiare mestiere non e' una leva
+
+  const alternative = k => k === 'ruolo' ? RUOLI.map(r => r.v)
+    : k === 'autonomia' ? AUTONOMIE.map(a => a.v) : ['si','no'];
+
+  function controfattuali(attuale){
+    const singole = [];
+    for(const k of LEVE)
+      for(const v of alternative(k)){
+        if(v === st[k]) continue;
+        const prova = classifica(Object.assign({}, st, {[k]: v}));
+        if(prova.livello !== attuale.livello)
+          singole.push({mosse:[{k, v}], livello: prova.livello});
+      }
+    if(singole.length)
+      return {coppie:false, elenco: singole.sort((a,b) => ORDINE[a.livello] - ORDINE[b.livello]).slice(0, 5)};
+
+    const doppie = [];
+    for(let i = 0; i < LEVE.length; i++)
+      for(let j = i + 1; j < LEVE.length; j++)
+        for(const v1 of alternative(LEVE[i])){
+          if(v1 === st[LEVE[i]]) continue;
+          for(const v2 of alternative(LEVE[j])){
+            if(v2 === st[LEVE[j]]) continue;
+            const prova = classifica(Object.assign({}, st, {[LEVE[i]]: v1, [LEVE[j]]: v2}));
+            if(prova.livello !== attuale.livello)
+              doppie.push({mosse:[{k:LEVE[i], v:v1}, {k:LEVE[j], v:v2}], livello: prova.livello});
+          }
+        }
+    return {coppie:true, elenco: doppie.sort((a,b) => ORDINE[a.livello] - ORDINE[b.livello]).slice(0, 4)};
+  }
+
+  function disegna(){
+    $('k-uso').value = st.uso;
+    [['k-ruolo','ruolo'],['k-autonomia','autonomia'],['k-profila','profila'],
+     ['k-contatto','contatto'],['k-marchio','marchio']].forEach(([c,k]) =>
+      $(c).querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === st[k])));
+
+    const u = uso(st.uso);
+    $('n-uso').textContent = u.vietato ? 'Pratica vietata dall’art. 5.'
+      : u.allegato ? 'Settore dell’allegato III: candidato all’alto rischio.'
+      : u.prodotto ? 'Sistema incorporato in un prodotto già regolato.'
+      : 'Uso non elencato: il rischio dipende dal resto della configurazione.';
+    $('n-ruolo').innerHTML = st.ruolo === 'deployer'
+      ? 'Il deployer ha obblighi d’uso e di sorveglianza, non di progettazione.'
+      : st.ruolo === 'fornitore' ? 'Il fornitore porta il carico più pesante: conformità, documentazione, marcatura.'
+      : 'Importatori e distributori verificano, non progettano.';
+
+    const r = classifica(st);
+    $('esito').className = 'cfg-esito ' + r.classe;
+    $('e-liv').textContent = r.livello;
+    $('e-art').textContent = r.articolo;
+    $('e-sotto').textContent = r.sotto;
+    $('e-catena').innerHTML = r.catena.map(c =>
+      `<li class="${c.si ? 'si' : c.no ? 'no' : ''}">${c.t}</li>`).join('');
+    $('e-obblighi').innerHTML = r.obblighi.map(([t, f]) => `<li>${t}<span>${f}</span></li>`).join('');
+    $('e-data').textContent = r.data;
+    $('e-sanzione').textContent = r.sanzione;
+    $('e-sanzione').className = 'v ' + (r.classeSanzione || '');
+    $('e-registro').textContent = r.registro;
+
+    const cf = controfattuali(r);
+    const titolo = $('e-sposta').parentNode.querySelector('h4');
+    titolo.textContent = (cf.coppie && cf.elenco.length)
+      ? 'Cosa sposterebbe l’esito — servono due modifiche insieme'
+      : 'Cosa sposterebbe l’esito';
+    $('e-sposta').innerHTML = cf.elenco.length
+      ? cf.elenco.map((c, i) => {
+          const testo = c.mosse.map(m => `${ETICHETTE[m.k]} → <b>${valore(m.k, m.v)}</b>`).join(' <span class="arr">e</span> ');
+          return `<li><button data-i="${i}">${testo}</button> <span class="arr">porta a <b>${c.livello}</b></span></li>`;
+        }).join('')
+      : '<li class="arr">Nessuna combinazione di parametri cambia l’esito: qui si sposta solo ripensando la finalità del sistema.</li>';
+    $('e-sposta').querySelectorAll('button').forEach(b =>
+      b.onclick = () => { cf.elenco[+b.dataset.i].mosse.forEach(m => st[m.k] = m.v); disegna(); });
+
+    scriviUrl();
+  }
+
+  root.querySelectorAll('[data-caso]').forEach(b =>
+    b.onclick = () => { Object.assign(st, CASI[b.dataset.caso]); disegna(); });
+
+  // stato nell'indirizzo, come nel resto del sito
+  let urlScrivibile = true;
+  const frammento = () => {
+    const q = Object.keys(DEF).filter(k => st[k] !== DEF[k]).map(k => k + '=' + st[k]).join('&');
+    return q ? '#c:' + q : '';
+  };
+  const urlConfig = () => location.href.split('#')[0] + frammento();
+  function scriviUrl(){
+    if(!urlScrivibile) return;
+    try{ history.replaceState(null, '', urlConfig()); }catch(_){ urlScrivibile = false; }
+  }
+  if(location.hash.indexOf('#c:') === 0)
+    location.hash.slice(3).split('&').forEach(p => {
+      const [k, v] = p.split('=');
+      if(k in DEF) st[k] = v;
+    });
+
+  $('cfg-link').onclick = function(){
+    const t = urlConfig(), ok = () => {
+      const p = this.textContent; this.textContent = 'Link copiato';
+      setTimeout(() => this.textContent = p, 1800);
+    };
+    if(navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(ok).catch(() => ripiego(t, ok));
+    else ripiego(t, ok);
+  };
+  function ripiego(t, ok){
+    const ta = document.createElement('textarea');
+    ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); ok(); }catch(_){}
+    document.body.removeChild(ta);
+  }
+
+  disegna();
 })();
 </script>
 </body>
