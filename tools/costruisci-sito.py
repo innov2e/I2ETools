@@ -5,6 +5,7 @@ Una sola fonte di verità: aggiungere un artefatto significa aggiungere una voce
 al manifest. Questo script riscrive, dentro ogni pagina, i blocchi delimitati da
 
     <!-- sito:menu -->      ... <!-- /sito:menu -->      il menù fra le pagine
+    <!-- sito:mappa -->     ... <!-- /sito:mappa -->     la mappa (solo index)
     <!-- sito:catalogo -->  ... <!-- /sito:catalogo -->  l'elenco (solo index)
     <!-- sito:pie -->       ... <!-- /sito:pie -->       firma, data, licenza
 
@@ -56,6 +57,76 @@ def sostituisci(testo, nome, contenuto, dove):
             raise ValueError("nessun </body>")
         return testo[:i] + nuovo + "\n" + testo[i:]
     raise ValueError(dove)
+
+
+
+CAMPI_OBBLIGATORI = {"id", "titolo", "tipo", "tema", "accesso", "aggiornato"}
+CAMPI_NOTI = CAMPI_OBBLIGATORI | {
+    "indirizzo", "etichetta", "descrizione", "ordine", "durata", "lezioni", "livello",
+    "prerequisiti", "percorsi", "provenienza", "estrazione", "manipolabile", "bok",
+}
+TIPI = {"deep-dive", "tool", "corso"}
+ACCESSI = {"aperto", "riservato"}
+
+
+def valida(m):
+    """Controlla il manifest contro le proprie regole, prima di generare.
+
+    Serve a intercettare gli errori che non darebbero errore: un identificativo
+    duplicato, un prerequisito che non esiste, due artefatti con lo stesso posto
+    in fila, un campo scritto male. Producono una navigazione leggermente
+    sbagliata, e ce ne si accorge mesi dopo."""
+    temi = {t["id"] for t in m["temi"]}
+    identificativi, rilievi = set(), []
+
+    for t in m["temi"]:
+        for c in ("id", "titolo"):
+            if not t.get(c):
+                rilievi.append(f"tema senza {c}: {t}")
+
+    for a in m["artefatti"]:
+        chi = a.get("id", "(senza id)")
+
+        mancanti = CAMPI_OBBLIGATORI - set(a)
+        if mancanti:
+            rilievi.append(f"{chi}: campi obbligatori mancanti: {', '.join(sorted(mancanti))}")
+        sconosciuti = set(a) - CAMPI_NOTI
+        if sconosciuti:
+            rilievi.append(f"{chi}: campi sconosciuti (refuso?): {', '.join(sorted(sconosciuti))}")
+
+        if a.get("id") in identificativi:
+            rilievi.append(f"{chi}: identificativo duplicato")
+        identificativi.add(a.get("id"))
+
+        if a.get("tema") not in temi:
+            rilievi.append(f"{chi}: tema sconosciuto '{a.get('tema')}'")
+        if a.get("tipo") not in TIPI:
+            rilievi.append(f"{chi}: tipo '{a.get('tipo')}' fuori da {sorted(TIPI)}")
+        if a.get("accesso") not in ACCESSI:
+            rilievi.append(f"{chi}: accesso '{a.get('accesso')}' fuori da {sorted(ACCESSI)}")
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(a.get("aggiornato", ""))):
+            rilievi.append(f"{chi}: data '{a.get('aggiornato')}' non in forma AAAA-MM-GG")
+
+        if a.get("accesso") == "aperto" and not a.get("indirizzo"):
+            rilievi.append(f"{chi}: aperto ma senza indirizzo")
+        if a.get("indirizzo") and not (RADICE / a["indirizzo"]).exists():
+            rilievi.append(f"{chi}: indirizzo inesistente '{a['indirizzo']}'")
+
+    for a in m["artefatti"]:
+        for q in a.get("prerequisiti", []):
+            if q not in identificativi:
+                rilievi.append(f"{a.get('id')}: prerequisito inesistente '{q}'")
+
+    for t in temi:
+        posti = {}
+        for a in m["artefatti"]:
+            if a["tema"] == t and a.get("ordine"):
+                posti.setdefault(a["ordine"], []).append(a["id"])
+        for posto, chi in posti.items():
+            if len(chi) > 1:
+                rilievi.append(f"tema '{t}': stesso posto {posto} per {', '.join(chi)}")
+
+    return rilievi
 
 
 # ------------------------------------------------------------------ contenuti
@@ -166,6 +237,69 @@ def pie(m, art):
             f'<div class="sito-lic">{e(s["licenza"])}</div></footer>\n')
 
 
+
+MAPPA_STILE = """<style>
+.mappa{margin:34px 0 8px}
+.mappa-t{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--a1);font-weight:800}
+.mappa-s{margin:10px 0 20px;color:var(--muted);font-size:14px;max-width:70ch}
+.mappa-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.terr{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--mc,var(--a1));
+  border-radius:12px;padding:16px 16px 14px;display:flex;flex-direction:column;gap:10px}
+.terr.chiusa{border-style:dashed;border-top-style:solid;opacity:.85}
+.terr h3{margin:0;font-size:14.5px;font-weight:800;letter-spacing:-.01em}
+.terr h3 em{font-style:normal;color:var(--muted);font-weight:600;font-size:12px;margin-left:6px}
+.terr-n{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.nodo{display:inline-block;font-size:12px;font-weight:600;line-height:1.25;padding:6px 9px;border-radius:7px;
+  background:var(--panel2);border:1px solid var(--line);color:var(--ink);text-decoration:none;max-width:100%}
+.nodo:hover{border-color:var(--mc,var(--a1));color:var(--mc,var(--a1))}
+.nodo.chiuso{border-style:dashed;color:var(--muted);cursor:default}
+.nodo.chiuso:before{content:'\\1F512';margin-right:5px;opacity:.75}
+.nodo.molti{background:transparent;border-style:dashed}
+.freccia{color:var(--muted);font-size:12px;opacity:.75}
+@media print{.mappa{display:none}}
+</style>"""
+
+
+def mappa(m):
+    """Una fascia sopra il catalogo: i temi come territori, e le frecce dove il
+    manifest sa gia' che un artefatto viene prima di un altro."""
+    e = html.escape
+    colori = ["var(--a1)", "var(--a2)", "var(--a3)", "var(--a4)", "var(--a5)"]
+    fuori = [MAPPA_STILE, '<section class="mappa">',
+             '<div class="mappa-t">La mappa</div>',
+             '<p class="mappa-s">Cinque territori. Dove un contenuto viene prima di un altro, '
+             'la freccia lo dice; le zone tratteggiate si aprono partecipando a un corso.</p>',
+             '<div class="mappa-g">']
+
+    for n, t in enumerate(m["temi"]):
+        figli = sorted([a for a in m["artefatti"] if a["tema"] == t["id"]],
+                       key=lambda a: (a.get("ordine", 99), a["titolo"]))
+        if not figli:
+            continue
+        chiusa = all(a["accesso"] == "riservato" for a in figli)
+        fuori.append(f'<div class="terr{" chiusa" if chiusa else ""}" style="--mc:{colori[n % 5]}">'
+                     f'<h3>{e(t["titolo"])}<em>{len(figli)}</em></h3><div class="terr-n">')
+
+        # oltre sei nodi il territorio diventa illeggibile: si raccoglie in uno solo
+        if len(figli) > 6:
+            fuori.append(f'<a class="nodo molti" href="#tema-{e(t["id"])}">'
+                         f'{len(figli)} contenuti &#8594;</a>')
+        else:
+            ordinati = [a for a in figli if a.get("ordine")]
+            for i, a in enumerate(figli):
+                if i and a in ordinati and figli[i - 1] in ordinati:
+                    fuori.append('<span class="freccia">&#8594;</span>')
+                if a["accesso"] == "riservato" or not a.get("indirizzo"):
+                    fuori.append(f'<span class="nodo chiuso">{e(a["titolo"])}</span>')
+                else:
+                    fuori.append(f'<a class="nodo" href="{e(verso("index.html", a["indirizzo"]))}">'
+                                 f'{e(a["titolo"])}</a>')
+        fuori.append("</div></div>")
+
+    fuori += ["</div></section>"]
+    return "\n".join(fuori)
+
+
 def catalogo(m):
     """L'elenco per la pagina d'ingresso: un gruppo per tema."""
     e = html.escape
@@ -175,7 +309,7 @@ def catalogo(m):
                        key=lambda a: (a.get("ordine", 99), a["titolo"]))
         if not figli:
             continue
-        fuori.append(f'\n<section class="cat-tema">\n  <h2>{e(t["titolo"])}</h2>'
+        fuori.append(f'\n<section class="cat-tema" id="tema-{e(t["id"])}">\n  <h2>{e(t["titolo"])}</h2>'
                      f'\n  <p class="cat-sub">{e(t["descrizione"])}</p>\n  <div class="grid">')
         for a in figli:
             chiuso = a["accesso"] == "riservato" or not a.get("indirizzo")
@@ -210,12 +344,12 @@ def main():
         sys.exit("manifest.json assente")
     m = json.loads(MANIFEST.read_text(encoding="utf-8"))
 
-    temi = {t["id"] for t in m["temi"]}
-    for art in m["artefatti"]:
-        if art["tema"] not in temi:
-            sys.exit(f"{art['id']}: tema sconosciuto '{art['tema']}'")
-        if art.get("indirizzo") and not (RADICE / art["indirizzo"]).exists():
-            sys.exit(f"{art['id']}: indirizzo inesistente '{art['indirizzo']}'")
+    rilievi = valida(m)
+    if rilievi:
+        print("Il manifest non è coerente: niente viene generato.\n")
+        for r in rilievi:
+            print(f"  ✖ {r}")
+        sys.exit(1)
 
     pagine = [(a["indirizzo"], a) for a in m["artefatti"]
               if a.get("indirizzo") and a["accesso"] == "aperto"]
@@ -229,6 +363,7 @@ def main():
         if art:
             testo = sostituisci(testo, "pie", pie(m, art), "prima-body")
         else:
+            testo = sostituisci(testo, "mappa", mappa(m), "prima-body")
             testo = sostituisci(testo, "catalogo", catalogo(m), "prima-body")
         if testo != originale:
             cambiate.append(nome)

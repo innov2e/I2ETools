@@ -41,7 +41,9 @@ IMPORTA = re.compile(r"""@import\s+(?:url\()?["']?(https?:|//)""", re.I)
 RETE = re.compile(r"\b(?:fetch|XMLHttpRequest|WebSocket|EventSource)\s*\(", re.I)
 REGIA = re.compile(r'class="docente"|Nota per chi conduce', re.I)
 SEZIONE = re.compile(r'<section[^>]*\sid="', re.I)
-INDICE = re.compile(r'class="(?:topnav|paginanav|toc)"', re.I)
+# vale come indice qualunque cosa porti alle sezioni della pagina: la barra
+# curata delle guide, il sommario del Libro, la mappa del catalogo
+INDICE = re.compile(r'class="(?:topnav|paginanav|toc|mappa-g)"', re.I)
 SEZIONI_MINIME = 4
 COLLEGAMENTI = re.compile(r'(?:href|src)="([^"]+)"')
 

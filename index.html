@@ -277,12 +277,67 @@
     <p class="lede">Ogni scheda qui sotto apre una pagina pubblicata su questo sito. Cliccate un link per andare al documento.</p>
   </div>
 
+  <!-- ============ MAPPA ============ -->
+  <!-- Generata da manifest.json come il catalogo: non si modifica a mano. -->
+  <!-- sito:mappa --><style>
+.mappa{margin:34px 0 8px}
+.mappa-t{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--a1);font-weight:800}
+.mappa-s{margin:10px 0 20px;color:var(--muted);font-size:14px;max-width:70ch}
+.mappa-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.terr{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--mc,var(--a1));
+  border-radius:12px;padding:16px 16px 14px;display:flex;flex-direction:column;gap:10px}
+.terr.chiusa{border-style:dashed;border-top-style:solid;opacity:.85}
+.terr h3{margin:0;font-size:14.5px;font-weight:800;letter-spacing:-.01em}
+.terr h3 em{font-style:normal;color:var(--muted);font-weight:600;font-size:12px;margin-left:6px}
+.terr-n{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.nodo{display:inline-block;font-size:12px;font-weight:600;line-height:1.25;padding:6px 9px;border-radius:7px;
+  background:var(--panel2);border:1px solid var(--line);color:var(--ink);text-decoration:none;max-width:100%}
+.nodo:hover{border-color:var(--mc,var(--a1));color:var(--mc,var(--a1))}
+.nodo.chiuso{border-style:dashed;color:var(--muted);cursor:default}
+.nodo.chiuso:before{content:'\1F512';margin-right:5px;opacity:.75}
+.nodo.molti{background:transparent;border-style:dashed}
+.freccia{color:var(--muted);font-size:12px;opacity:.75}
+@media print{.mappa{display:none}}
+</style>
+<section class="mappa">
+<div class="mappa-t">La mappa</div>
+<p class="mappa-s">Cinque territori. Dove un contenuto viene prima di un altro, la freccia lo dice; le zone tratteggiate si aprono partecipando a un corso.</p>
+<div class="mappa-g">
+<div class="terr" style="--mc:var(--a1)"><h3>Fondamenti<em>3</em></h3><div class="terr-n">
+<a class="nodo" href="tipi-di-ai.html">I tipi di AI — guida per decision maker</a>
+<a class="nodo" href="timeline_tecnologica.html">Le tappe che hanno cambiato il mondo</a>
+<a class="nodo" href="tipi-di-ai-index.html">Tipi di Intelligenza Artificiale</a>
+</div></div>
+<div class="terr" style="--mc:var(--a2)"><h3>Alfabetizzazione sull&#x27;AI<em>3</em></h3><div class="terr-n">
+<a class="nodo" href="prompt-engineering-struttura.html">L&#x27;anatomia di un prompt</a>
+<span class="freccia">&#8594;</span>
+<a class="nodo" href="memoria-e-contesto-ai.html">La memoria dell&#x27;AI</a>
+<span class="freccia">&#8594;</span>
+<a class="nodo" href="normativa-ai-scadenze-obblighi.html">La normativa: cosa devo fare, entro quando</a>
+</div></div>
+<div class="terr" style="--mc:var(--a3)"><h3>Guide operative<em>1</em></h3><div class="terr-n">
+<a class="nodo" href="Il%20Libro%20dei%20Prompting.html">Il Libro dei Prompting</a>
+</div></div>
+<div class="terr" style="--mc:var(--a4)"><h3>Strumenti<em>15</em></h3><div class="terr-n">
+<a class="nodo molti" href="#tema-strumenti">15 contenuti &#8594;</a>
+</div></div>
+<div class="terr" style="--mc:var(--a5)"><h3>BMAD<em>2</em></h3><div class="terr-n">
+<a class="nodo" href="bmad-anatomia.html">BMAD: cos&#x27;è e anatomia dell&#x27;installazione</a>
+<span class="freccia">&#8594;</span>
+<a class="nodo" href="bmad-install-lab.html">BMAD: laboratorio di installazione</a>
+</div></div>
+<div class="terr chiusa" style="--mc:var(--a1)"><h3>Corsi in aula<em>2</em></h3><div class="terr-n">
+<span class="nodo chiuso">Prompting avanzato per funzioni — Modulo 1</span>
+<span class="nodo chiuso">Tecniche di base di prompt engineering</span>
+</div></div>
+</div></section><!-- /sito:mappa -->
+
   <!-- ============ CATALOGO ============ -->
   <!-- Generato da manifest.json: non si modifica a mano.
        Per aggiungere un contenuto: una voce in manifest.json, poi
            python3 tools/costruisci-sito.py                                -->
   <!-- sito:catalogo -->
-<section class="cat-tema">
+<section class="cat-tema" id="tema-fondamenti">
   <h2>Fondamenti</h2>
   <p class="cat-sub">Orientarsi: che cosa è un sistema di AI, come si classifica, da dove viene.</p>
   <div class="grid">
@@ -307,7 +362,7 @@
   </div>
 </section>
 
-<section class="cat-tema">
+<section class="cat-tema" id="tema-alfabetizzazione">
   <h2>Alfabetizzazione sull&#x27;AI</h2>
   <p class="cat-sub">Il corso: come si scrive un prompt, dove vive il contesto, quali obblighi si applicano.</p>
   <div class="grid">
@@ -332,7 +387,7 @@
   </div>
 </section>
 
-<section class="cat-tema">
+<section class="cat-tema" id="tema-guide">
   <h2>Guide operative</h2>
   <p class="cat-sub">Materiale da usare sul lavoro, non da studiare.</p>
   <div class="grid">
@@ -345,7 +400,7 @@
   </div>
 </section>
 
-<section class="cat-tema">
+<section class="cat-tema" id="tema-strumenti">
   <h2>Strumenti</h2>
   <p class="cat-sub">Banchi di prova interattivi: si usano nel browser, non salvano nulla, funzionano anche scaricati.</p>
   <div class="grid">
@@ -442,7 +497,7 @@
   </div>
 </section>
 
-<section class="cat-tema">
+<section class="cat-tema" id="tema-bmad">
   <h2>BMAD</h2>
   <p class="cat-sub">Che cos&#x27;è, come si installa, come si usa.</p>
   <div class="grid">
@@ -461,7 +516,7 @@
   </div>
 </section>
 
-<section class="cat-tema">
+<section class="cat-tema" id="tema-aula">
   <h2>Corsi in aula</h2>
   <p class="cat-sub">Percorsi condotti. Il materiale si riceve partecipando.</p>
   <div class="grid">
