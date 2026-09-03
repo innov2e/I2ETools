@@ -174,6 +174,9 @@ footer{border-top:1px solid var(--line);padding:36px 28px;text-align:center;colo
 .modbar-i em{font-style:normal;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;font-weight:700;color:var(--mc)}
 .modbar-i b{display:block;color:var(--tx);font-size:13.8px;margin-top:5px;font-weight:650;letter-spacing:-.2px;line-height:1.3}
 .modbar-i span{display:block;color:var(--tx-3);font-size:11px;margin-top:4px;font-family:var(--mono)}
+
+  /* rimando a una pagina non ancora pubblicata: il testo resta, il link no */
+  .non-ancora{color:var(--tx-2,inherit);opacity:.85;border-bottom:1px dotted var(--line-2,#555);cursor:default}
 </style>
 </head>
 <body data-os="mac">
@@ -717,7 +720,7 @@ bmad-loop adapters</pre>
       <p>Il preflight controlla, uno per uno: la configurazione BMAD, la presenza di uno <code>sprint-status.yaml</code>, git, il binario della CLI, la registrazione degli hook e lo stato del multiplexer. Verifica inoltre che ci siano le skill che l'orchestratore andrà a invocare, e le segnala con l'indicazione di quale modulo le fornisce se mancano.</p>
 
       <div class="obs"><b>Il preflight fallirà, ed è previsto</b>
-      A questo punto manca <code>sprint-status.yaml</code>, perché non hai ancora fatto pianificazione. È il modo giusto per far vedere che il preflight <em>controlla davvero</em> invece di dire sempre di sì. Per completare, servirebbe una passata di pianificazione — che è l'argomento del <a href="bmad-workshop.html">laboratorio sui tre flussi</a>, non di questa pagina.</div>
+      A questo punto manca <code>sprint-status.yaml</code>, perché non hai ancora fatto pianificazione. È il modo giusto per far vedere che il preflight <em>controlla davvero</em> invece di dire sempre di sì. Per completare, servirebbe una passata di pianificazione — che è l'argomento del <span class="non-ancora" title="Non ancora pubblicata">laboratorio sui tre flussi</span>, non di questa pagina.</div>
 
       <div class="warn"><b>Il passaggio che tutti dimenticano, e che costa mezz'ora</b>
       Se la CLI di coding non è <b>mai</b> stata avviata in quel progetto, avviala una volta a mano e accetta la finestra di fiducia del workspace e l'eventuale approvazione degli hook. Una sessione generata dall'orchestratore non può rispondere a un dialogo di primo avvio, e quel blocco viene letto come un timeout di sessione: un sintomo che non suggerisce affatto la sua causa.</div>
@@ -1000,7 +1003,7 @@ Remove-Item -Recurse -Force $env:LOCALAPPDATA\bmad-loop\state\</pre>
 
 <!-- MARKER -->
 
-<section class="modbar" style="border-top:1px solid var(--line)"><div class="modbar-t">Il percorso completo del corso</div><div class="modbar-g"><a class="modbar-i" style="--mc:#ffb547" href="prompt-engineering-struttura.html"><em>Modulo 1</em><b>L'anatomia di un prompt</b><span>apri →</span></a><a class="modbar-i" style="--mc:#5eead4" href="memoria-e-contesto-ai.html"><em>Modulo 2</em><b>Memoria e contesto</b><span>apri →</span></a><a class="modbar-i" style="--mc:#7dd3fc" href="normativa-ai-scadenze-obblighi.html"><em>Modulo 3</em><b>Normativa UE e italiana</b><span>apri →</span></a><a class="modbar-i" style="--mc:#a78bfa" href="bmad-tre-flussi.html"><em>Modulo 4</em><b>BMad: i tre flussi</b><span>apri →</span></a><a class="modbar-i" style="--mc:#c084fc" href="bmad-workshop.html"><em>Laboratorio</em><b>BMad: flussi a confronto</b><span>apri →</span></a><a class="modbar-i" style="--mc:#fb7185" href="bmad-anatomia.html"><em>Install · 1</em><b>Concetti e anatomia</b><span>apri →</span></a><div class="modbar-i cur" style="--mc:#fb7185"><em>Install · 2</em><b>Laboratorio installazione</b><span>sei qui</span></div></div></section>
+<section class="modbar" style="border-top:1px solid var(--line)"><div class="modbar-t">Il percorso completo del corso</div><div class="modbar-g"><a class="modbar-i" style="--mc:#ffb547" href="prompt-engineering-struttura.html"><em>Modulo 1</em><b>L'anatomia di un prompt</b><span>apri →</span></a><a class="modbar-i" style="--mc:#5eead4" href="memoria-e-contesto-ai.html"><em>Modulo 2</em><b>Memoria e contesto</b><span>apri →</span></a><a class="modbar-i" style="--mc:#7dd3fc" href="normativa-ai-scadenze-obblighi.html"><em>Modulo 3</em><b>Normativa UE e italiana</b><span>apri →</span></a><span class="modbar-i non-ancora" style="--mc:#a78bfa" title="Non ancora pubblicata"><em>Modulo 4</em><b>BMad: i tre flussi</b><span>apri →</span></span><span class="modbar-i non-ancora" style="--mc:#c084fc" title="Non ancora pubblicata"><em>Laboratorio</em><b>BMad: flussi a confronto</b><span>apri →</span></span><a class="modbar-i" style="--mc:#fb7185" href="bmad-anatomia.html"><em>Install · 1</em><b>Concetti e anatomia</b><span>apri →</span></a><div class="modbar-i cur" style="--mc:#fb7185"><em>Install · 2</em><b>Laboratorio installazione</b><span>sei qui</span></div></div></section>
 
 </main>
 

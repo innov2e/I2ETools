@@ -166,6 +166,9 @@ footer{border-top:1px solid var(--line);padding:36px 28px;text-align:center;colo
 .modbar-i em{font-style:normal;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;font-weight:700;color:var(--mc)}
 .modbar-i b{display:block;color:var(--tx);font-size:13.8px;margin-top:5px;font-weight:650;letter-spacing:-.2px;line-height:1.3}
 .modbar-i span{display:block;color:var(--tx-3);font-size:11px;margin-top:4px;font-family:var(--mono)}
+
+  /* rimando a una pagina non ancora pubblicata: il testo resta, il link no */
+  .non-ancora{color:var(--tx-2,inherit);opacity:.85;border-bottom:1px dotted var(--line-2,#555);cursor:default}
 </style>
 </head>
 <body>
@@ -334,7 +337,7 @@ footer{border-top:1px solid var(--line);padding:36px 28px;text-align:center;colo
 
   <h3>Le quattro fasi</h3>
   <p>Ogni fase è facoltativa nel senso che puoi entrare direttamente dove ti serve. Ciò che non è facoltativo è la logica: <strong>ogni documento diventa il contesto del successivo</strong>. Il PRD dice all'architetto quali vincoli contano; l'architettura dice all'agente di sviluppo quali pattern seguire; il file di specifica dà un contesto focalizzato e completo all'implementazione.</p>
-  <p>Il modulo <a href="bmad-workshop.html">laboratorio sui tre flussi</a> approfondisce le fasi e i tre modi di attraversarle; qui basta sapere che esistono, perché determinano quali cartelle vengono create e quando.</p>
+  <p>Il modulo <span class="non-ancora" title="Non ancora pubblicata">laboratorio sui tre flussi</span> approfondisce le fasi e i tre modi di attraversarle; qui basta sapere che esistono, perché determinano quali cartelle vengono create e quando.</p>
 </section>
 
 <!-- ===== 2. HARNESS ===== -->
@@ -568,7 +571,7 @@ footer{border-top:1px solid var(--line);padding:36px 28px;text-align:center;colo
 
 <!-- MARKER -->
 
-<section class="modbar" style="border-top:1px solid var(--line)"><div class="modbar-t">Il percorso completo del corso</div><div class="modbar-g"><a class="modbar-i" style="--mc:#ffb547" href="prompt-engineering-struttura.html"><em>Modulo 1</em><b>L'anatomia di un prompt</b><span>apri →</span></a><a class="modbar-i" style="--mc:#5eead4" href="memoria-e-contesto-ai.html"><em>Modulo 2</em><b>Memoria e contesto</b><span>apri →</span></a><a class="modbar-i" style="--mc:#7dd3fc" href="normativa-ai-scadenze-obblighi.html"><em>Modulo 3</em><b>Normativa UE e italiana</b><span>apri →</span></a><a class="modbar-i" style="--mc:#a78bfa" href="bmad-tre-flussi.html"><em>Modulo 4</em><b>BMad: i tre flussi</b><span>apri →</span></a><a class="modbar-i" style="--mc:#c084fc" href="bmad-workshop.html"><em>Laboratorio</em><b>BMad: flussi a confronto</b><span>apri →</span></a><div class="modbar-i cur" style="--mc:#fb7185"><em>Install · 1</em><b>Concetti e anatomia</b><span>sei qui</span></div><a class="modbar-i" style="--mc:#fb7185" href="bmad-install-lab.html"><em>Install · 2</em><b>Laboratorio installazione</b><span>apri →</span></a></div></section>
+<section class="modbar" style="border-top:1px solid var(--line)"><div class="modbar-t">Il percorso completo del corso</div><div class="modbar-g"><a class="modbar-i" style="--mc:#ffb547" href="prompt-engineering-struttura.html"><em>Modulo 1</em><b>L'anatomia di un prompt</b><span>apri →</span></a><a class="modbar-i" style="--mc:#5eead4" href="memoria-e-contesto-ai.html"><em>Modulo 2</em><b>Memoria e contesto</b><span>apri →</span></a><a class="modbar-i" style="--mc:#7dd3fc" href="normativa-ai-scadenze-obblighi.html"><em>Modulo 3</em><b>Normativa UE e italiana</b><span>apri →</span></a><span class="modbar-i non-ancora" style="--mc:#a78bfa" title="Non ancora pubblicata"><em>Modulo 4</em><b>BMad: i tre flussi</b><span>apri →</span></span><span class="modbar-i non-ancora" style="--mc:#c084fc" title="Non ancora pubblicata"><em>Laboratorio</em><b>BMad: flussi a confronto</b><span>apri →</span></span><div class="modbar-i cur" style="--mc:#fb7185"><em>Install · 1</em><b>Concetti e anatomia</b><span>sei qui</span></div><a class="modbar-i" style="--mc:#fb7185" href="bmad-install-lab.html"><em>Install · 2</em><b>Laboratorio installazione</b><span>apri →</span></a></div></section>
 
 </main>
 
@@ -792,7 +795,7 @@ mkAcc('harness-acc',[
   b:'<p><b>Cosa fa.</b> BMAD non definisce strumenti propri: usa quelli della CLI di coding sotto — lettura e scrittura file, esecuzione comandi, git. La scelta è deliberata e allineata a un risultato noto della disciplina: esporre tutto come file e lasciare che l\'agente usi <code>read</code>, <code>grep</code>, <code>find</code> e <code>shell</code> tende a battere lo strumentario specializzato.</p>'+
     '<p><b>Dove interviene davvero.</b> Nel <i>passaggio</i> all\'implementazione: <code>[workflow] implementation_handoff</code> contiene la ricetta letterale passata al subagente, con un vincolo esplicito — al processo padre è vietato riformulare gli obiettivi, elencare i file o iniettare criteri di accettazione. È progettazione dell\'interfaccia fra agenti, più che fra agente e mondo.</p>'},
  {n:'06',t:'Umano nel ciclo',s:'dove e quando una persona decide',badge:['b-ok','Coperto'],
-  b:'<p><b>Come lo realizza.</b> È il tema del <a href="bmad-tre-flussi.html">modulo 4</a>. Tre flussi che differiscono <i>solo</i> per la posizione dei checkpoint, e in quello automatico un parametro esplicito — <code>gates.mode</code> — che sposta le fermate da una per storia a nessuna. In aggiunta, checkpoint indipendenti per singola storia e uno stato terminale onesto (<code>awaiting-operator</code>) per il lavoro che richiede un\'azione esterna che solo una persona può compiere.</p>'+
+  b:'<p><b>Come lo realizza.</b> È il tema del <span class="non-ancora" title="Non ancora pubblicata">modulo 4</span>. Tre flussi che differiscono <i>solo</i> per la posizione dei checkpoint, e in quello automatico un parametro esplicito — <code>gates.mode</code> — che sposta le fermate da una per storia a nessuna. In aggiunta, checkpoint indipendenti per singola storia e uno stato terminale onesto (<code>awaiting-operator</code>) per il lavoro che richiede un\'azione esterna che solo una persona può compiere.</p>'+
     '<p>La cosa notevole è che il grado di supervisione sia un <b>parametro di configurazione</b> e non una proprietà del prodotto: è precisamente ciò che la disciplina intende quando parla di spostare l\'umano <i>sul</i> ciclo invece che dentro.</p>'},
  {n:'07',t:'Osservabilità e tracciamento',s:'sapere cosa sta facendo, mentre lo fa',badge:['b-part','In parte'],
   b:'<p><b>Cosa c\'è.</b> Nell\'orchestratore: un diario append-only di ogni decisione, la dashboard testuale dal vivo, il dump diagnostico sanificato per le segnalazioni di bug, i totali di token pesati per costo. Nel metodo: gli snapshot immutabili e indirizzati dal contenuto di ciò che è stato effettivamente eseguito, con un manifesto degli hash.</p>'+
