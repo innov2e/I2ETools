@@ -259,7 +259,12 @@ footer{border-top:1px solid var(--line);padding:36px 28px;text-align:center;colo
 .cfg-sposta button{background:none;border:none;border-bottom:1px dashed var(--ac);color:var(--ac);font:inherit;font-size:13.5px;padding:0;cursor:pointer;text-align:left}
 .cfg-sposta button:hover{background:rgba(125,211,252,.12)}
 .cfg-sposta .arr{color:var(--tx-2)}
-.cfg-act{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.cfg-act{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.cfg-act .et{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--tx-3);font-weight:700;margin-right:2px}
+.xbtn{background:var(--bg);border:1px solid var(--line-2);color:var(--tx-2);font:inherit;font-size:12.5px;font-weight:600;padding:7px 13px;border-radius:8px;cursor:pointer;transition:.12s}
+.xbtn:hover{border-color:var(--ac);color:var(--ac)}
+.xbtn.on{border-color:var(--ac);color:var(--ac);background:rgba(125,211,252,.12)}
+.cfg-act .sp{flex:1}
 .cfg-note{font-size:11.5px;color:var(--tx-3);margin-top:14px;line-height:1.55}
 </style>
 </head>
@@ -457,10 +462,12 @@ footer{border-top:1px solid var(--line);padding:36px 28px;text-align:center;colo
     </div>
 
     <div class="cfg-act">
-      <button class="xbtn" data-caso="curriculum">Caso: selezione del personale</button>
-      <button class="xbtn" data-caso="chatbot">Caso: chatbot di assistenza</button>
-      <button class="xbtn" data-caso="macchinario">Caso: controllo qualità in fabbrica</button>
-      <button class="xbtn" data-caso="emozioni">Caso: analisi del tono in call center</button>
+      <span class="et">Casi</span>
+      <button class="xbtn" data-caso="curriculum">Selezione del personale</button>
+      <button class="xbtn" data-caso="chatbot">Chatbot di assistenza</button>
+      <button class="xbtn" data-caso="macchinario">Controllo qualità in fabbrica</button>
+      <button class="xbtn" data-caso="emozioni">Analisi del tono in call center</button>
+      <span class="sp"></span>
       <button class="xbtn" id="cfg-link">Copia link a questa configurazione</button>
     </div>
 
@@ -1462,6 +1469,10 @@ mkAcc('ag',[
       : '<li class="arr">Nessuna combinazione di parametri cambia l’esito: qui si sposta solo ripensando la finalità del sistema.</li>';
     $('e-sposta').querySelectorAll('button').forEach(b =>
       b.onclick = () => { cf.elenco[+b.dataset.i].mosse.forEach(m => st[m.k] = m.v); disegna(); });
+
+    const uguale = c => Object.keys(DEF).every(k => CASI[c][k] === st[k]);
+    root.querySelectorAll('[data-caso]').forEach(b =>
+      b.classList.toggle('on', uguale(b.dataset.caso)));
 
     scriviUrl();
   }
