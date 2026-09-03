@@ -75,6 +75,15 @@ button:disabled{opacity:.4;cursor:not-allowed}
 main{padding-bottom:64px}
 .brm .sp{flex:1}
 .st{font-size:12px;color:var(--tx-3)}
+.spento{max-width:720px;margin:8px auto 0}
+.spento h3{font-size:19px;margin:0 0 10px;color:var(--tx)}
+.spento p{color:var(--tx-2);margin:0 0 14px}
+.spento ol{color:var(--tx-2);margin:0 0 16px 20px}.spento li{margin-bottom:8px}
+.cmd{display:flex;gap:8px;align-items:center;background:#090b0f;border:1px solid var(--line-2);
+  border-radius:8px;padding:12px 14px;margin:10px 0 18px}
+.cmd code{flex:1;font-family:var(--mono);font-size:13px;color:var(--ac);user-select:all}
+.perche{border-left:3px solid var(--amb);background:rgba(255,181,71,.06);padding:12px 16px;
+  border-radius:0 8px 8px 0;font-size:13px;color:var(--tx-2)}
 </style>
 </head>
 <body>
@@ -341,7 +350,48 @@ async function costruisci(file){
 $('#b-una').onclick = () => corrente && costruisci(corrente.file);
 $('#b-tutte').onclick = () => costruisci(null);
 
-carica().catch(e => $('#elenco').innerHTML = `<p class="vuoto">${esc(e.message)}</p>`);
+function serverSpento(motivo){
+  $('#elenco').innerHTML = '<p class="vuoto">nessuna pagina: il server non risponde</p>';
+  $('#b-una').disabled = true;
+  $('#b-tutte').disabled = true;
+  $('#st-build').textContent = 'server non in esecuzione';
+  $('#editor').innerHTML = `
+    <div class="spento">
+      <h3>Il pannello ha bisogno del suo server</h3>
+      <p>Questa pagina scrive file sul tuo computer — le note di regia e i segnaposto nelle pagine —
+         e un browser da solo non può farlo. Il server fa quel lavoro, gira solo qui in locale
+         e non viene mai pubblicato.</p>
+      <ol>
+        <li>Apri il Terminale nella cartella del progetto.</li>
+        <li>Lancia il comando qui sotto.</li>
+        <li>Il pannello si apre da solo su <code>http://127.0.0.1:8765/</code>. Chiudi pure questa scheda.</li>
+      </ol>
+      <div class="cmd">
+        <code id="cmd">python3 tools/regia-server.py</code>
+        <button id="b-copia">copia</button>
+      </div>
+      <p class="perche"><strong>Perché vedevi un errore.</strong> ${esc(motivo)} —
+         stai aprendo il file direttamente dal disco, oppure il server è stato chiuso con Ctrl+C.
+         Riavvialo e ricarica.</p>
+      <p style="margin-top:16px"><button id="b-riprova">Riprova adesso</button></p>
+    </div>`;
+  $('#b-copia').onclick = function(){
+    const t = $('#cmd').textContent;
+    const fatto = () => { this.textContent = 'copiato'; setTimeout(() => this.textContent = 'copia', 1600); };
+    if(navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(fatto).catch(fatto);
+    else { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta);
+           ta.select(); try{ document.execCommand('copy'); fatto(); }catch(_){} document.body.removeChild(ta); }
+  };
+  $('#b-riprova').onclick = avvia;
+}
+
+function avvia(){
+  if(location.protocol === 'file:')          // da disco le chiamate non partono nemmeno
+    return serverSpento('La pagina è aperta come file locale (file://).');
+  carica().catch(e => serverSpento(e.message || 'Il server non ha risposto.'));
+}
+
+avvia();
 </script>
 </body>
 </html>
