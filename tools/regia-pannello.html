@@ -45,11 +45,23 @@ button.primario{background:var(--ac);border-color:var(--ac);color:#08131a}
 button.primario:hover{opacity:.88;color:#08131a}
 button.rischio:hover{border-color:var(--no);color:var(--no)}
 button:disabled{opacity:.4;cursor:not-allowed}
-.due{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media(max-width:900px){.due{grid-template-columns:1fr}}
-.ante{background:var(--bg-2);border:1px dashed var(--amb);border-radius:10px;padding:14px 18px;min-height:320px;overflow:auto}
-.ante .dt{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--amb);font-weight:700;margin-bottom:8px}
-.ante p{margin:0 0 8px;font-size:13.5px}.ante ol,.ante ul{margin:0 0 8px 18px;font-size:13.5px}
+.barra{display:flex;gap:4px;flex-wrap:wrap;align-items:center;background:var(--bg-3);
+  border:1px solid var(--line-2);border-bottom:none;border-radius:10px 10px 0 0;padding:6px}
+.barra button{padding:5px 10px;font-size:12.5px;border-color:transparent;background:transparent}
+.barra button:hover{background:var(--bg-2);border-color:var(--line-2)}
+.barra button.on{background:var(--ac);border-color:var(--ac);color:#08131a}
+.barra .div{width:1px;height:20px;background:var(--line-2);margin:0 4px}
+.barra .sp{flex:1}
+.barra b{font-weight:800}.barra i{font-style:italic}
+.tela{background:var(--bg-2);border:1px solid var(--line-2);border-top:none;border-radius:0 0 10px 10px;
+  padding:16px 20px;min-height:340px;overflow:auto}
+.tela .dt{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--amb);font-weight:700;
+  margin-bottom:10px;user-select:none}
+.tela [contenteditable]{outline:none;min-height:280px;font-size:14px}
+.tela [contenteditable]:empty:before{content:attr(data-vuoto);color:var(--tx-3)}
+.tela p{margin:0 0 10px}.tela ol,.tela ul{margin:0 0 10px 20px}.tela li{margin-bottom:4px}
+.tela strong{color:var(--tx)}.tela code{font-family:var(--mono);font-size:12.5px;color:var(--ac)}
+#sorgente{width:100%;min-height:340px;border-radius:0 0 10px 10px;border-top:none}
 .aiuto{font-size:12px;color:var(--tx-3);margin:6px 0 0}
 .avviso{border-left:3px solid var(--amb);background:rgba(255,181,71,.07);padding:10px 14px;border-radius:0 8px 8px 0;
   font-size:13px;margin-bottom:14px}
@@ -127,7 +139,8 @@ function apri(p, idNota){
 
   const conNota = p.sezioni.filter(s => s.nota);
   const ids = Object.keys(p.note);
-  notaAperta = idNota || (ids.length ? ids[0] : null);
+  // idNota assente = apri la prima; idNota null = foglio bianco per una nota nuova
+  notaAperta = idNota === undefined ? (ids[0] || null) : (idNota || null);
 
   $('#editor').innerHTML = `
     <h2>${esc(p.file)}</h2>
@@ -148,18 +161,26 @@ function apri(p, idNota){
       <input type="text" id="in-id" value="${notaAperta ? esc(notaAperta) : ''}" placeholder="es. dimensiona-il-tuo-caso">
     </div>
 
-    <div class="due">
-      <div>
-        <h2>Testo della nota</h2>
-        <textarea id="ta" spellcheck="true" placeholder="&lt;p&gt;Prima di mostrare il modello, chiedi alla stanza…&lt;/p&gt;"></textarea>
-        <p class="aiuto">HTML semplice: <code>&lt;p&gt;</code>, <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code>,
-          <code>&lt;ol&gt;&lt;li&gt;</code>. Il titolo «Nota per chi conduce» e la cornice li mette il generatore.</p>
-      </div>
-      <div>
-        <h2>Anteprima</h2>
-        <div class="ante"><div class="dt">Nota per chi conduce</div><div id="ante"></div></div>
-      </div>
+    <h2>Testo della nota</h2>
+    <div class="barra" id="barra">
+      <button data-cmd="bold" title="Grassetto (Cmd+B)"><b>B</b></button>
+      <button data-cmd="italic" title="Corsivo (Cmd+I)"><i>I</i></button>
+      <button data-cmd="formatBlock" data-arg="p" title="Paragrafo">¶</button>
+      <span class="div"></span>
+      <button data-cmd="insertUnorderedList" title="Elenco puntato">• elenco</button>
+      <button data-cmd="insertOrderedList" title="Elenco numerato">1. elenco</button>
+      <span class="div"></span>
+      <button data-cmd="removeFormat" title="Togli la formattazione">pulisci</button>
+      <span class="sp"></span>
+      <button id="b-html" title="Passa al codice HTML e viceversa">vista HTML</button>
     </div>
+    <div class="tela" id="tela">
+      <div class="dt">Nota per chi conduce</div>
+      <div contenteditable="true" id="visuale" spellcheck="true"
+           data-vuoto="Scrivi qui la regia: cosa chiedere alla stanza, dove fermarsi, quanto tempo…"></div>
+    </div>
+    <textarea id="sorgente" spellcheck="false" hidden></textarea>
+    <p class="aiuto">Il titolo «Nota per chi conduce» e la cornice ambrata le mette il generatore: qui scrivi solo il contenuto.</p>
 
     <div class="riga" style="margin-top:16px">
       <button class="primario" id="b-salva">Salva e metti il segnaposto</button>
@@ -173,18 +194,99 @@ function apri(p, idNota){
   const suaSezione = conNota.find(s => s.nota === notaAperta);
   if(suaSezione) sez.value = suaSezione.id;
 
-  $('#ta').value = notaAperta ? p.note[notaAperta] : '';
-  aggiornaAnteprima();
+  scriviEditor(notaAperta ? p.note[notaAperta] : '');
+  collegaEditor();
 
-  $('#ta').oninput = aggiornaAnteprima;
   $('#sel-nota').onchange = e => apri(corrente, e.target.value || null);
-  $('#in-id').oninput = e => e.target.value = chiave(e.target.value);
+  $('#sel-sez').onchange = proponiId;
+  // l'id si normalizza quando esci dal campo, non a ogni tasto
+  $('#in-id').onblur = e => { if(e.target.value.trim()) e.target.value = chiave(e.target.value); };
+  proponiId();
   $('#b-salva').onclick = () => salva(false);
   $('#b-salva-build').onclick = () => salva(true);
   $('#b-elimina').onclick = elimina;
 }
 
-function aggiornaAnteprima(){ $('#ante').innerHTML = $('#ta').value; }
+/* ---------- editor visuale, con passaggio al codice ---------- */
+let vistaHtml = false;
+
+const AMMESSI = ['P','STRONG','B','EM','I','UL','OL','LI','BR','CODE','A','H4'];
+
+function ripulisci(radice){
+  radice.querySelectorAll('*').forEach(el => {
+    if(!AMMESSI.includes(el.tagName)){        // div, span, font... diventano il loro contenuto
+      const p = el.parentNode;
+      while(el.firstChild) p.insertBefore(el.firstChild, el);
+      p.removeChild(el);
+      return;
+    }
+    [...el.attributes].forEach(a => {
+      if(!(el.tagName === 'A' && a.name === 'href')) el.removeAttribute(a.name);
+    });
+    if(el.tagName === 'B'){ el.outerHTML = '<strong>' + el.innerHTML + '</strong>'; }
+    if(el.tagName === 'I'){ el.outerHTML = '<em>' + el.innerHTML + '</em>'; }
+  });
+  return radice;
+}
+
+function impagina(html){          // una riga per tag di primo livello, comodo da leggere
+  return html.replace(/></g, '>\n<').replace(/\n(<\/(li|strong|em|code|a)>)/g, '$1').trim();
+}
+
+function leggiEditor(){
+  if(vistaHtml) return $('#sorgente').value.trim();
+  const d = document.createElement('div');
+  d.innerHTML = $('#visuale').innerHTML;
+  return impagina(ripulisci(d).innerHTML.replace(/<br>\s*(?=<\/p>)/g, ''));
+}
+
+function scriviEditor(html){
+  $('#visuale').innerHTML = html || '';
+  $('#sorgente').value = html || '';
+}
+
+function collegaEditor(){
+  try{ document.execCommand('defaultParagraphSeparator', false, 'p'); }catch(_){}
+
+  $('#barra').querySelectorAll('[data-cmd]').forEach(b => b.onclick = () => {
+    if(vistaHtml) return;
+    $('#visuale').focus();
+    document.execCommand(b.dataset.cmd, false, b.dataset.arg || null);
+    statoBarra();
+  });
+  $('#visuale').addEventListener('keyup', statoBarra);
+  $('#visuale').addEventListener('mouseup', statoBarra);
+
+  $('#b-html').onclick = () => {
+    if(vistaHtml){                       // dal codice al visuale
+      $('#visuale').innerHTML = $('#sorgente').value;
+      vistaHtml = false;
+    } else {                             // dal visuale al codice
+      $('#sorgente').value = leggiEditor();
+      vistaHtml = true;
+    }
+    $('#tela').hidden = vistaHtml;
+    $('#sorgente').hidden = !vistaHtml;
+    $('#b-html').classList.toggle('on', vistaHtml);
+    $('#b-html').textContent = vistaHtml ? 'vista testo' : 'vista HTML';
+    $('#barra').querySelectorAll('[data-cmd]').forEach(b => b.disabled = vistaHtml);
+  };
+}
+
+function statoBarra(){
+  $('#barra').querySelectorAll('[data-cmd]').forEach(b => {
+    try{ b.classList.toggle('on', document.queryCommandState(b.dataset.cmd)); }catch(_){}
+  });
+}
+
+// se l'id e' vuoto lo propone dal titolo della sezione scelta
+function proponiId(){
+  const campo = $('#in-id');
+  if(campo.value.trim()) return;
+  const sel = $('#sel-sez');
+  const titolo = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].textContent : '';
+  campo.value = chiave(titolo.replace('— occupata','').replace(/—/g,'').trim() || 'nota');
+}
 
 function mostra(testo, ok){
   const l = $('#log');
@@ -193,8 +295,9 @@ function mostra(testo, ok){
 }
 
 async function salva(anche_build){
+  proponiId();
   const id = chiave($('#in-id').value || 'nota');
-  const testo = $('#ta').value.trim();
+  const testo = leggiEditor();
   if(!testo) return mostra('La nota è vuota: niente da salvare.', false);
   try{
     const p = await api('/api/nota', {

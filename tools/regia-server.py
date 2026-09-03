@@ -28,6 +28,8 @@ PANNELLO = Path(__file__).resolve().parent / "regia-pannello.html"
 MARCATORE = re.compile(r"<!--\s*regia:\s*([a-z0-9-]+)\s*-->")
 SEZIONE = re.compile(r'<section\s+id="([a-z0-9-]+)"', re.I)
 TITOLO_SEZ = re.compile(r"<h2[^>]*>(.*?)</h2>", re.I | re.S)
+TITOLO_CON_ID = re.compile(r'<(h2|h3)[^>]*\sid="([a-z0-9-]+)"[^>]*>(.*?)</\1>', re.I | re.S)
+FINE_PAGINA = "__fine__"
 
 
 # ---------------------------------------------------------------- lettura
@@ -49,21 +51,51 @@ def blocchi_regia(nome):
     }
 
 
+def _pulisci(t):
+    return html.unescape(re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", t)).strip())
+
+
 def sezioni(nome):
-    """Le sezioni della pagina, con titolo leggibile e nota già presente."""
+    """Punti della pagina in cui una nota può essere agganciata.
+
+    Preferisce i <section id>; se la pagina non ne ha, ripiega sui titoli con
+    id; in ogni caso offre "fine della pagina", così nessuna pagina resta
+    senza un aggancio possibile."""
     testo = (RADICE / nome).read_text(encoding="utf-8")
     fuori = []
+
     for m in SEZIONE.finditer(testo):
         fine = testo.find("</section>", m.end())
         corpo = testo[m.end():fine if fine > 0 else len(testo)]
         t = TITOLO_SEZ.search(corpo)
-        titolo = re.sub(r"<[^>]+>", "", t.group(1)).strip() if t else m.group(1)
         segnaposto = MARCATORE.search(corpo)
         fuori.append({
             "id": m.group(1),
-            "titolo": html.unescape(titolo),
+            "titolo": _pulisci(t.group(1)) if t else m.group(1),
             "nota": segnaposto.group(1) if segnaposto else None,
+            "tipo": "sezione",
         })
+
+    if not fuori:
+        titoli = list(TITOLO_CON_ID.finditer(testo))
+        for i, m in enumerate(titoli):
+            fine = titoli[i + 1].start() if i + 1 < len(titoli) else len(testo)
+            segnaposto = MARCATORE.search(testo[m.end():fine])
+            fuori.append({
+                "id": m.group(2),
+                "titolo": _pulisci(m.group(3)),
+                "nota": segnaposto.group(1) if segnaposto else None,
+                "tipo": "titolo",
+            })
+
+    ancorate = {s["nota"] for s in fuori if s["nota"]}
+    libere = [m.group(1) for m in MARCATORE.finditer(testo) if m.group(1) not in ancorate]
+    fuori.append({
+        "id": FINE_PAGINA,
+        "titolo": "— fine della pagina —",
+        "nota": libere[0] if libere else None,
+        "tipo": "fine",
+    })
     return fuori
 
 
@@ -93,9 +125,30 @@ def scrivi_regia(nome, note: dict):
 
 
 def metti_segnaposto(nome, sezione_id, nota_id):
-    """Inserisce <!-- regia: id --> in fondo alla sezione scelta, se non c'è già."""
+    """Inserisce <!-- regia: id --> nel punto scelto, se non c'è già."""
     percorso = RADICE / nome
     testo = percorso.read_text(encoding="utf-8")
+
+    if sezione_id == FINE_PAGINA:
+        chiusura = "</main>" if "</main>" in testo else "</body>"
+        taglio = testo.rfind(chiusura)
+        if MARCATORE.search(testo[:taglio][-400:]):
+            testo = testo[:taglio - 400] + MARCATORE.sub(
+                f"<!-- regia: {nota_id} -->", testo[taglio - 400:taglio], count=1) + testo[taglio:]
+        else:
+            testo = testo[:taglio] + f"<!-- regia: {nota_id} -->\n\n" + testo[taglio:]
+        percorso.write_text(testo, encoding="utf-8")
+        return
+
+    if not SEZIONE.search(testo):                      # pagina senza <section>: aggancio a un titolo
+        for m in TITOLO_CON_ID.finditer(testo):
+            if m.group(2) != sezione_id:
+                continue
+            testo = testo[:m.end()] + f"\n  <!-- regia: {nota_id} -->" + testo[m.end():]
+            percorso.write_text(testo, encoding="utf-8")
+            return
+        raise ValueError(f"titolo '{sezione_id}' non trovato in {nome}")
+
     m = SEZIONE.search(testo, 0)
     while m and m.group(1) != sezione_id:
         m = SEZIONE.search(testo, m.end())
