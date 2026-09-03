@@ -107,6 +107,7 @@ main{padding-bottom:64px}
 <script>
 const $ = s => document.querySelector(s);
 let pagine = [], corrente = null, notaAperta = null;
+let idAuto = true;   // l'id segue la sezione finché non lo scrivi a mano
 
 const esc = t => t.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const chiave = t => t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
@@ -199,8 +200,15 @@ function apri(p, idNota){
 
   $('#sel-nota').onchange = e => apri(corrente, e.target.value || null);
   $('#sel-sez').onchange = proponiId;
-  // l'id si normalizza quando esci dal campo, non a ogni tasto
-  $('#in-id').onblur = e => { if(e.target.value.trim()) e.target.value = chiave(e.target.value); };
+
+  // scrivendo nell'id prendi il comando; svuotandolo torna a seguire la sezione
+  $('#in-id').oninput = e => { idAuto = !e.target.value.trim(); };
+  $('#in-id').onblur = e => {
+    if(e.target.value.trim()) e.target.value = chiave(e.target.value);
+    else { idAuto = true; proponiId(); }
+  };
+
+  idAuto = !notaAperta;          // una nota esistente tiene il suo id
   proponiId();
   $('#b-salva').onclick = () => salva(false);
   $('#b-salva-build').onclick = () => salva(true);
@@ -282,7 +290,7 @@ function statoBarra(){
 // se l'id e' vuoto lo propone dal titolo della sezione scelta
 function proponiId(){
   const campo = $('#in-id');
-  if(campo.value.trim()) return;
+  if(!idAuto) return;                    // l'hai scritto tu: non lo tocco
   const sel = $('#sel-sez');
   const titolo = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].textContent : '';
   campo.value = chiave(titolo.replace('— occupata','').replace(/—/g,'').trim() || 'nota');
@@ -295,7 +303,6 @@ function mostra(testo, ok){
 }
 
 async function salva(anche_build){
-  proponiId();
   const id = chiave($('#in-id').value || 'nota');
   const testo = leggiEditor();
   if(!testo) return mostra('La nota è vuota: niente da salvare.', false);
