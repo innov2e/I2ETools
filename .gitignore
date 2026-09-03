@@ -8,3 +8,7 @@ _bmad/
 # Template di lavoro — non pubblicati
 docs/templates/
 _bmad-output/
+
+# Regia d'aula — non va nel repo pubblico (destinazione: repo privato)
+regia/
+*.docente.html

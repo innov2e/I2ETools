@@ -424,19 +424,7 @@ body.proietta p,body.proietta li{font-size:17px}
     <p class="xpl-note"><strong>Come sono calcolati i numeri.</strong> Stime, non fatturazione: 1 pagina &#8776; 500 parole; in italiano &#8776; 1 token ogni 3,5 caratteri, in inglese &#8776; 1 ogni 4,3 &#8212; da cui il sovrapprezzo. La cronologia viene riletta per intero a ogni turno: è il motivo per cui il costo cresce con il quadrato dei messaggi, non in modo lineare. La cache riduce il prezzo del contesto ripetuto, non la sua occupazione della finestra. I prezzi al milione di token variano per modello e fornitore: metti il tuo.</p>
   </div>
 
-  <div class="docente">
-    <div class="dt">Nota per chi conduce</div>
-    <p><strong>Prima di mostrare il modello, fai una domanda alla stanza:</strong> «Su cento parole che il modello legge a ogni vostro messaggio, quante le avete scritte voi?» Raccogli tre risposte a voce alta. Quasi sempre stimano fra il 40 e il 70 per cento.</p>
-    <p>Poi mostra il valore reale della configurazione di partenza. È il momento in cui la stanza capisce di cosa stiamo parlando: non spiegarlo prima.</p>
-    <ol>
-      <li>Alza <strong>i messaggi</strong> da 10 a 40 senza toccare altro. Chiedi: «La spesa raddoppia?» Non raddoppia: cresce molto di più, perché la cronologia viene riletta ogni volta.</li>
-      <li>Alza <strong>le pagine allegate</strong> a 200. Compare l'avviso di saturazione: qui si aggancia il <em>context rot</em> di cui abbiamo appena parlato.</li>
-      <li>Poi il colpo di scena: <strong>riduci</strong> le pagine da 200 a 20. Costo giù, e la qualità attesa <em>sale</em>. È la lezione dell'intero modulo, e conviene farla scoprire invece di enunciarla.</li>
-      <li>Chiudi sul <strong>sovrapprezzo italiano</strong>: nessuno in aula lo sa, e nei preventivi non lo mette nessuno.</li>
-    </ol>
-    <p><strong>Tempo:</strong> 8-10 minuti. <strong>Errore tipico:</strong> qualcuno obietterà che «tanto le finestre da 1M risolvono». È l'aggancio all'Avvertenza 2 — non anticiparlo, aspetta che lo dica qualcuno.</p>
-    <p><strong>Prima dell'aula:</strong> imposta i numeri sul cliente che hai davanti e usa «Copia link» — la configurazione entra nell'indirizzo. Con <strong>Proiezione</strong> il tema passa in chiaro per la sala illuminata; da stampa le note non escono.</p>
-  </div>
+  <!-- regia: dimensiona-il-tuo-caso -->
 
 </section>
 
@@ -1042,15 +1030,16 @@ mkAcc('miti-box',[
   // --- modalità aula: note di conduzione, proiezione, stampa ---
   const bar = document.createElement('div');
   bar.className = 'aula-bar';
-  bar.innerHTML = '<button class="xbtn" id="a-doc">Note docente</button>' +
+  const conRegia = !!document.querySelector('.docente');   // presente solo nella copia per chi conduce
+  bar.innerHTML = (conRegia ? '<button class="xbtn" id="a-doc">Note docente</button>' : '') +
                   '<button class="xbtn" id="a-pro">Proiezione</button>' +
                   '<button class="xbtn" id="a-stampa">Stampa</button>';
   document.body.appendChild(bar);
   const attiva = (cls, btn, on) => { document.body.classList.toggle(cls, on); btn.classList.toggle('on', on); };
-  $('a-doc').addEventListener('click', function(){ attiva('aula', this, !document.body.classList.contains('aula')); });
+  if(conRegia) $('a-doc').addEventListener('click', function(){ attiva('aula', this, !document.body.classList.contains('aula')); });
   $('a-pro').addEventListener('click', function(){ attiva('proietta', this, !document.body.classList.contains('proietta')); });
   $('a-stampa').addEventListener('click', () => window.print());
-  if(/[?&]docente=1/.test(location.search)) attiva('aula', $('a-doc'), true);
+  if(conRegia && /[?&]docente=1/.test(location.search)) attiva('aula', $('a-doc'), true);
 
   leggiUrl();
   disegna();
