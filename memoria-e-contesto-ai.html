@@ -176,6 +176,64 @@ footer{border-top:1px solid var(--line);padding:36px 28px;text-align:center;colo
 .mx-n{font-family:var(--mono);font-size:11px;color:var(--ac);font-weight:700;letter-spacing:1px}
 .mx b{display:block;margin:5px 0 4px;font-size:14.5px}
 .mx p{font-size:12.4px;color:var(--tx-3);margin:0}
+
+/* ===== explorable: dimensiona il tuo caso ===== */
+.xpl{background:linear-gradient(180deg,var(--bg-2),var(--bg-3));border:1px solid var(--line-2);border-radius:14px;padding:24px;margin:28px 0}
+.xpl-hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+.xpl-tag{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--ac);font-weight:700}
+.xpl-hint{font-size:12px;color:var(--tx-3)}
+.xpl-story{font-size:16.5px;line-height:2.1;margin:14px 0 4px}
+.tg{color:var(--ac);font-family:var(--mono);font-weight:700;font-size:.95em;border-bottom:1px dashed var(--ac);cursor:ew-resize;padding:2px 3px;border-radius:4px;user-select:none;touch-action:none;white-space:nowrap}
+.tg:hover,.tg:focus{background:rgba(94,234,212,.14);outline:none}
+.tg.drag{background:rgba(94,234,212,.22)}
+.tg[contenteditable="true"]{cursor:text;background:rgba(94,234,212,.22)}
+.out{font-family:var(--mono);font-weight:700;color:var(--amb)}
+.out.big{font-size:1.12em}
+.xpl-slider{display:flex;align-items:center;gap:14px;margin:18px 0 6px;flex-wrap:wrap}
+.xpl-slider label{font-size:13px;color:var(--tx-2);min-width:190px}
+.xpl-slider input[type=range]{flex:1;min-width:180px;accent-color:var(--ac);height:22px}
+.xpl-slider .val{font-family:var(--mono);font-size:13px;color:var(--ac);min-width:52px;text-align:right}
+.xpl-res{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:20px}
+.xpl-cell{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.xpl-cell .k{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--tx-3);font-weight:700}
+.xpl-cell .v{font-family:var(--mono);font-size:21px;font-weight:700;margin-top:6px;color:var(--tx)}
+.xpl-cell .n{font-size:11.5px;color:var(--tx-3);margin-top:4px;line-height:1.45}
+.xpl-cell.warn{border-color:var(--no)}.xpl-cell.warn .v{color:var(--no)}
+.xpl-cell.ok{border-color:var(--ok)}.xpl-cell.ok .v{color:var(--ok)}
+.xpl-cell.amb{border-color:var(--amb)}.xpl-cell.amb .v{color:var(--amb)}
+.xpl-verdict{margin-top:16px;font-size:14.5px;line-height:1.65;border-left:3px solid var(--amb);background:rgba(255,181,71,.06);padding:13px 18px;border-radius:0 10px 10px 0}
+.xpl-bar{margin-top:18px}
+.xpl-bar .lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--tx-3);margin-bottom:6px}
+.xpl-tr{height:9px;background:var(--bg);border:1px solid var(--line);border-radius:6px;overflow:hidden;display:flex}
+.xpl-fl{height:100%;transition:width .18s}
+.xpl-fl.a{background:var(--info)}.xpl-fl.b{background:var(--vio)}.xpl-fl.c{background:var(--ac)}
+.xpl-lg{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--tx-3);margin-top:8px}
+.xpl-lg i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle;font-style:normal}
+.xpl-act{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.xbtn{background:var(--bg);border:1px solid var(--line-2);color:var(--tx-2);font:inherit;font-size:12.5px;font-weight:600;padding:7px 13px;border-radius:8px;cursor:pointer}
+.xbtn:hover{border-color:var(--ac);color:var(--ac)}
+.xbtn.on{border-color:var(--ac);color:var(--ac);background:rgba(94,234,212,.1)}
+.xpl-note{font-size:12px;color:var(--tx-3);margin-top:14px;line-height:1.55}
+
+/* ===== modalità aula ===== */
+.docente{display:none;border:1px dashed var(--amb);background:rgba(255,181,71,.05);border-radius:10px;padding:14px 18px;margin:18px 0}
+body.aula .docente{display:block}
+.docente .dt{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--amb);font-weight:700;margin-bottom:8px}
+.docente p{font-size:14px;margin-bottom:8px}.docente p:last-child{margin-bottom:0}
+.docente ol{font-size:14px;margin:0 0 0 18px}.docente li{margin-bottom:5px}
+.aula-bar{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;gap:8px;background:var(--bg-2);border:1px solid var(--line-2);border-radius:10px;padding:7px}
+@media(max-width:640px){.aula-bar{right:8px;bottom:8px}}
+body.proietta{--bg:#fbfaf8;--bg-2:#fff;--bg-3:#f2efea;--line:#ddd6cc;--line-2:#c4bbae;--tx:#16181d;--tx-2:#414a5a;--tx-3:#6b7484;--ac:#0d7d70;--ac-2:#0a6459}
+body.proietta .xpl-story{font-size:19px}
+body.proietta p,body.proietta li{font-size:17px}
+
+@media print{
+  .aula-bar,.homelink,nav,.turn-ctrl,.xpl-act{display:none!important}
+  body{background:#fff;color:#111}
+  .xpl,.card,.callout,.docente{break-inside:avoid;border-color:#bbb!important;background:#fff!important}
+  a{color:#111;text-decoration:underline}
+  .out,.tg{color:#111!important;border-bottom:none}
+}
 </style>
 </head>
 <body>
@@ -292,6 +350,94 @@ footer{border-top:1px solid var(--line);padding:36px 28px;text-align:center;colo
     <p>Il meccanismo sospettato dietro il "lost in the middle" è legato alle <strong>codifiche posizionali</strong>: RoPE, usata in gran parte dei modelli attuali, introduce un decadimento a lungo raggio che privilegia i token iniziali e finali della sequenza<span class="ref" data-r="8">[8]</span>. Non è un bug correggibile con un prompt migliore: è una proprietà dell'architettura, che si mitiga solo con la <em>selezione</em> di ciò che entra.</p>
     <p style="margin-top:10px">Due implicazioni operative dirette: <strong>(a)</strong> collocare l'istruzione critica all'inizio <em>e</em> ripeterla alla fine sui prompt molto lunghi; <strong>(b)</strong> preferire il recupero mirato di 5 passaggi rilevanti all'inserimento di 300 pagine intere, anche quando le 300 pagine ci starebbero.</p>
   </div>
+  <h3>Dimensiona il tuo caso</h3>
+  <p>I due fenomeni qui sopra sono documentati in astratto. Qui sotto puoi vederli sul <em>tuo</em> caso: trascina i numeri dentro la frase (oppure cliccali e scrivili) e guarda cosa succede alla finestra, alla qualità e alla spesa.</p>
+
+  <div class="xpl" id="xpl">
+    <div class="xpl-hd">
+      <span class="xpl-tag">Modello interattivo</span>
+      <span class="xpl-hint">trascina i numeri &#8596; &nbsp;·&nbsp; oppure clicca e digita</span>
+    </div>
+
+    <p class="xpl-story">
+      Un gruppo di <span class="tg" data-k="persone" data-min="1" data-max="500" data-step="1">12</span> persone
+      usa un assistente <span class="tg" data-k="sessioni" data-min="1" data-max="40" data-step="1">6</span> volte al giorno.
+      A ogni sessione allega <span class="tg" data-k="pagine" data-min="0" data-max="400" data-step="1">15</span> pagine di documenti
+      e scambia <span class="tg" data-k="turni" data-min="1" data-max="60" data-step="1">10</span> messaggi,
+      su una finestra da <span class="tg" data-k="finestra" data-min="8" data-max="1000" data-step="8" data-suffix="k">200</span> token.
+      Il fornitore chiede <span class="tg" data-k="prezzo" data-min="0.1" data-max="30" data-step="0.1" data-dec="1">3.0</span> € per milione di token in ingresso.
+    </p>
+
+    <div class="xpl-slider">
+      <label for="x-cache">Riuso della cache di contesto</label>
+      <input type="range" id="x-cache" min="0" max="90" step="5" value="0">
+      <span class="val" id="x-cache-v">0%</span>
+    </div>
+
+    <div class="xpl-bar">
+      <div class="lbl"><span>Composizione della finestra all'ultimo messaggio</span><span class="out" id="x-occ">—</span></div>
+      <div class="xpl-tr">
+        <div class="xpl-fl a" id="x-f-doc"></div>
+        <div class="xpl-fl b" id="x-f-cron"></div>
+        <div class="xpl-fl c" id="x-f-tuo"></div>
+      </div>
+      <div class="xpl-lg">
+        <span><i style="background:var(--info)"></i>documenti allegati</span>
+        <span><i style="background:var(--vio)"></i>risposte del modello</span>
+        <span><i style="background:var(--ac)"></i>tutti i tuoi messaggi</span>
+      </div>
+    </div>
+
+    <div class="xpl-res">
+      <div class="xpl-cell" id="c-tuo">
+        <div class="k">Scritto da te</div>
+        <div class="v" id="x-quota">—</div>
+        <div class="n">della finestra: tutto ciò che hai scritto tu</div>
+      </div>
+      <div class="xpl-cell" id="c-occ">
+        <div class="k">Finestra occupata</div>
+        <div class="v" id="x-occ2">—</div>
+        <div class="n" id="x-occ-n">&nbsp;</div>
+      </div>
+      <div class="xpl-cell" id="c-costo">
+        <div class="k">Spesa mensile</div>
+        <div class="v" id="x-costo">—</div>
+        <div class="n">solo token in ingresso, 20 giorni lavorativi</div>
+      </div>
+      <div class="xpl-cell amb">
+        <div class="k">Sovrapprezzo italiano</div>
+        <div class="v" id="x-ita">—</div>
+        <div class="n">in più rispetto allo stesso testo in inglese</div>
+      </div>
+    </div>
+
+    <p class="xpl-verdict" id="x-verdict">&nbsp;</p>
+
+    <div class="xpl-act">
+      <button class="xbtn" data-preset="pilota">Preset: progetto pilota</button>
+      <button class="xbtn" data-preset="reparto">Preset: reparto legale</button>
+      <button class="xbtn" data-preset="rot">Preset: contesto saturo</button>
+      <button class="xbtn" id="x-link">Copia link a questa configurazione</button>
+      <button class="xbtn" id="x-reset">Ripristina</button>
+    </div>
+
+    <p class="xpl-note"><strong>Come sono calcolati i numeri.</strong> Stime, non fatturazione: 1 pagina &#8776; 500 parole; in italiano &#8776; 1 token ogni 3,5 caratteri, in inglese &#8776; 1 ogni 4,3 &#8212; da cui il sovrapprezzo. La cronologia viene riletta per intero a ogni turno: è il motivo per cui il costo cresce con il quadrato dei messaggi, non in modo lineare. La cache riduce il prezzo del contesto ripetuto, non la sua occupazione della finestra. I prezzi al milione di token variano per modello e fornitore: metti il tuo.</p>
+  </div>
+
+  <div class="docente">
+    <div class="dt">Nota per chi conduce</div>
+    <p><strong>Prima di mostrare il modello, fai una domanda alla stanza:</strong> «Su cento parole che il modello legge a ogni vostro messaggio, quante le avete scritte voi?» Raccogli tre risposte a voce alta. Quasi sempre stimano fra il 40 e il 70 per cento.</p>
+    <p>Poi mostra il valore reale della configurazione di partenza. È il momento in cui la stanza capisce di cosa stiamo parlando: non spiegarlo prima.</p>
+    <ol>
+      <li>Alza <strong>i messaggi</strong> da 10 a 40 senza toccare altro. Chiedi: «La spesa raddoppia?» Non raddoppia: cresce molto di più, perché la cronologia viene riletta ogni volta.</li>
+      <li>Alza <strong>le pagine allegate</strong> a 200. Compare l'avviso di saturazione: qui si aggancia il <em>context rot</em> di cui abbiamo appena parlato.</li>
+      <li>Poi il colpo di scena: <strong>riduci</strong> le pagine da 200 a 20. Costo giù, e la qualità attesa <em>sale</em>. È la lezione dell'intero modulo, e conviene farla scoprire invece di enunciarla.</li>
+      <li>Chiudi sul <strong>sovrapprezzo italiano</strong>: nessuno in aula lo sa, e nei preventivi non lo mette nessuno.</li>
+    </ol>
+    <p><strong>Tempo:</strong> 8-10 minuti. <strong>Errore tipico:</strong> qualcuno obietterà che «tanto le finestre da 1M risolvono». È l'aggancio all'Avvertenza 2 — non anticiparlo, aspetta che lo dica qualcuno.</p>
+    <p><strong>Prima dell'aula:</strong> imposta i numeri sul cliente che hai davanti e usa «Copia link» — la configurazione entra nell'indirizzo. Con <strong>Proiezione</strong> il tema passa in chiaro per la sala illuminata; da stampa le note non escono.</p>
+  </div>
+
 </section>
 
 <!-- ===== 3 ===== -->
@@ -689,6 +835,225 @@ mkAcc('miti-box',[
       '<a href="'+u+'" target="_blank" rel="noopener">'+t+'</a><span>'+d+'</span>';
     w.appendChild(li);
   });
+})();
+</script>
+<script>
+/* ===== explorable "dimensiona il tuo caso" + modalità aula =====
+   Nessuna dipendenza esterna: la pagina resta autoconsistente e funziona da file locale. */
+(function(){
+  const root = document.getElementById('xpl');
+  if(!root) return;
+
+  // --- costanti del modello (stime dichiarate nella nota) ---
+  const PAROLE_PAGINA = 500,
+        TOK_PAROLA_IT = 1.77,   // ~6,2 caratteri per parola / 3,5 caratteri per token
+        TOK_PAROLA_EN = 1.30,   // ~5,6 caratteri per parola / 4,3 caratteri per token
+        TOK_SISTEMA   = 1200,   // istruzioni di sistema e strumenti
+        PAROLE_DOMANDA = 45,
+        PAROLE_RISPOSTA = 250,
+        GIORNI = 20,
+        PREZZO_CACHE = 0.1;     // la lettura da cache costa ~1/10
+
+  const DEF = {persone:12, sessioni:6, pagine:15, turni:10, finestra:200, prezzo:3.0, cache:0};
+  const PRESET = {
+    pilota:  {persone:4,  sessioni:3,  pagine:8,   turni:8,  finestra:200, prezzo:3.0, cache:0},
+    reparto: {persone:40, sessioni:10, pagine:60,  turni:15, finestra:200, prezzo:3.0, cache:50},
+    rot:     {persone:12, sessioni:6,  pagine:300, turni:30, finestra:200, prezzo:3.0, cache:0}
+  };
+  const st = Object.assign({}, DEF);
+
+  const tg = {};
+  root.querySelectorAll('.tg').forEach(el => tg[el.dataset.k] = el);
+  const slider = document.getElementById('x-cache');
+  const $ = id => document.getElementById(id);
+
+  const fmt = (n,d=0) => n.toLocaleString('it-IT',{minimumFractionDigits:d, maximumFractionDigits:d});
+  const eur = n => n >= 1000 ? fmt(n) + ' €' : fmt(n,n<100?2:0) + ' €';
+  const tok = n => n >= 1e6 ? fmt(n/1e6,1)+' M' : n >= 1000 ? fmt(n/1000)+' k' : fmt(n);
+
+  function calcola(){
+    const doc     = st.pagine * PAROLE_PAGINA * TOK_PAROLA_IT;
+    const domanda = PAROLE_DOMANDA  * TOK_PAROLA_IT;
+    const risposta= PAROLE_RISPOSTA * TOK_PAROLA_IT;
+    const fisso   = doc + TOK_SISTEMA;
+    const finestra= st.finestra * 1000;
+
+    // all'ultimo turno la finestra contiene: fisso + cronologia dei turni precedenti + domanda corrente
+    const cronologia = (st.turni - 1) * (domanda + risposta);
+    const occupato   = fisso + cronologia + domanda;
+
+    // token in ingresso fatturati per sessione: ogni turno rilegge tutto ciò che precede
+    let ingresso = 0;
+    for(let t = 1; t <= st.turni; t++) ingresso += fisso + (t-1)*(domanda+risposta) + domanda;
+
+    // la cache sconta solo la parte ripetuta (il blocco fisso riletto dopo il primo turno)
+    const ripetuto = (st.turni - 1) * fisso;
+    const sconto   = ripetuto * (st.cache/100) * (1 - PREZZO_CACHE);
+    const fatturato= Math.max(0, ingresso - sconto);
+
+    const sessioniMese = st.persone * st.sessioni * GIORNI;
+    const costo   = fatturato * sessioniMese * st.prezzo / 1e6;
+    const costoEn = costo * (TOK_PAROLA_EN / TOK_PAROLA_IT);
+
+    const tuoi = st.turni * domanda, risposte = (st.turni - 1) * risposta;
+    return {doc, domanda, risposta, tuoi, risposte, occupato, finestra, costo,
+            extraIta: costo - costoEn, quotaTua: tuoi/occupato, riempimento: occupato/finestra};
+  }
+
+  function disegna(){
+    const r = calcola();
+
+    for(const k in tg){
+      const d = +(tg[k].dataset.dec || 0);
+      tg[k].textContent = fmt(st[k], d) + (tg[k].dataset.suffix || '');
+    }
+    slider.value = st.cache;
+    $('x-cache-v').textContent = st.cache + '%';
+
+    // barra di composizione, in scala sulla finestra dichiarata
+    const scala = Math.max(r.occupato, r.finestra);
+    const pz = v => (100 * v / scala).toFixed(2) + '%';
+    $('x-f-doc').style.width  = pz(r.doc + TOK_SISTEMA);
+    $('x-f-cron').style.width = pz(r.risposte);
+    $('x-f-tuo').style.width  = pz(r.tuoi);
+
+    const pieno = r.riempimento * 100;
+    $('x-occ').textContent  = tok(Math.round(r.occupato)) + ' / ' + tok(r.finestra) + ' token';
+    $('x-occ2').textContent = fmt(Math.min(pieno,999), pieno<10?1:0) + '%';
+    $('x-quota').textContent= (r.quotaTua*100 < 1 ? '<1' : fmt(r.quotaTua*100,1)) + '%';
+    $('x-costo').textContent= eur(r.costo) + '/mese';
+    $('x-ita').textContent  = '+' + eur(r.extraIta) + '/mese';
+
+    const cOcc = $('c-occ'), cTuo = $('c-tuo');
+    cOcc.className = 'xpl-cell ' + (pieno > 100 ? 'warn' : pieno > 60 ? 'amb' : 'ok');
+    cTuo.className = 'xpl-cell ' + (r.quotaTua < 0.03 ? 'warn' : '');
+    $('x-occ-n').textContent = pieno > 100 ? 'la finestra trabocca: qualcosa viene tagliato'
+                             : pieno > 60  ? 'zona in cui il degrado è documentato'
+                             : 'margine ampio';
+
+    let v;
+    if(pieno > 100){
+      v = '<strong>La finestra trabocca.</strong> Con questa configurazione qualcosa viene tagliato prima di arrivare al modello, e non decidi tu cosa. Non è un problema di prezzo: è un problema di correttezza delle risposte.';
+    } else if(pieno > 60){
+      v = '<strong>Sei nella zona del degrado.</strong> Il testo ci sta, ma è esattamente l\'intervallo in cui <em>lost in the middle</em> e <em>context rot</em> sono documentati. Prova a dimezzare le pagine allegate: la spesa scende e la qualità attesa sale.';
+    } else if(r.quotaTua < 0.03){
+      v = '<strong>Quello che scrivi tu è rumore statistico.</strong> Meno del 3% della finestra. Migliorare la formulazione della domanda cambia poco: qui conta cosa <em>selezioni</em> di allegare.';
+    } else {
+      v = '<strong>Configurazione sana.</strong> Margine sulla finestra e quota di testo tuo ancora significativa. Da qui, alza i messaggi e guarda la spesa: cresce più in fretta di quanto sembri, perché la cronologia viene riletta a ogni turno.';
+    }
+    $('x-verdict').innerHTML = v;
+    scriviUrl();
+  }
+
+  // --- numeri trascinabili e digitabili (pattern Tangle) ---
+  Object.entries(tg).forEach(([k, el]) => {
+    const min = +el.dataset.min, max = +el.dataset.max, step = +el.dataset.step, dec = +(el.dataset.dec||0);
+    el.tabIndex = 0;
+    el.setAttribute('role','spinbutton');
+    el.setAttribute('aria-label', k);
+
+    const clamp = v => Math.min(max, Math.max(min, Math.round(v/step)*step));
+    let trascina = false, x0 = 0, v0 = 0;
+
+    el.addEventListener('pointerdown', e => {
+      if(el.isContentEditable) return;
+      trascina = true; x0 = e.clientX; v0 = st[k];
+      el.setPointerCapture(e.pointerId); el.classList.add('drag'); e.preventDefault();
+    });
+    el.addEventListener('pointermove', e => {
+      if(!trascina) return;
+      const passo = (max - min) / 260;            // ~260 px per l'intera corsa
+      st[k] = clamp(v0 + (e.clientX - x0) * passo);
+      disegna();
+    });
+    const fine = e => {
+      if(!trascina) return;
+      trascina = false; el.classList.remove('drag');
+      try{ el.releasePointerCapture(e.pointerId); }catch(_){}
+    };
+    el.addEventListener('pointerup', fine);
+    el.addEventListener('pointercancel', fine);
+
+    // click senza trascinamento: si digita
+    el.addEventListener('click', () => {
+      if(el.isContentEditable) return;
+      el.contentEditable = 'true';
+      el.textContent = fmt(st[k], dec);
+      el.focus();
+      const r = document.createRange(); r.selectNodeContents(el);
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    });
+    el.addEventListener('blur', () => {
+      if(!el.isContentEditable) return;
+      el.contentEditable = 'false';
+      const n = parseFloat(el.textContent.replace(/[^\d.,-]/g,'').replace(',','.'));
+      if(!isNaN(n)) st[k] = clamp(n);
+      disegna();
+    });
+    el.addEventListener('keydown', e => {
+      if(e.key === 'Enter'){ e.preventDefault(); el.blur(); return; }
+      if(el.isContentEditable) return;
+      if(e.key === 'ArrowUp' || e.key === 'ArrowRight'){ st[k] = clamp(st[k] + step); disegna(); e.preventDefault(); }
+      if(e.key === 'ArrowDown' || e.key === 'ArrowLeft'){ st[k] = clamp(st[k] - step); disegna(); e.preventDefault(); }
+    });
+  });
+
+  slider.addEventListener('input', () => { st.cache = +slider.value; disegna(); });
+
+  root.querySelectorAll('[data-preset]').forEach(b =>
+    b.addEventListener('click', () => { Object.assign(st, PRESET[b.dataset.preset]); disegna(); }));
+  $('x-reset').addEventListener('click', () => { Object.assign(st, DEF); disegna(); });
+
+  // --- stato nell'indirizzo: il formatore prepara la configurazione e la distribuisce ---
+  let urlScrivibile = true;   // su file:// alcuni browser vietano replaceState
+  function frammento(){
+    const q = Object.keys(DEF).filter(k => st[k] !== DEF[k]).map(k => k + '=' + st[k]).join('&');
+    return q ? '#x:' + q : '';
+  }
+  function urlConfig(){ return location.href.split('#')[0] + frammento(); }
+  function scriviUrl(){
+    if(!urlScrivibile) return;
+    try{ history.replaceState(null, '', urlConfig()); }
+    catch(_){ urlScrivibile = false; }   // il link si costruisce comunque alla copia
+  }
+  function leggiUrl(){
+    const h = location.hash;
+    if(h.indexOf('#x:') !== 0) return;
+    h.slice(3).split('&').forEach(p => {
+      const [k, v] = p.split('=');
+      if(k in DEF && !isNaN(parseFloat(v))) st[k] = parseFloat(v);
+    });
+  }
+  $('x-link').addEventListener('click', function(){
+    const testo = urlConfig();
+    const ok = () => { const t = this.textContent; this.textContent = 'Link copiato'; this.classList.add('on');
+                       setTimeout(() => { this.textContent = t; this.classList.remove('on'); }, 1800); };
+    if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(testo).then(ok).catch(()=>ripiego(testo, ok)); }
+    else ripiego(testo, ok);
+  });
+  function ripiego(testo, ok){
+    const ta = document.createElement('textarea');
+    ta.value = testo; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); ok(); }catch(_){}
+    document.body.removeChild(ta);
+  }
+
+  // --- modalità aula: note di conduzione, proiezione, stampa ---
+  const bar = document.createElement('div');
+  bar.className = 'aula-bar';
+  bar.innerHTML = '<button class="xbtn" id="a-doc">Note docente</button>' +
+                  '<button class="xbtn" id="a-pro">Proiezione</button>' +
+                  '<button class="xbtn" id="a-stampa">Stampa</button>';
+  document.body.appendChild(bar);
+  const attiva = (cls, btn, on) => { document.body.classList.toggle(cls, on); btn.classList.toggle('on', on); };
+  $('a-doc').addEventListener('click', function(){ attiva('aula', this, !document.body.classList.contains('aula')); });
+  $('a-pro').addEventListener('click', function(){ attiva('proietta', this, !document.body.classList.contains('proietta')); });
+  $('a-stampa').addEventListener('click', () => window.print());
+  if(/[?&]docente=1/.test(location.search)) attiva('aula', $('a-doc'), true);
+
+  leggiUrl();
+  disegna();
 })();
 </script>
 </body>
