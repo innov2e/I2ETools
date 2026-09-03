@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Regia d'aula — pannello</title>
+<style>
+:root{
+  --bg:#0d0f14;--bg-2:#141821;--bg-3:#1b2030;--line:#262d3d;--line-2:#333c52;
+  --tx:#e6e9f0;--tx-2:#a2acc2;--tx-3:#6d7891;--ac:#5eead4;--amb:#ffb547;--ok:#4ade80;--no:#f87171;
+  --mono:'SF Mono',ui-monospace,'JetBrains Mono',Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:14px;line-height:1.6}
+header{border-bottom:1px solid var(--line);background:var(--bg-2);padding:14px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+header h1{font-size:15px;margin:0;letter-spacing:.3px}
+header .tag{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--amb);font-weight:700;
+  border:1px solid var(--amb);border-radius:20px;padding:3px 10px}
+header .sp{flex:1}
+main{display:grid;grid-template-columns:270px 1fr;gap:0;min-height:calc(100vh - 55px)}
+@media(max-width:860px){main{grid-template-columns:1fr}}
+aside{border-right:1px solid var(--line);background:var(--bg-2);padding:16px}
+aside h2,section h2{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--ac);font-weight:700;margin:0 0 12px}
+.pg{display:block;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:8px;
+  color:var(--tx-2);font:inherit;padding:9px 11px;cursor:pointer;margin-bottom:3px}
+.pg:hover{background:var(--bg-3);color:var(--tx)}
+.pg.on{background:var(--bg-3);border-color:var(--ac);color:var(--tx)}
+.pg small{display:block;font-family:var(--mono);font-size:10.5px;color:var(--tx-3);margin-top:2px}
+.pg .n{display:inline-block;background:var(--amb);color:#0d0f14;font-size:10px;font-weight:800;
+  border-radius:10px;padding:0 6px;margin-left:6px;vertical-align:middle}
+section{padding:22px 26px;max-width:1000px}
+.riga{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+label{font-size:12px;color:var(--tx-2);font-weight:600}
+input[type=text],select,textarea{background:var(--bg-2);border:1px solid var(--line-2);color:var(--tx);
+  font:inherit;border-radius:8px;padding:8px 11px}
+input[type=text]{font-family:var(--mono);font-size:13px;min-width:230px}
+select{min-width:260px}
+textarea{width:100%;min-height:320px;font-family:var(--mono);font-size:13px;line-height:1.65;resize:vertical}
+textarea:focus,input:focus,select:focus{outline:none;border-color:var(--ac)}
+button{background:var(--bg-2);border:1px solid var(--line-2);color:var(--tx-2);font:inherit;font-size:13px;
+  font-weight:600;border-radius:8px;padding:8px 14px;cursor:pointer}
+button:hover{border-color:var(--ac);color:var(--ac)}
+button.primario{background:var(--ac);border-color:var(--ac);color:#08131a}
+button.primario:hover{opacity:.88;color:#08131a}
+button.rischio:hover{border-color:var(--no);color:var(--no)}
+button:disabled{opacity:.4;cursor:not-allowed}
+.due{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:900px){.due{grid-template-columns:1fr}}
+.ante{background:var(--bg-2);border:1px dashed var(--amb);border-radius:10px;padding:14px 18px;min-height:320px;overflow:auto}
+.ante .dt{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--amb);font-weight:700;margin-bottom:8px}
+.ante p{margin:0 0 8px;font-size:13.5px}.ante ol,.ante ul{margin:0 0 8px 18px;font-size:13.5px}
+.aiuto{font-size:12px;color:var(--tx-3);margin:6px 0 0}
+.avviso{border-left:3px solid var(--amb);background:rgba(255,181,71,.07);padding:10px 14px;border-radius:0 8px 8px 0;
+  font-size:13px;margin-bottom:14px}
+.log{font-family:var(--mono);font-size:12px;white-space:pre-wrap;background:#090b0f;border:1px solid var(--line);
+  border-radius:8px;padding:12px 14px;color:var(--tx-2);margin-top:14px;max-height:170px;overflow:auto}
+.log.ko{border-color:var(--no);color:var(--no)}
+.log.ok{border-color:var(--ok)}
+.vuoto{color:var(--tx-3);font-size:13px}
+.brm{position:fixed;right:0;bottom:0;left:0;background:var(--bg-2);border-top:1px solid var(--line);
+  padding:10px 22px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+main{padding-bottom:64px}
+.brm .sp{flex:1}
+.st{font-size:12px;color:var(--tx-3)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Regia d'aula</h1>
+  <span class="tag">pannello locale</span>
+  <span class="sp"></span>
+  <span class="st">solo su questo computer · niente di tutto ciò viene pubblicato</span>
+</header>
+
+<main>
+  <aside>
+    <h2>Pagine</h2>
+    <div id="elenco"><p class="vuoto">carico…</p></div>
+  </aside>
+
+  <section id="editor">
+    <p class="vuoto">Scegli una pagina a sinistra.</p>
+  </section>
+</main>
+
+<div class="brm">
+  <button id="b-una" class="primario" disabled>Ricostruisci questa pagina</button>
+  <button id="b-tutte">Ricostruisci tutte</button>
+  <span class="sp"></span>
+  <span class="st" id="st-build">le copie docente si chiamano <code>*.docente.html</code> e restano fuori da git</span>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+let pagine = [], corrente = null, notaAperta = null;
+
+const esc = t => t.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const chiave = t => t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
+  .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,50) || 'nota';
+
+async function api(rotta, dati){
+  const r = await fetch(rotta, dati ? {method:'POST', headers:{'Content-Type':'application/json'},
+                                       body:JSON.stringify(dati)} : undefined);
+  const j = await r.json();
+  if(j.errore) throw new Error(j.errore);
+  return j;
+}
+
+async function carica(){
+  pagine = await api('/api/pagine');
+  $('#elenco').innerHTML = pagine.map(p => `
+    <button class="pg" data-f="${p.file}">
+      ${esc(p.titolo.split('—')[0].trim())}
+      ${Object.keys(p.note).length ? `<span class="n">${Object.keys(p.note).length}</span>` : ''}
+      <small>${p.file}</small>
+    </button>`).join('');
+  document.querySelectorAll('.pg').forEach(b =>
+    b.onclick = () => apri(pagine.find(p => p.file === b.dataset.f)));
+}
+
+function apri(p, idNota){
+  corrente = p;
+  document.querySelectorAll('.pg').forEach(b => b.classList.toggle('on', b.dataset.f === p.file));
+  $('#b-una').disabled = false;
+
+  const conNota = p.sezioni.filter(s => s.nota);
+  const ids = Object.keys(p.note);
+  notaAperta = idNota || (ids.length ? ids[0] : null);
+
+  $('#editor').innerHTML = `
+    <h2>${esc(p.file)}</h2>
+    ${p.orfane.length ? `<div class="avviso"><strong>Note senza segnaposto:</strong>
+       ${p.orfane.map(esc).join(', ')} — assegna loro una sezione, altrimenti non finiscono nella copia docente.</div>` : ''}
+
+    <div class="riga">
+      <label for="sel-nota">Nota</label>
+      <select id="sel-nota">
+        ${ids.map(i => `<option value="${i}" ${i === notaAperta ? 'selected':''}>${esc(i)}</option>`).join('')}
+        <option value="">＋ nuova nota…</option>
+      </select>
+      <label for="sel-sez">va in fondo alla sezione</label>
+      <select id="sel-sez">
+        ${p.sezioni.map(s => `<option value="${s.id}">${esc(s.titolo)}${s.nota && s.nota !== notaAperta ? ' — occupata' : ''}</option>`).join('')}
+      </select>
+      <label for="in-id">id</label>
+      <input type="text" id="in-id" value="${notaAperta ? esc(notaAperta) : ''}" placeholder="es. dimensiona-il-tuo-caso">
+    </div>
+
+    <div class="due">
+      <div>
+        <h2>Testo della nota</h2>
+        <textarea id="ta" spellcheck="true" placeholder="&lt;p&gt;Prima di mostrare il modello, chiedi alla stanza…&lt;/p&gt;"></textarea>
+        <p class="aiuto">HTML semplice: <code>&lt;p&gt;</code>, <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code>,
+          <code>&lt;ol&gt;&lt;li&gt;</code>. Il titolo «Nota per chi conduce» e la cornice li mette il generatore.</p>
+      </div>
+      <div>
+        <h2>Anteprima</h2>
+        <div class="ante"><div class="dt">Nota per chi conduce</div><div id="ante"></div></div>
+      </div>
+    </div>
+
+    <div class="riga" style="margin-top:16px">
+      <button class="primario" id="b-salva">Salva e metti il segnaposto</button>
+      <button id="b-salva-build">Salva e ricostruisci</button>
+      <span class="sp"></span>
+      <button class="rischio" id="b-elimina" ${notaAperta ? '' : 'disabled'}>Elimina questa nota</button>
+    </div>
+    <div class="log" id="log" hidden></div>`;
+
+  const sez = $('#sel-sez');
+  const suaSezione = conNota.find(s => s.nota === notaAperta);
+  if(suaSezione) sez.value = suaSezione.id;
+
+  $('#ta').value = notaAperta ? p.note[notaAperta] : '';
+  aggiornaAnteprima();
+
+  $('#ta').oninput = aggiornaAnteprima;
+  $('#sel-nota').onchange = e => apri(corrente, e.target.value || null);
+  $('#in-id').oninput = e => e.target.value = chiave(e.target.value);
+  $('#b-salva').onclick = () => salva(false);
+  $('#b-salva-build').onclick = () => salva(true);
+  $('#b-elimina').onclick = elimina;
+}
+
+function aggiornaAnteprima(){ $('#ante').innerHTML = $('#ta').value; }
+
+function mostra(testo, ok){
+  const l = $('#log');
+  l.hidden = false; l.textContent = testo;
+  l.className = 'log ' + (ok ? 'ok' : 'ko');
+}
+
+async function salva(anche_build){
+  const id = chiave($('#in-id').value || 'nota');
+  const testo = $('#ta').value.trim();
+  if(!testo) return mostra('La nota è vuota: niente da salvare.', false);
+  try{
+    const p = await api('/api/nota', {
+      file: corrente.file, id, sezione: $('#sel-sez').value,
+      testo, id_precedente: notaAperta || null
+    });
+    pagine = pagine.map(x => x.file === p.file ? p : x);
+    apri(p, id);
+    mostra(`Salvata «${id}» e segnaposto messo in fondo alla sezione scelta.`, true);
+    if(anche_build) await costruisci(corrente.file);
+  }catch(e){ mostra(String(e.message), false); }
+}
+
+async function elimina(){
+  if(!notaAperta || !confirm(`Elimino la nota «${notaAperta}» e il suo segnaposto?`)) return;
+  try{
+    const p = await api('/api/nota/elimina', {file: corrente.file, id: notaAperta});
+    pagine = pagine.map(x => x.file === p.file ? p : x);
+    await carica();
+    apri(p);
+    mostra('Nota eliminata.', true);
+  }catch(e){ mostra(String(e.message), false); }
+}
+
+async function costruisci(file){
+  $('#st-build').textContent = 'costruisco…';
+  try{
+    const r = await api('/api/costruisci', file ? {file} : {});
+    $('#st-build').textContent = r.ok ? 'fatto' : 'errore';
+    mostra(r.log || '(nessun output)', r.ok);
+  }catch(e){ $('#st-build').textContent = 'errore'; mostra(String(e.message), false); }
+}
+
+$('#b-una').onclick = () => corrente && costruisci(corrente.file);
+$('#b-tutte').onclick = () => costruisci(null);
+
+carica().catch(e => $('#elenco').innerHTML = `<p class="vuoto">${esc(e.message)}</p>`);
+</script>
+</body>
+</html>

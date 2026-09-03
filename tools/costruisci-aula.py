@@ -6,6 +6,9 @@ Una sorgente, due file in uscita:
   pagina.html                  pubblico, senza una riga di regia
   pagina.docente.html          con le note inline, autoconsistente, offline
 
+Il file di regia conserva solo il testo della nota: la cornice grafica
+(<div class="docente">) la ricostruisce questo script.
+
 Le note vivono in regia/<pagina>.html, suddivise da marcatori
 
     <!-- regia: <id> -->
@@ -23,6 +26,9 @@ from pathlib import Path
 RADICE = Path(__file__).resolve().parent.parent
 REGIA = RADICE / "regia"
 MARCATORE = re.compile(r"<!--\s*regia:\s*([a-z0-9-]+)\s*-->")
+CORNICE = ('  <div class="docente">\n    <div class="dt">{titolo}</div>\n'
+           '{corpo}\n  </div>')
+TITOLO_PREDEFINITO = "Nota per chi conduce"
 
 
 def blocchi(sorgente: Path) -> dict[str, str]:
@@ -50,7 +56,8 @@ def costruisci(pagina: Path) -> Path | None:
             mancanti.append(chiave)
             return m.group(0)
         usati.add(chiave)
-        return note[chiave]
+        corpo = "\n".join("    " + r for r in note[chiave].splitlines())
+        return CORNICE.format(titolo=TITOLO_PREDEFINITO, corpo=corpo)
 
     testo, quanti = MARCATORE.subn(sostituisci, testo)
     if mancanti:
@@ -64,6 +71,11 @@ def costruisci(pagina: Path) -> Path | None:
     uscita.write_text(testo, encoding="utf-8")
     print(f"  {pagina.name} + {quanti} blocchi -> {uscita.name} ({len(testo) // 1024} KB)")
     return uscita
+
+
+def elenco_pagine():
+    """Le pagine pubbliche del sito, escluse le copie generate."""
+    return sorted(f for f in RADICE.glob("*.html") if not f.name.endswith(".docente.html"))
 
 
 def main():
