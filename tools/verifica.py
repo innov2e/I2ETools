@@ -10,6 +10,8 @@ qualcosa che abbiamo dichiarato per iscritto.
   V4  data di aggiornamento visibile     è il controllo su cui regge la freschezza
   V5  artefatto dichiarato nel manifest  quello che non è dichiarato non esiste
   V6  navigazione allineata al manifest
+  V7  indice sulle pagine lunghe        da quattro sezioni in su serve un modo
+                                        per navigarle
 
 Sono ammessi i rimandi su cui il lettore clicca: è vietato ciò che il browser
 carica da solo.
@@ -38,6 +40,9 @@ CARICATE = re.compile(
 IMPORTA = re.compile(r"""@import\s+(?:url\()?["']?(https?:|//)""", re.I)
 RETE = re.compile(r"\b(?:fetch|XMLHttpRequest|WebSocket|EventSource)\s*\(", re.I)
 REGIA = re.compile(r'class="docente"|Nota per chi conduce', re.I)
+SEZIONE = re.compile(r'<section[^>]*\sid="', re.I)
+INDICE = re.compile(r'class="(?:topnav|paginanav|toc)"', re.I)
+SEZIONI_MINIME = 4
 COLLEGAMENTI = re.compile(r'(?:href|src)="([^"]+)"')
 
 
@@ -84,6 +89,13 @@ def controlla(f, dichiarati):
 
     if rel != "index.html" and "sito:pie" not in s:
         r.append((GRAVE, "V4", 0, "manca il piè di pagina con data, firma e licenza"))
+
+    # da quattro sezioni in su, la pagina va navigabile: barra, indice, sommario
+    corpo = s[s.find("<!-- /sito:menu -->"):]
+    sezioni = len(SEZIONE.findall(corpo))
+    if sezioni >= SEZIONI_MINIME and not INDICE.search(corpo):
+        r.append((GRAVE, "V7", 0,
+                  f"{sezioni} sezioni e nessun indice: la pagina è lunga e non si naviga"))
 
     if rel not in dichiarati and rel != "index.html":
         r.append((GRAVE, "V5", 0, "artefatto non dichiarato nel manifest: non compare in nessuna navigazione"))

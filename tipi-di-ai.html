@@ -250,6 +250,18 @@
     .axis-nav{position:static}
     .axis-nav button{flex:1 1 100%}
   }
+
+  /* indice della pagina: la stessa funzione della barra delle altre guide */
+  .paginanav{
+    display:flex;flex-wrap:wrap;gap:6px;margin:26px 0 8px;padding:10px 0;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  .paginanav a{
+    font-size:12.5px;font-weight:600;color:var(--tx-2);text-decoration:none;
+    padding:6px 10px;border-radius:7px;
+  }
+  .paginanav a:hover{background:var(--bg-2);color:var(--tx)}
+  @media(max-width:640px){.paginanav{gap:2px}.paginanav a{padding:5px 7px;font-size:12px}}
 </style>
 </head>
 <body>
@@ -358,8 +370,18 @@
   <h1>I tipi di Intelligenza Artificiale:<br>una mappa che funziona davvero</h1>
   <p class="lede">Le classificazioni che si trovano online mescolano categorie che non stanno sulla stessa scala. Questa guida le separa in cinque assi indipendenti, con esempi concreti e le implicazioni pratiche per chi deve decidere cosa comprare, cosa vietare e di cosa preoccuparsi.</p>
 </header>
+<nav class="paginanav" aria-label="Indice della pagina">
+  <a href="#problema">1. Il problema</a>
+  <a href="#assi">2. I cinque assi</a>
+  <a href="#sistemi">3. Sistemi reali</a>
+  <a href="#traduttore">4. Traduttore</a>
+  <a href="#domande">5. Sette domande</a>
+  <a href="#sintesi">6. In una pagina</a>
+  <a href="#fonti">Fonti</a>
+</nav>
 
-<section>
+
+<section id="problema">
   <h2>Il problema: nessuno ti dice che sono classificazioni diverse</h2>
   <p>Se cerchi «tipi di intelligenza artificiale» ti troverai davanti un elenco più o meno così: <em>AI ristretta, machine learning, AI generativa, AI debole, AI forte, superintelligenza, singolarità</em>. Presentati in fila, come se fossero sette gradini della stessa scala.</p>
   <p>Non lo sono. E questo è esattamente il motivo per cui quelle spiegazioni non chiariscono nulla: chiedere se il machine learning venga «prima» o «dopo» l'AI generativa è come chiedere se il motore diesel venga prima o dopo un'automobile familiare. Sono risposte a domande diverse — <em>come è fatto il motore</em> contro <em>a cosa serve il veicolo</em>.</p>
@@ -600,7 +622,7 @@
 </section>
 
 <!-- ================= MATRICE ================= -->
-<section>
+<section id="sistemi">
   <div class="section-kicker">La verifica</div>
   <h2>Sistemi reali, cinque etichette ciascuno</h2>
   <p>Ecco la prova che gli assi sono indipendenti. Ogni riga è un sistema esistente; ogni colonna una delle cinque domande. Notate che la colonna «capacità» è costante e le altre variano: è esattamente per questo che elencare ANI, ML e AI debole in fila non ha senso.</p>
@@ -653,7 +675,7 @@
 </section>
 
 <!-- ================= TRADUTTORE ================= -->
-<section>
+<section id="traduttore">
   <div class="section-kicker">Applicazione pratica</div>
   <h2>Traduttore: cosa dice il fornitore, cosa significa</h2>
   <p>Il vantaggio concreto di avere gli assi in testa è che permette di decodificare il linguaggio commerciale in tempo reale. Ogni riga qui sotto è una formulazione ricorrente, con la sua traduzione e la domanda che la mette alla prova.</p>
@@ -673,7 +695,7 @@
 </section>
 
 <!-- ================= CHECKLIST ================= -->
-<section>
+<section id="domande">
   <div class="section-kicker">Da portare in riunione</div>
   <h2>Sette domande che qualificano qualunque proposta AI</h2>
   <p>Ogni domanda deriva da uno degli assi. Spuntate quelle a cui avete già una risposta scritta e verificabile.</p>
@@ -690,7 +712,7 @@
 </section>
 
 <!-- ================= CHIUSURA ================= -->
-<section>
+<section id="sintesi">
   <h2>In una pagina</h2>
   <p>Le classificazioni dell'AI non sono in disaccordo tra loro: rispondono a domande diverse e vengono presentate come se rispondessero alla stessa. Separandole, si ottiene una mappa che regge:</p>
   <ul>
@@ -704,7 +726,7 @@
 </section>
 
 <!-- ================= FONTI ================= -->
-<section class="sources">
+<section id="fonti" class="sources">
   <div class="section-kicker">Riferimenti</div>
   <h2>Fonti</h2>
   <h3>Fonti primarie e accademiche</h3>
