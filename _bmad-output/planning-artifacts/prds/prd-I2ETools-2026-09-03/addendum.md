@@ -62,7 +62,7 @@ Fuori portata senza un reparto di sviluppo: inferenza nel browser, 3D in tempo r
 
 ## Anatomia dei corsi esistenti
 
-Ricavata da `docs/templates/`, fuori dal repository pubblico.
+Ricavata dai sorgenti in `corsi/`, nel repository privato `I2ETools-riservato`.
 
 **Corso base — Tecniche di base di prompt engineering.** 5 lezioni, 10 ore. Due punti d'ingresso allineati e separati: `index.html` per chi partecipa, `docente/index.html` per chi conduce. Ogni lezione in tre parti con codice colore stabile: lezione (indaco), esercitazioni (verde), materiale (ambra). Quindici tool interattivi. Materiali trasversali: glossario con la lezione di introduzione, cinque casi studio per dominio, checklist di qualità degli output, Body of Knowledge su dieci aree secondo i descrittori EQF. Risultato dichiarato: chi partecipa esce con cinque prompt documentati e validati da un collega.
 
@@ -80,7 +80,7 @@ Le pagine sciolte duplicano stili e comportamenti: `.xbtn` è definita in due fi
 
 - `tools/costruisci-aula.py` — inietta la regia dai segnaposto `<!-- regia: id -->` e produce la copia `.docente.html`.
 - `tools/regia-server.py` + `tools/regia-pannello.html` — pannello locale su 127.0.0.1 per scrivere la regia, collocarla e rigenerare.
-- `docs/templates/.../qualita/verifica_corso.py` — verifica di conformità dei corsi.
+- `corsi/<corso>/qualita/verifica_corso.py` (repository privato) — verifica di conformità dei corsi.
 
 ## Assistente di redazione degli artefatti — perché è praticabile
 

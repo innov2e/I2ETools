@@ -5,13 +5,15 @@ _bmad/
 # macOS
 .DS_Store
 
-# Template di lavoro — non pubblicati
-docs/templates/
+# Sorgenti dei corsi e materiale di riferimento: repository privato
+# I2ETools-riservato. La cartella docs/templates/ non esiste più qui.
 
 # Output BMad: memoria di lavoro fuori, artefatti di pianificazione dentro
 _bmad-output/*
 !_bmad-output/planning-artifacts/
 
-# Regia d'aula — non va nel repo pubblico (destinazione: repo privato)
-regia/
+# Regia d'aula — vive nel repository privato I2ETools-riservato.
+# Senza barra finale: qui "regia" è un collegamento simbolico, che per git è un
+# file e il pattern "regia/" non lo intercetterebbe.
+regia
 *.docente.html
