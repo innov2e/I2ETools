@@ -116,11 +116,18 @@ SCRIPT = """<script>
 </script>"""
 
 
+def verso(corrente, meta):
+    """Indirizzo di `meta` visto da `corrente`: le pagine non stanno tutte
+    nella stessa cartella, e i collegamenti devono restare relativi."""
+    su = "../" * len(Path(corrente).parent.parts)
+    return (su + meta).replace(" ", "%20")
+
+
 def menu(m, corrente):
     """Il menù fra le pagine: un tema per voce, gli artefatti nella tendina."""
     e = html.escape
     fuori = [STILE, '<nav class="sito-bar" aria-label="Navigazione del sito">',
-             f'<a class="sito-marchio" href="index.html">{e(m["sito"]["nome"])} '
+             f'<a class="sito-marchio" href="{verso(corrente, "index.html")}">{e(m["sito"]["nome"])} '
              f'<b>{e(m["sito"]["titolo"])}</b></a>']
 
     for t in m["temi"]:
@@ -137,12 +144,12 @@ def menu(m, corrente):
                 fuori.append(f'<span class="chiuso">{e(a["titolo"])}{desc}</span>')
             else:
                 attuale = " qui" if a["indirizzo"] == corrente else ""
-                fuori.append(f'<a class="{attuale.strip()}" href="{e(a["indirizzo"])}">'
+                fuori.append(f'<a class="{attuale.strip()}" href="{e(verso(corrente, a["indirizzo"]))}">'
                              f'{e(a["titolo"])}{desc}</a>')
         fuori.append("</div></div>")
 
     fuori += ['<span class="sito-sp"></span>',
-              '<a class="sito-casa" href="index.html">Tutti i contenuti &#8594;</a>',
+              f'<a class="sito-casa" href="{verso(corrente, "index.html")}">Tutti i contenuti &#8594;</a>',
               "</nav>", SCRIPT]
     return "\n".join(fuori)
 
@@ -181,7 +188,7 @@ def catalogo(m):
                 meta.append(f'{len(a["percorsi"])} percorsi')
             riga = f'<div class="cat-meta">{" &middot; ".join(meta)}</div>' if meta else ""
             azione = ('<span class="go chiuso">Riservato ai partecipanti</span>' if chiuso
-                      else f'<a class="go" href="{e(a["indirizzo"].replace(" ", "%20"))}">Apri &#8594;</a>')
+                      else f'<a class="go" href="{e(verso("index.html", a["indirizzo"]))}">Apri &#8594;</a>')
             fuori.append(
                 f'\n    <div class="card{" chiuso" if chiuso else ""}">'
                 f'\n      <div class="tag">{e(a.get("etichetta", a["tipo"]))}</div>'

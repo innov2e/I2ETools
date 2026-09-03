@@ -5,15 +5,38 @@
     "licenza": "Uso consentito con citazione della fonte. Vietata la rivendita.",
     "base": "https://innov2e.github.io/I2ETools/"
   },
-
   "temi": [
-    { "id": "fondamenti",       "titolo": "Fondamenti",              "descrizione": "Orientarsi: che cosa è un sistema di AI, come si classifica, da dove viene." },
-    { "id": "alfabetizzazione", "titolo": "Alfabetizzazione sull'AI", "descrizione": "Il corso: come si scrive un prompt, dove vive il contesto, quali obblighi si applicano." },
-    { "id": "guide",            "titolo": "Guide operative",          "descrizione": "Materiale da usare sul lavoro, non da studiare." },
-    { "id": "bmad",             "titolo": "BMAD",                     "descrizione": "Che cos'è, come si installa, come si usa." },
-    { "id": "aula",             "titolo": "Corsi in aula",            "descrizione": "Percorsi condotti. Il materiale si riceve partecipando." }
+    {
+      "id": "fondamenti",
+      "titolo": "Fondamenti",
+      "descrizione": "Orientarsi: che cosa è un sistema di AI, come si classifica, da dove viene."
+    },
+    {
+      "id": "alfabetizzazione",
+      "titolo": "Alfabetizzazione sull'AI",
+      "descrizione": "Il corso: come si scrive un prompt, dove vive il contesto, quali obblighi si applicano."
+    },
+    {
+      "id": "guide",
+      "titolo": "Guide operative",
+      "descrizione": "Materiale da usare sul lavoro, non da studiare."
+    },
+    {
+      "id": "strumenti",
+      "titolo": "Strumenti",
+      "descrizione": "Banchi di prova interattivi: si usano nel browser, non salvano nulla, funzionano anche scaricati."
+    },
+    {
+      "id": "bmad",
+      "titolo": "BMAD",
+      "descrizione": "Che cos'è, come si installa, come si usa."
+    },
+    {
+      "id": "aula",
+      "titolo": "Corsi in aula",
+      "descrizione": "Percorsi condotti. Il materiale si riceve partecipando."
+    }
   ],
-
   "artefatti": [
     {
       "id": "tipi-di-ai-mappa",
@@ -48,7 +71,6 @@
       "accesso": "aperto",
       "aggiornato": "2026-08-16"
     },
-
     {
       "id": "prompt-struttura",
       "titolo": "L'anatomia di un prompt",
@@ -87,7 +109,336 @@
       "ordine": 3,
       "manipolabile": true
     },
-
+    {
+      "id": "banco-pilastri",
+      "titolo": "Banco dei 4 pilastri",
+      "etichetta": "Lezione 1",
+      "descrizione": "Smonta un prompt nei suoi quattro elementi portanti e vedi che cosa cambia togliendone uno.",
+      "tipo": "tool",
+      "tema": "strumenti",
+      "indirizzo": "strumenti/banco-pilastri.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-20",
+      "ordine": 11,
+      "provenienza": {
+        "corso": "Tecniche di base di prompt engineering",
+        "lezione": 1
+      },
+      "estrazione": {
+        "corso": "corso-prompting-base",
+        "corso_titolo": "Tecniche di base di prompt engineering",
+        "lezione": 1,
+        "file": "lezioni/lezione-01/esercitazioni/tool.html"
+      }
+    },
+    {
+      "id": "come-vede-il-testo",
+      "titolo": "Come il modello vede il testo",
+      "etichetta": "Lezione 1",
+      "descrizione": "Il testo diventa token sotto i tuoi occhi: dove si spezzano le parole e quanto costa scrivere in italiano.",
+      "tipo": "tool",
+      "tema": "strumenti",
+      "indirizzo": "strumenti/come-vede-il-testo.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-20",
+      "ordine": 12,
+      "provenienza": {
+        "corso": "Tecniche di base di prompt engineering",
+        "lezione": 1
+      },
+      "estrazione": {
+        "corso": "corso-prompting-base",
+        "corso_titolo": "Tecniche di base di prompt engineering",
+        "lezione": 1,
+        "file": "lezioni/lezione-01/esercitazioni/tool-token.html"
+      }
+    },
+    {
+      "id": "filtro-anonimizzazione",
+      "titolo": "Il filtro dell'anonimizzazione",
+      "etichetta": "Lezione 1",
+      "descrizione": "Che cosa togliere da un testo prima di darlo in pasto a un modello, e che cosa resta comunque riconoscibile.",
+      "tipo": "tool",
+      "tema": "strumenti",
+      "indirizzo": "strumenti/filtro-anonimizzazione.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-20",
+      "ordine": 13,
+      "provenienza": {
+        "corso": "Tecniche di base di prompt engineering",
+        "lezione": 1
+      },
+      "estrazione": {
+        "corso": "corso-prompting-base",
+        "corso_titolo": "Tecniche di base di prompt engineering",
+        "lezione": 1,
+        "file": "lezioni/lezione-01/esercitazioni/tool-anonimizza.html"
+      }
+    },
+    {
+      "id": "banco-ruoli",
+      "titolo": "Banco dei ruoli",
+      "etichetta": "Lezione 2",
+      "descrizione": "Lo stesso compito assegnato a personaggi diversi: quanto cambia davvero la risposta.",
+      "tipo": "tool",
+      "tema": "strumenti",
+      "indirizzo": "strumenti/banco-ruoli.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-20",
+      "ordine": 21,
+      "provenienza": {
+        "corso": "Tecniche di base di prompt engineering",
+        "lezione": 2
+      },
+      "estrazione": {
+        "corso": "corso-prompting-base",
+        "corso_titolo": "Tecniche di base di prompt engineering",
+        "lezione": 2,
+        "file": "lezioni/lezione-02/esercitazioni/tool-persona.html"
+      }
+    },
+    {
+      "id": "compositore-formato",
+      "titolo": "Compositore di formato",
+      "etichetta": "Lezione 2",
+      "descrizione": "Costruisci la forma dell'output — tabella, elenco, schema — e guarda l'effetto sulla resa.",
+      "tipo": "tool",
+      "tema": "strumenti",
+      "indirizzo": "strumenti/compositore-formato.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-20",
+      "ordine": 22,
+      "provenienza": {
+        "corso": "Tecniche di base di prompt engineering",
+        "lezione": 2
+      },
+      "estrazione": {
+        "corso": "corso-prompting-base",
+        "corso_titolo": "Tecniche di base di prompt engineering",
+        "lezione": 2,
+        "file": "lezioni/lezione-02/esercitazioni/tool-formato.html"
+      }
+    },
+    {
+      "id": "officina-catena",
+      "titolo": "Officina della catena",
+      "etichetta": "Lezione 2",
+      "descrizione": "Spezza un compito complesso in passaggi concatenati e osserva dove la catena si rompe.",
+      "tipo": "tool",
+      "tema": "strumenti",
+      "indirizzo": "strumenti/officina-catena.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-20",
+      "ordine": 23,
+      "provenienza": {
+        "corso": "Tecniche di base di prompt engineering",
+        "lezione": 2
+      },
+      "estrazione": {
+        "corso": "corso-prompting-base",
+        "corso_titolo": "Tecniche di base di prompt engineering",
+        "lezione": 2,
+        "file": "lezioni/lezione-02/esercitazioni/tool-catena.html"
+      }
+    },
+    {
+      "id": "officina-precisione",
+      "titolo": "Officina della precisione",
+      "etichetta": "Lezione 3",
+      "descrizione": "Prendi una richiesta ambigua e togli l'ambiguità un pezzo alla volta.",
+      "tipo": "tool",
+      "tema": "strumenti",
+      "indirizzo": "strumenti/officina-precisione.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-20",
+      "ordine": 31,
+      "provenienza": {
+        "corso": "Tecniche di base di prompt engineering",
+        "lezione": 3
+      },
+      "estrazione": {
+        "corso": "corso-prompting-base",
+        "corso_titolo": "Tecniche di base di prompt engineering",
+        "lezione": 3,
+        "file": "lezioni/lezione-03/esercitazioni/tool-ambiguita.html"
+      }
+    },
+    {
+      "id": "banco-esempi",
+      "titolo": "Banco degli esempi",
+      "etichetta": "Lezione 3",
+      "descrizione": "Zero, uno, pochi esempi: quanti ne servono davvero e quando cominciano a nuocere.",
+      "tipo": "tool",
+      "tema": "strumenti",
+      "indirizzo": "strumenti/banco-esempi.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-20",
+      "ordine": 32,
+      "provenienza": {
+        "corso": "Tecniche di base di prompt engineering",
+        "lezione": 3
+      },
+      "estrazione": {
+        "corso": "corso-prompting-base",
+        "corso_titolo": "Tecniche di base di prompt engineering",
+        "lezione": 3,
+        "file": "lezioni/lezione-03/esercitazioni/tool-esempi.html"
+      }
+    },
+    {
+      "id": "ancoraggio-documento",
+      "titolo": "Ancoraggio al documento",
+      "etichetta": "Lezione 3",
+      "descrizione": "Come si obbliga un modello a rispondere solo con quello che c'è nel documento.",
+      "tipo": "tool",
+      "tema": "strumenti",
+      "indirizzo": "strumenti/ancoraggio-documento.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-20",
+      "ordine": 33,
+      "provenienza": {
+        "corso": "Tecniche di base di prompt engineering",
+        "lezione": 3
+      },
+      "estrazione": {
+        "corso": "corso-prompting-base",
+        "corso_titolo": "Tecniche di base di prompt engineering",
+        "lezione": 3,
+        "file": "lezioni/lezione-03/esercitazioni/tool-ancoraggio.html"
+      }
+    },
+    {
+      "id": "verificatore-ragionamento",
+      "titolo": "Verificatore di ragionamento",
+      "etichetta": "Lezione 4",
+      "descrizione": "Metti alla prova un ragionamento in più passaggi e scopri dove si inceppa.",
+      "tipo": "tool",
+      "tema": "strumenti",
+      "indirizzo": "strumenti/verificatore-ragionamento.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-20",
+      "ordine": 41,
+      "provenienza": {
+        "corso": "Tecniche di base di prompt engineering",
+        "lezione": 4
+      },
+      "estrazione": {
+        "corso": "corso-prompting-base",
+        "corso_titolo": "Tecniche di base di prompt engineering",
+        "lezione": 4,
+        "file": "lezioni/lezione-04/esercitazioni/tool-ragionamento.html"
+      }
+    },
+    {
+      "id": "registro-iterazione",
+      "titolo": "Registro dell'iterazione",
+      "etichetta": "Lezione 4",
+      "descrizione": "Tieni traccia dei tentativi: che cosa hai cambiato, che cosa è migliorato, che cosa no.",
+      "tipo": "tool",
+      "tema": "strumenti",
+      "indirizzo": "strumenti/registro-iterazione.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-20",
+      "ordine": 42,
+      "provenienza": {
+        "corso": "Tecniche di base di prompt engineering",
+        "lezione": 4
+      },
+      "estrazione": {
+        "corso": "corso-prompting-base",
+        "corso_titolo": "Tecniche di base di prompt engineering",
+        "lezione": 4,
+        "file": "lezioni/lezione-04/esercitazioni/tool-iterazione.html"
+      }
+    },
+    {
+      "id": "banco-difese",
+      "titolo": "Banco delle difese",
+      "etichetta": "Lezione 4",
+      "descrizione": "Prova a far deragliare un prompt e vedi quali difese reggono.",
+      "tipo": "tool",
+      "tema": "strumenti",
+      "indirizzo": "strumenti/banco-difese.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-20",
+      "ordine": 43,
+      "provenienza": {
+        "corso": "Tecniche di base di prompt engineering",
+        "lezione": 4
+      },
+      "estrazione": {
+        "corso": "corso-prompting-base",
+        "corso_titolo": "Tecniche di base di prompt engineering",
+        "lezione": 4,
+        "file": "lezioni/lezione-04/esercitazioni/tool-difese.html"
+      }
+    },
+    {
+      "id": "officina-meta-prompt",
+      "titolo": "Officina del meta-prompt",
+      "etichetta": "Lezione 5",
+      "descrizione": "Usa il modello per scrivere il prompt: quando funziona e quando gira a vuoto.",
+      "tipo": "tool",
+      "tema": "strumenti",
+      "indirizzo": "strumenti/officina-meta-prompt.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-20",
+      "ordine": 51,
+      "provenienza": {
+        "corso": "Tecniche di base di prompt engineering",
+        "lezione": 5
+      },
+      "estrazione": {
+        "corso": "corso-prompting-base",
+        "corso_titolo": "Tecniche di base di prompt engineering",
+        "lezione": 5,
+        "file": "lezioni/lezione-05/esercitazioni/tool-meta.html"
+      }
+    },
+    {
+      "id": "compilatore-schede",
+      "titolo": "Compilatore di schede",
+      "etichetta": "Lezione 5",
+      "descrizione": "Documenta un prompt perché sia riusabile da un collega fra sei mesi.",
+      "tipo": "tool",
+      "tema": "strumenti",
+      "indirizzo": "strumenti/compilatore-schede.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-20",
+      "ordine": 52,
+      "provenienza": {
+        "corso": "Tecniche di base di prompt engineering",
+        "lezione": 5
+      },
+      "estrazione": {
+        "corso": "corso-prompting-base",
+        "corso_titolo": "Tecniche di base di prompt engineering",
+        "lezione": 5,
+        "file": "lezioni/lezione-05/esercitazioni/tool-scheda.html"
+      }
+    },
+    {
+      "id": "mia-libreria",
+      "titolo": "La mia libreria",
+      "etichetta": "Lezione 5",
+      "descrizione": "Raccogli i prompt collaudati in una libreria da esportare. Non salva nulla: il file va scaricato.",
+      "tipo": "tool",
+      "tema": "strumenti",
+      "indirizzo": "strumenti/mia-libreria.html",
+      "accesso": "aperto",
+      "aggiornato": "2026-08-20",
+      "ordine": 53,
+      "provenienza": {
+        "corso": "Tecniche di base di prompt engineering",
+        "lezione": 5
+      },
+      "estrazione": {
+        "corso": "corso-prompting-base",
+        "corso_titolo": "Tecniche di base di prompt engineering",
+        "lezione": 5,
+        "file": "lezioni/lezione-05/esercitazioni/tool-libreria.html"
+      }
+    },
     {
       "id": "libro-prompting",
       "titolo": "Il Libro dei Prompting",
@@ -99,7 +450,6 @@
       "accesso": "aperto",
       "aggiornato": "2026-09-03"
     },
-
     {
       "id": "bmad-anatomia",
       "titolo": "BMAD: cos'è e anatomia dell'installazione",
@@ -123,9 +473,10 @@
       "accesso": "aperto",
       "aggiornato": "2026-08-16",
       "ordine": 2,
-      "prerequisiti": ["bmad-anatomia"]
+      "prerequisiti": [
+        "bmad-anatomia"
+      ]
     },
-
     {
       "id": "corso-prompting-base",
       "titolo": "Tecniche di base di prompt engineering",
@@ -152,8 +503,18 @@
       "accesso": "riservato",
       "aggiornato": "2026-08-20",
       "livello": "avanzato",
-      "percorsi": ["finance", "sales", "legal", "project"],
-      "prerequisiti": ["corso-prompting-base"]
+      "percorsi": [
+        "finance",
+        "sales",
+        "legal",
+        "project"
+      ],
+      "prerequisiti": [
+        "corso-prompting-base"
+      ]
     }
-  ]
+  ],
+  "sorgenti": {
+    "corso-prompting-base": "../I2ETools-riservato/corsi/0 Corso Prompting di base - Completo"
+  }
 }

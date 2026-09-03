@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Come il modello vede il testo — Lezione 1</title>
+<style>
+/* incorporato da stile.css */
+/* ============================================================
+   Tecniche di Base di Prompt Engineering
+   Foglio di stile condiviso — nessuna risorsa esterna
+   ============================================================ */
+
+:root{
+  --ink:        #191A3D;
+  --ink-soft:   #3A3B63;
+  --paper:      #EDEBF2;
+  --paper-2:    #F6F5F9;
+  --card:       #FFFFFF;
+  --accent:     #4A2FE7;
+  --accent-dim: #8E7DF2;
+  --accent-pale:#EAE5FE;
+  --good:       #0E7A5F;
+  --bad:        #B3261E;
+  --muted:      #6B6A8C;
+  --pending:    #B07908;
+  --line:       #D6D2E4;
+
+  --mono: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --wrap: 62rem;
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:17px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+.wrap{ width:min(100% - 2.5rem, var(--wrap)); margin-inline:auto; }
+
+/* ---------- etichette di servizio ---------- */
+.eyebrow{
+  font-family:var(--mono);
+  font-size:.7rem; font-weight:600;
+  letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted);
+  margin:0 0 1.1rem;
+}
+
+/* ---------- navigazione ---------- */
+.crumb{
+  padding:1.6rem 0 0;
+  font-family:var(--mono);
+  font-size:.72rem; font-weight:600;
+  letter-spacing:.13em; text-transform:uppercase;
+}
+.crumb a{ color:var(--muted); text-decoration:none; border-bottom:1px solid var(--line); }
+.crumb a:hover, .crumb a:focus-visible{ color:var(--accent); border-color:var(--accent); }
+
+/* ---------- testata ---------- */
+.masthead{ padding:2.6rem 0 3rem; }
+.masthead.tall{ padding-top:4.5rem; }
+
+.masthead h1{
+  font-family:var(--mono);
+  font-weight:700;
+  font-size:clamp(1.75rem, 5.4vw, 3.4rem);
+  line-height:1.07;
+  letter-spacing:-.035em;
+  margin:0 0 1.3rem;
+  max-width:22ch;
+}
+.masthead.tall h1{ font-size:clamp(1.9rem, 6.2vw, 3.6rem); max-width:18ch; }
+.masthead h1 em{ font-style:normal; color:var(--accent); }
+.masthead .lede{ margin:0; max-width:58ch; font-size:1.02rem; color:var(--ink-soft); }
+
+/* ---------- blocco prompt (elemento firma) ---------- */
+.promptcard{
+  background:var(--ink);
+  color:var(--paper);
+  border-radius:.55rem;
+  padding:1.6rem 1.5rem;
+  font-family:var(--mono);
+  font-size:.9rem;
+  line-height:1.85;
+  overflow-x:auto;
+}
+.promptcard dl{ margin:0; display:grid; grid-template-columns:auto 1fr; gap:0 1.4rem; }
+.promptcard dt{ color:var(--accent-dim); letter-spacing:.06em; white-space:nowrap; }
+.promptcard dd{ margin:0; }
+.promptcard .caret{
+  display:inline-block; width:.55em; height:1.05em;
+  background:var(--accent-dim); vertical-align:-.18em; margin-left:.15em;
+  animation:blink 1.25s steps(1) infinite;
+}
+@keyframes blink{ 50%{ opacity:0; } }
+
+/* ---------- sezioni ---------- */
+.band{ padding:3.2rem 0; border-top:1px solid var(--line); }
+.band > .wrap > h2{
+  font-family:var(--mono);
+  font-size:1.05rem; font-weight:700;
+  letter-spacing:-.01em;
+  margin:0 0 1.8rem;
+}
+.band p{ max-width:62ch; }
+
+/* ---------- scheda a griglia ---------- */
+.specs{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(15rem, 1fr));
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+  border-radius:.5rem;
+  overflow:hidden;
+}
+.spec{ background:var(--card); padding:1.05rem 1.15rem; margin:0; }
+.spec dt{
+  font-family:var(--mono);
+  font-size:.66rem; font-weight:600;
+  letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:.35rem;
+}
+.spec dd{ margin:0; font-size:.97rem; line-height:1.45; }
+
+/* ---------- elenco numerato ---------- */
+.goals{ margin:2.4rem 0 0; padding:0; list-style:none; counter-reset:g; }
+.goals li{
+  counter-increment:g;
+  position:relative;
+  padding-left:2.6rem;
+  margin-bottom:.75rem;
+  font-size:.97rem;
+  max-width:58ch;
+}
+.goals li::before{
+  content:counter(g,decimal-leading-zero);
+  position:absolute; left:0; top:.1em;
+  font-family:var(--mono); font-size:.72rem; font-weight:600;
+  color:var(--accent); letter-spacing:.05em;
+}
+
+/* ---------- indice lezioni ---------- */
+.lessons{ list-style:none; margin:0; padding:0; }
+.lesson{
+  display:grid;
+  grid-template-columns:4.2rem 1fr;
+  gap:0 1.2rem;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:.5rem;
+  padding:1.4rem 1.5rem;
+  margin-bottom:.7rem;
+  text-decoration:none;
+  color:inherit;
+  transition:border-color .18s ease, transform .18s ease;
+}
+a.lesson:hover, a.lesson:focus-visible{ border-color:var(--accent); transform:translateX(3px); }
+a.lesson:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
+.lesson .num{
+  font-family:var(--mono);
+  font-size:1.55rem; font-weight:700;
+  letter-spacing:-.04em;
+  color:var(--line);
+  line-height:1;
+  padding-top:.15rem;
+  transition:color .18s ease;
+}
+a.lesson:hover .num, a.lesson:focus-visible .num{ color:var(--accent); }
+
+.lesson h3{ margin:0 0 .5rem; font-size:1.12rem; font-weight:650; letter-spacing:-.012em; line-height:1.3; }
+.lesson .key{
+  margin:0 0 .9rem;
+  font-size:.95rem;
+  color:var(--ink-soft);
+  border-left:2px solid var(--accent-dim);
+  padding-left:.9rem;
+  max-width:56ch;
+}
+.lesson .meta{
+  display:flex; flex-wrap:wrap; align-items:center; gap:.5rem 1rem;
+  font-family:var(--mono);
+  font-size:.7rem; font-weight:600;
+  letter-spacing:.13em; text-transform:uppercase;
+  color:var(--muted);
+  margin:0;
+}
+.lesson .go{ color:var(--accent); }
+.lesson .status{ color:var(--pending); display:inline-flex; align-items:center; gap:.45rem; }
+.lesson .status::before{
+  content:""; width:.42rem; height:.42rem; border-radius:50%;
+  background:var(--pending); flex:none;
+}
+.is-pending{ background:transparent; border-style:dashed; }
+.is-pending h3{ color:var(--ink-soft); }
+
+/* ---------- schede risorsa (materiali) ---------- */
+.resources{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(17rem,1fr)); gap:.7rem; }
+.resource{
+  display:block;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:.5rem;
+  padding:1.2rem 1.3rem;
+  text-decoration:none; color:inherit;
+  transition:border-color .18s ease, transform .18s ease;
+}
+a.resource:hover, a.resource:focus-visible{ border-color:var(--accent); transform:translateY(-2px); }
+a.resource:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+.resource h3{ margin:.4rem 0 .4rem; font-size:1rem; font-weight:650; }
+.resource p{ margin:0; font-size:.9rem; color:var(--ink-soft); }
+
+/* ---------- navigazione per domini ---------- */
+.domainnav{ list-style:none; display:flex; flex-wrap:wrap; gap:.45rem; margin:0 0 2.4rem; padding:0; }
+.domainnav a{
+  display:inline-block;
+  font-family:var(--mono);
+  font-size:.7rem; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase;
+  padding:.5rem .8rem;
+  border:1px solid var(--line);
+  border-radius:2rem;
+  background:var(--card);
+  color:var(--ink-soft);
+  text-decoration:none;
+  transition:border-color .18s ease, color .18s ease;
+}
+.domainnav a:hover, .domainnav a:focus-visible{ border-color:var(--accent); color:var(--accent); }
+
+/* ---------- dominio ---------- */
+.domain{ border-top:1px solid var(--line); padding:2.8rem 0 1rem; scroll-margin-top:1.5rem; }
+.domain > h2{
+  font-family:var(--mono);
+  font-size:1.35rem; font-weight:700;
+  letter-spacing:-.025em;
+  margin:.2rem 0 .6rem;
+}
+.domain > .intro{ margin:0 0 1.9rem; max-width:62ch; color:var(--ink-soft); font-size:.98rem; }
+
+/* ---------- blocco materiale ---------- */
+.material{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:.5rem;
+  padding:1.4rem 1.5rem;
+  margin-bottom:.9rem;
+}
+.material > h3{
+  font-family:var(--mono);
+  font-size:.7rem; font-weight:600;
+  letter-spacing:.16em; text-transform:uppercase;
+  color:var(--accent);
+  margin:0 0 .2rem;
+}
+.material > h4{ margin:0 0 .7rem; font-size:1.02rem; font-weight:650; letter-spacing:-.01em; }
+.material .use{
+  font-family:var(--mono);
+  font-size:.68rem; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase;
+  color:var(--muted);
+  margin:0 0 1rem;
+}
+.material p{ font-size:.96rem; }
+
+/* testo grezzo da consegnare ai partecipanti */
+.raw{
+  background:var(--paper-2);
+  border:1px solid var(--line);
+  border-left:3px solid var(--accent-dim);
+  border-radius:.35rem;
+  padding:1.05rem 1.15rem;
+  margin:0 0 1rem;
+  font-size:.93rem;
+  line-height:1.62;
+}
+.raw p{ margin:0 0 .8rem; max-width:none; }
+.raw p:last-child{ margin-bottom:0; }
+.raw .from{ font-family:var(--mono); font-size:.72rem; color:var(--muted); letter-spacing:.04em; }
+
+/* dataset */
+.dataset{ width:100%; border-collapse:collapse; font-size:.9rem; margin:0 0 1rem; }
+.dataset caption{
+  text-align:left;
+  font-family:var(--mono);
+  font-size:.68rem; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase;
+  color:var(--muted);
+  padding-bottom:.6rem;
+}
+.dataset th, .dataset td{ text-align:left; padding:.5rem .7rem; border-bottom:1px solid var(--line); vertical-align:top; }
+.dataset th{
+  font-family:var(--mono); font-size:.68rem; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--muted);
+  border-bottom:1px solid var(--ink-soft);
+}
+.dataset td:first-child{ font-family:var(--mono); color:var(--muted); width:2.6rem; }
+.dataset tr.tricky td{ background:#FCF6E8; }
+.dataset tr.tricky td:first-child{ color:var(--pending); font-weight:700; }
+
+/* riquadri di richiamo */
+.note, .warn{
+  border-radius:.35rem;
+  padding:.9rem 1.1rem;
+  margin:0 0 1rem;
+  font-size:.92rem;
+  line-height:1.55;
+}
+.note{ background:var(--paper-2); border-left:3px solid var(--accent); }
+.warn{ background:#FCF6E8; border-left:3px solid var(--pending); }
+.note p, .warn p{ margin:0; max-width:none; }
+.note strong, .warn strong{ font-weight:650; }
+.warn strong{ color:#7A5405; }
+
+/* ---------- piè di pagina ---------- */
+footer{ border-top:1px solid var(--line); padding:2.6rem 0 4rem; font-size:.9rem; color:var(--muted); }
+footer p{ margin:0 0 .5rem; max-width:60ch; }
+footer strong{ color:var(--ink); font-weight:600; }
+footer a{ color:var(--accent); }
+
+/* ---------- movimento ---------- */
+.reveal{ animation:rise .5s ease both; }
+.lessons > li:nth-child(1) .reveal{ animation-delay:.04s; }
+.lessons > li:nth-child(2) .reveal{ animation-delay:.09s; }
+.lessons > li:nth-child(3) .reveal{ animation-delay:.14s; }
+.lessons > li:nth-child(4) .reveal{ animation-delay:.19s; }
+.lessons > li:nth-child(5) .reveal{ animation-delay:.24s; }
+@keyframes rise{ from{ opacity:0; transform:translateY(9px); } to{ opacity:1; transform:none; } }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+}
+
+/* ---------- adattamento mobile ---------- */
+@media (max-width:640px){
+  body{ font-size:16px; }
+  .masthead{ padding:2rem 0 2.2rem; }
+  .masthead.tall{ padding-top:3rem; }
+  .lesson{ grid-template-columns:1fr; }
+  .lesson .num{ font-size:.8rem; letter-spacing:.16em; color:var(--muted); margin-bottom:.6rem; }
+  .promptcard dl{ grid-template-columns:1fr; gap:0; }
+  .promptcard dt{ margin-top:.7rem; }
+  .promptcard dd{ margin-bottom:.2rem; }
+  .dataset{ font-size:.85rem; }
+  .dataset th, .dataset td{ padding:.45rem .4rem; }
+}
+
+/* ---------- stampa ---------- */
+@media print{
+  body{ background:#fff; }
+  .crumb, .domainnav{ display:none; }
+  .material, .lesson, .raw{ break-inside:avoid; }
+  .promptcard{ background:#fff; color:#000; border:1px solid #000; }
+  .promptcard dt{ color:#000; }
+  .caret{ display:none; }
+}
+
+
+/* ============================================================
+   Componenti delle pagine di lezione
+   ============================================================ */
+
+.wrap--wide{ width:min(100% - 2.5rem, 76rem); margin-inline:auto; }
+.mono{ font-family:var(--mono); }
+h1,h2,h3{ letter-spacing:-.015em; }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+.lede{ font-size:1.08rem; color:var(--ink-soft); max-width:60ch; margin:0; }
+.band > .wrap--wide > h2{ font-family:var(--mono); font-size:1.05rem; font-weight:700; margin:0 0 1.6rem; }
+.caret{
+  display:inline-block; width:.55em; height:1.05em;
+  background:var(--accent-dim); vertical-align:-.18em; margin-left:.15em;
+  animation:blink 1.25s steps(1) infinite;
+}
+
+/* ---------- barra di navigazione ---------- */
+.topbar{
+  background:var(--ink); color:var(--paper);
+  padding:.7rem 0;
+  font-family:var(--mono); font-size:.72rem;
+  letter-spacing:.1em; text-transform:uppercase;
+  position:sticky; top:0; z-index:50;
+}
+.topbar .wrap, .topbar .wrap--wide{ display:flex; flex-wrap:wrap; gap:.6rem 1.4rem; align-items:center; }
+.topbar a{ color:var(--accent-dim); text-decoration:none; }
+.topbar a:hover, .topbar a:focus-visible{ color:#fff; text-decoration:underline; }
+.topbar .here{ color:#fff; }
+.topbar .sep{ color:#4A4B7A; }
+
+/* ---------- card generiche ---------- */
+.card{ background:var(--card); border:1px solid var(--line); border-radius:.5rem; padding:1.3rem 1.4rem; }
+.card h3{ margin:0 0 .5rem; font-size:1.05rem; }
+.card p:last-child{ margin-bottom:0; }
+.grid{ display:grid; gap:.8rem; }
+.grid--2{ grid-template-columns:repeat(auto-fit, minmax(18rem,1fr)); }
+.grid--3{ grid-template-columns:repeat(auto-fit, minmax(14rem,1fr)); }
+
+/* ---------- blocchi di prompt di esempio ---------- */
+pre.block{
+  background:#FBFAFF;
+  border:1px solid var(--line);
+  border-left:3px solid var(--accent-dim);
+  border-radius:.35rem;
+  padding:1rem 1.1rem;
+  font-family:var(--mono); font-size:.83rem; line-height:1.65;
+  overflow-x:auto; white-space:pre-wrap; margin:.9rem 0;
+}
+pre.block.bad{ border-left-color:var(--bad); }
+pre.block.good{ border-left-color:var(--good); }
+
+/* ---------- etichette ---------- */
+.tag{
+  display:inline-block;
+  font-family:var(--mono); font-size:.63rem; font-weight:600;
+  letter-spacing:.14em; text-transform:uppercase;
+  padding:.2rem .5rem; border-radius:.25rem;
+  background:var(--accent-pale); color:var(--accent);
+}
+.tag--bad{ background:#FBE9E7; color:var(--bad); }
+.tag--good{ background:#E3F3EE; color:var(--good); }
+.tag--warn{ background:#FCF1DC; color:var(--pending); }
+
+/* ---------- pulsanti ---------- */
+.btn{
+  display:inline-block;
+  font-family:var(--mono); font-size:.72rem; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase;
+  padding:.6rem 1.1rem;
+  border:1px solid var(--accent); border-radius:.35rem;
+  background:var(--accent); color:#fff;
+  text-decoration:none; cursor:pointer;
+  transition:background .15s ease, color .15s ease;
+}
+.btn:hover, .btn:focus-visible{ background:#3A22C4; }
+.btn--ghost{ background:transparent; color:var(--accent); }
+.btn--ghost:hover, .btn--ghost:focus-visible{ background:var(--accent-pale); color:var(--accent); }
+.btn[disabled]{ opacity:.45; cursor:not-allowed; }
+
+/* ---------- tabelle ---------- */
+table.t{
+  width:100%; border-collapse:collapse; font-size:.94rem;
+  background:var(--card); border:1px solid var(--line); border-radius:.5rem; overflow:hidden;
+}
+table.t th, table.t td{ padding:.7rem .9rem; text-align:left; border-bottom:1px solid var(--line); vertical-align:top; }
+table.t th{
+  font-family:var(--mono); font-size:.66rem; font-weight:600;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted); background:#F7F6FB;
+}
+table.t tr:last-child td{ border-bottom:0; }
+
+/* ---------- pie' di pagina delle lezioni ---------- */
+footer.site{ border-top:1px solid var(--line); padding:2.4rem 0 3.5rem; font-size:.9rem; color:var(--muted); }
+footer.site p{ margin:0 0 .5rem; max-width:60ch; }
+footer.site a{ color:var(--accent); }
+
+@media print{
+  .topbar{ display:none; }
+  .btn{ display:none; }
+}
+
+
+/* ============================================================
+   Intestazione di marca e credito in calce
+   ============================================================ */
+
+.sitehead{
+  background:var(--card);
+  border-bottom:1px solid var(--line);
+  padding:.65rem 0;
+}
+.sitehead .inner{
+  width:min(100% - 2.5rem, 76rem);
+  margin-inline:auto;
+  display:flex; align-items:center;
+}
+.sitehead img{ height:34px; width:auto; display:block; }
+.sitehead a{ display:block; line-height:0; }
+
+.credit{
+  margin:1.1rem 0 0 !important;
+  padding-top:.9rem;
+  border-top:1px solid var(--line);
+  font-size:.84rem;
+  color:var(--muted);
+}
+
+@media (max-width:640px){
+  .sitehead img{ height:27px; }
+}
+@media print{
+  .sitehead{ border-bottom:0; padding:.3rem 0 1rem; }
+  .sitehead img{ height:28px; }
+  .credit{ font-size:9pt; }
+}
+
+
+/* ============================================================
+   Codice colore delle tre parti della lezione
+   Lezione = indaco · Esercitazioni = verde · Materiale = ambra
+   ============================================================ */
+
+:root{
+  --c-lez:       #4A2FE7;  --c-lez-pale:  #EAE5FE;
+  --c-ese:       #0E7A5F;  --c-ese-pale:  #E3F3EE;
+  --c-mat:       #B07908;  --c-mat-pale:  #FCF1DC;
+}
+
+body[data-sezione="lezione"]      { --sez:var(--c-lez); --sez-pale:var(--c-lez-pale); }
+body[data-sezione="esercitazioni"]{ --sez:var(--c-ese); --sez-pale:var(--c-ese-pale); }
+body[data-sezione="materiale"]    { --sez:var(--c-mat); --sez-pale:var(--c-mat-pale); }
+
+/* fascia che dichiara in quale parte si sta navigando */
+.sezbar{
+  background:var(--sez-pale);
+  border-bottom:1px solid var(--sez);
+  padding:.5rem 0;
+}
+.sezbar .inner{
+  width:min(100% - 2.5rem, 76rem); margin-inline:auto;
+  display:flex; align-items:center; gap:.55rem;
+  font-family:var(--mono); font-size:.66rem; font-weight:700;
+  letter-spacing:.18em; text-transform:uppercase; color:var(--sez);
+}
+.sezbar .dot{ width:.5rem; height:.5rem; border-radius:50%; background:var(--sez); flex:none; }
+.sezbar .qual{ color:var(--muted); font-weight:600; letter-spacing:.12em; }
+
+/* la barra di navigazione porta il colore della parte */
+body[data-sezione] .topbar{ border-bottom:3px solid var(--sez); }
+body[data-sezione] .deckbar{ border-bottom:3px solid var(--sez); }
+
+/* gli elementi d'accento seguono il colore della parte */
+body[data-sezione] .eyebrow{ color:var(--sez); }
+body[data-sezione] .masthead h1 em{ color:var(--sez); }
+body[data-sezione] .slide .kicker{ color:var(--sez); }
+body[data-sezione] .slide h2 em{ color:var(--sez); }
+body[data-sezione] .exhead .n{ color:var(--sez); }
+body[data-sezione] .q .n{ color:var(--sez); }
+
+/* ---------- le tre schede nell'hub di lezione ---------- */
+.parti{ display:grid; gap:.8rem; grid-template-columns:repeat(auto-fit,minmax(17rem,1fr)); }
+.parte{
+  background:var(--card); border:1px solid var(--line);
+  border-top:4px solid var(--p-col);
+  border-radius:.5rem; padding:1.3rem 1.4rem;
+  display:flex; flex-direction:column;
+}
+.parte--lezione      { --p-col:var(--c-lez); --p-pale:var(--c-lez-pale); }
+.parte--esercitazioni{ --p-col:var(--c-ese); --p-pale:var(--c-ese-pale); }
+.parte--materiale    { --p-col:var(--c-mat); --p-pale:var(--c-mat-pale); }
+
+.parte .k{
+  font-family:var(--mono); font-size:.63rem; font-weight:700;
+  letter-spacing:.16em; text-transform:uppercase;
+  color:var(--p-col); background:var(--p-pale);
+  border-radius:.25rem; padding:.2rem .5rem;
+  align-self:flex-start; margin:0 0 .7rem;
+}
+.parte h3{ margin:0 0 .5rem; font-size:1.1rem; }
+.parte h3 a{ color:inherit; text-decoration:none; }
+.parte h3 a:hover, .parte h3 a:focus-visible{ color:var(--p-col); }
+.parte p{ margin:0 0 .7rem; font-size:.93rem; color:var(--ink-soft); line-height:1.55; }
+.parte ul{ list-style:none; margin:0 0 .8rem; padding:0; }
+.parte ul li{ font-size:.88rem; padding:.18rem 0; }
+.parte ul li::before{ content:"— "; color:var(--p-col); }
+.parte ul a{ color:var(--ink-soft); text-decoration:none; }
+.parte ul a:hover{ color:var(--p-col); text-decoration:underline; }
+.parte .vai{
+  margin-top:auto; align-self:flex-start;
+  font-family:var(--mono); font-size:.68rem; font-weight:700;
+  letter-spacing:.12em; text-transform:uppercase;
+  color:var(--p-col); text-decoration:none;
+  border:1px solid var(--p-col); border-radius:.3rem; padding:.45rem .8rem;
+  transition:background .15s ease, color .15s ease;
+}
+.parte .vai:hover, .parte .vai:focus-visible{ background:var(--p-col); color:#fff; }
+
+/* ---------- legenda dei colori ---------- */
+.legenda{ display:flex; flex-wrap:wrap; gap:.4rem 1.2rem; margin:1rem 0 0;
+          font-family:var(--mono); font-size:.66rem; font-weight:600;
+          letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+.legenda span{ display:inline-flex; align-items:center; gap:.4rem; }
+.legenda i{ width:.7rem; height:.7rem; border-radius:.2rem; display:inline-block; }
+
+@media print{
+  .sezbar{ border-bottom:1px solid #000; background:#fff; }
+  .parte{ page-break-inside:avoid; }
+}
+
+
+/* anticipazione voluta di un termine spiegato piu' avanti: sempre con glossa */
+.anticipo{ border-bottom:1px dotted var(--accent-dim); cursor:help; }
+
+</style>
+<style>
+  .cols{ display:grid; gap:1.2rem; grid-template-columns:1fr 1fr; align-items:start; }
+  @media (max-width:860px){ .cols{ grid-template-columns:1fr; } }
+
+  textarea{
+    width:100%; min-height:11rem; resize:vertical;
+    font-family:var(--sans); font-size:.95rem; line-height:1.55;
+    padding:.85rem .95rem; border:1px solid var(--line); border-radius:.4rem;
+    background:var(--card); color:var(--ink);
+  }
+  textarea:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  .lab{ font-family:var(--mono); font-size:.66rem; font-weight:600;
+        letter-spacing:.15em; text-transform:uppercase; color:var(--muted);
+        display:block; margin-bottom:.5rem; }
+
+  .toks{ line-height:2.1; font-family:var(--mono); font-size:.85rem; }
+  .tk{ display:inline-block; padding:.1rem .28rem; margin:0 .08rem .18rem 0;
+       border-radius:.2rem; background:var(--accent-pale); color:var(--ink); }
+  .tk.sp{ background:#E4E1EE; color:var(--muted); }
+  .tk.pun{ background:#F0EDF8; color:var(--muted); }
+  .tk.split{ background:#FCF1DC; color:#7A5405; }
+
+  .count{ display:grid; grid-template-columns:repeat(auto-fit,minmax(7rem,1fr)); gap:1px;
+          background:var(--line); border:1px solid var(--line); border-radius:.45rem;
+          overflow:hidden; margin-bottom:1rem; }
+  .count div{ background:var(--card); padding:.75rem .85rem; }
+  .count b{ display:block; font-family:var(--mono); font-size:1.5rem; font-weight:700;
+            letter-spacing:-.03em; line-height:1.1; }
+  .count span{ font-family:var(--mono); font-size:.62rem; font-weight:600;
+               letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+
+  .gauge{ height:.85rem; background:#E4E1EE; border-radius:.45rem; overflow:hidden; margin:.4rem 0 .3rem; }
+  .gauge i{ display:block; height:100%; background:var(--accent); width:0; transition:width .3s ease; }
+  .gauge.wide i{ background:var(--good); }
+
+  .presets{ display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:.9rem; }
+  .presets button{
+    font-family:var(--mono); font-size:.65rem; font-weight:600;
+    letter-spacing:.1em; text-transform:uppercase;
+    padding:.45rem .75rem; border:1px solid var(--line); border-radius:2rem;
+    background:var(--card); color:var(--ink-soft); cursor:pointer;
+  }
+  .presets button:hover{ border-color:var(--accent); color:var(--accent); }
+
+  .legend{ display:flex; flex-wrap:wrap; gap:.5rem 1.1rem; font-size:.82rem; color:var(--ink-soft); margin-top:.8rem; }
+  .legend i{ display:inline-block; width:.75rem; height:.75rem; border-radius:.2rem; vertical-align:-.05em; margin-right:.35rem; }
+</style>
+</head>
+<body data-sezione="esercitazioni">
+<!-- sito:menu --><style>
+.sito-bar{position:sticky;top:0;z-index:900;display:flex;align-items:center;gap:2px;flex-wrap:wrap;
+  padding:0 14px;background:#0b0d12;border-bottom:1px solid #262d3d;font:600 13px/1 -apple-system,
+  BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.sito-bar a{text-decoration:none}
+.sito-marchio{color:#e6e9f0;padding:11px 12px 11px 0;letter-spacing:.4px;white-space:nowrap}
+.sito-marchio b{color:var(--ac,#7dd3fc)}
+.sito-tema{position:relative}
+.sito-tema>button{background:none;border:0;color:#a2acc2;font:inherit;padding:11px 12px;cursor:pointer;
+  border-bottom:2px solid transparent}
+.sito-tema>button:hover,.sito-tema.aperto>button{color:#e6e9f0}
+.sito-tema.qui>button{color:var(--ac,#7dd3fc);border-bottom-color:var(--ac,#7dd3fc)}
+.sito-menu{display:none;position:absolute;left:0;top:100%;min-width:290px;background:#12151d;
+  border:1px solid #333c52;border-radius:0 0 10px 10px;border-top:0;padding:6px;
+  box-shadow:0 14px 34px rgba(0,0,0,.5)}
+.sito-tema.aperto .sito-menu{display:block}
+.sito-menu a,.sito-menu span.chiuso{display:block;padding:8px 10px;border-radius:7px;color:#c9d1de;font-weight:600}
+.sito-menu a:hover{background:#1b2030;color:#fff}
+.sito-menu a.qui{color:var(--ac,#7dd3fc)}
+.sito-menu small{display:block;color:#6d7891;font-weight:500;margin-top:2px;font-size:11.5px;line-height:1.4}
+.sito-menu span.chiuso{color:#6d7891;cursor:default}
+.sito-menu span.chiuso:before{content:'\1F512';margin-right:7px;opacity:.7}
+.sito-bar .sito-sp{flex:1}
+.sito-bar .sito-casa{color:#6d7891;padding:11px 0 11px 12px;white-space:nowrap}
+.sito-bar .sito-casa:hover{color:var(--ac,#7dd3fc)}
+@media(max-width:760px){.sito-marchio{padding-right:6px}.sito-tema>button{padding:11px 8px}
+  .sito-menu{position:static;min-width:0;border:0;box-shadow:none;background:#0f121a}}
+.sito-pie{border-top:1px solid #262d3d;margin-top:56px;padding:26px 20px 34px;color:#6d7891;
+  font:400 12.5px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:center}
+.sito-pie b{color:#a2acc2;font-weight:700}
+.sito-pie a{color:#6d7891;text-decoration:underline}
+.sito-pie .sito-lic{margin-top:6px;font-size:12px}
+@media print{.sito-bar{display:none}.sito-pie{border-color:#bbb;color:#333}}
+</style>
+<nav class="sito-bar" aria-label="Navigazione del sito">
+<a class="sito-marchio" href="../index.html">INNOV2E <b>Strumenti formativi</b></a>
+<div class="sito-tema"><button type="button">Fondamenti</button><div class="sito-menu">
+<a class="" href="../tipi-di-ai.html">I tipi di AI — guida per decision maker<small>La versione distesa della mappa: le stesse cinque distinzioni, spiegate per chi deve decidere.</small></a>
+<a class="" href="../timeline_tecnologica.html">Le tappe che hanno cambiato il mondo<small>Linea del tempo interattiva, dagli automi dell&#x27;antichità a ChatGPT, con vista lineare o logaritmica per mettere in evidenza l&#x27;accelerazione.</small></a>
+<a class="" href="../tipi-di-ai-index.html">Tipi di Intelligenza Artificiale<small>Cinque assi indipendenti per orientarsi tra ANI/AGI/ASI, machine learning, AI debole/forte e il Regolamento UE sull&#x27;IA.</small></a>
+</div></div>
+<div class="sito-tema"><button type="button">Alfabetizzazione sull&#x27;AI</button><div class="sito-menu">
+<a class="" href="../prompt-engineering-struttura.html">L&#x27;anatomia di un prompt<small>Struttura e buone pratiche del prompt: che cosa cambia davvero il risultato e che cosa è folklore.</small></a>
+<a class="" href="../memoria-e-contesto-ai.html">La memoria dell&#x27;AI<small>Un&#x27;AI non ha una memoria. Ne ha sette. E nessuna delle sette funziona come la memoria umana.</small></a>
+<a class="" href="../normativa-ai-scadenze-obblighi.html">La normativa: cosa devo fare, entro quando<small>AI Act, Omnibus, legge 132/2025 e decreto attuativo: obblighi, scadenze e chi è obbligato a cosa.</small></a>
+</div></div>
+<div class="sito-tema"><button type="button">Guide operative</button><div class="sito-menu">
+<a class="" href="../Il%20Libro%20dei%20Prompting.html">Il Libro dei Prompting<small>360 prompt operativi su 8 livelli per un incarico di AI strategy enterprise: dalla prontezza dei dati al change management.</small></a>
+</div></div>
+<div class="sito-tema qui"><button type="button">Strumenti</button><div class="sito-menu">
+<a class="" href="../strumenti/banco-pilastri.html">Banco dei 4 pilastri<small>Smonta un prompt nei suoi quattro elementi portanti e vedi che cosa cambia togliendone uno.</small></a>
+<a class="qui" href="../strumenti/come-vede-il-testo.html">Come il modello vede il testo<small>Il testo diventa token sotto i tuoi occhi: dove si spezzano le parole e quanto costa scrivere in italiano.</small></a>
+<a class="" href="../strumenti/filtro-anonimizzazione.html">Il filtro dell&#x27;anonimizzazione<small>Che cosa togliere da un testo prima di darlo in pasto a un modello, e che cosa resta comunque riconoscibile.</small></a>
+<a class="" href="../strumenti/banco-ruoli.html">Banco dei ruoli<small>Lo stesso compito assegnato a personaggi diversi: quanto cambia davvero la risposta.</small></a>
+<a class="" href="../strumenti/compositore-formato.html">Compositore di formato<small>Costruisci la forma dell&#x27;output — tabella, elenco, schema — e guarda l&#x27;effetto sulla resa.</small></a>
+<a class="" href="../strumenti/officina-catena.html">Officina della catena<small>Spezza un compito complesso in passaggi concatenati e osserva dove la catena si rompe.</small></a>
+<a class="" href="../strumenti/officina-precisione.html">Officina della precisione<small>Prendi una richiesta ambigua e togli l&#x27;ambiguità un pezzo alla volta.</small></a>
+<a class="" href="../strumenti/banco-esempi.html">Banco degli esempi<small>Zero, uno, pochi esempi: quanti ne servono davvero e quando cominciano a nuocere.</small></a>
+<a class="" href="../strumenti/ancoraggio-documento.html">Ancoraggio al documento<small>Come si obbliga un modello a rispondere solo con quello che c&#x27;è nel documento.</small></a>
+<a class="" href="../strumenti/verificatore-ragionamento.html">Verificatore di ragionamento<small>Metti alla prova un ragionamento in più passaggi e scopri dove si inceppa.</small></a>
+<a class="" href="../strumenti/registro-iterazione.html">Registro dell&#x27;iterazione<small>Tieni traccia dei tentativi: che cosa hai cambiato, che cosa è migliorato, che cosa no.</small></a>
+<a class="" href="../strumenti/banco-difese.html">Banco delle difese<small>Prova a far deragliare un prompt e vedi quali difese reggono.</small></a>
+<a class="" href="../strumenti/officina-meta-prompt.html">Officina del meta-prompt<small>Usa il modello per scrivere il prompt: quando funziona e quando gira a vuoto.</small></a>
+<a class="" href="../strumenti/compilatore-schede.html">Compilatore di schede<small>Documenta un prompt perché sia riusabile da un collega fra sei mesi.</small></a>
+<a class="" href="../strumenti/mia-libreria.html">La mia libreria<small>Raccogli i prompt collaudati in una libreria da esportare. Non salva nulla: il file va scaricato.</small></a>
+</div></div>
+<div class="sito-tema"><button type="button">BMAD</button><div class="sito-menu">
+<a class="" href="../bmad-anatomia.html">BMAD: cos&#x27;è e anatomia dell&#x27;installazione<small>Cos&#x27;è BMAD, come si colloca nell&#x27;harness engineering, il vocabolario prima dei comandi e dove finiscono davvero i file.</small></a>
+<a class="" href="../bmad-install-lab.html">BMAD: laboratorio di installazione<small>Nove esercitazioni su macOS e Windows: prerequisiti, primo giro di prova, moduli, orchestratore, personalizzazione, aggiornamento.</small></a>
+</div></div>
+<div class="sito-tema"><button type="button">Corsi in aula</button><div class="sito-menu">
+<span class="chiuso">Prompting avanzato per funzioni — Modulo 1<small>Tronco comune più quattro percorsi verticali, ciascuno con la propria data room e i propri esercizi.</small></span>
+<span class="chiuso">Tecniche di base di prompt engineering<small>Cinque lezioni: dal prompt vago alla libreria di prompt collaudati. Ogni lezione ha slide, laboratorio, strumenti e verifica.</small></span>
+</div></div>
+<span class="sito-sp"></span>
+<a class="sito-casa" href="../index.html">Tutti i contenuti &#8594;</a>
+</nav>
+<script>
+(function(){
+  var bar=document.querySelector('.sito-bar'); if(!bar) return;
+  bar.querySelectorAll('.sito-tema>button').forEach(function(b){
+    b.onclick=function(e){
+      e.stopPropagation();
+      var t=b.parentNode, era=t.classList.contains('aperto');
+      bar.querySelectorAll('.sito-tema').forEach(function(x){x.classList.remove('aperto')});
+      t.classList.toggle('aperto', !era);
+    };
+  });
+  document.addEventListener('click',function(){
+    bar.querySelectorAll('.sito-tema').forEach(function(x){x.classList.remove('aperto')});
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape') bar.querySelectorAll('.sito-tema').forEach(function(x){x.classList.remove('aperto')});
+  });
+})();
+</script><!-- /sito:menu -->
+
+<div class="sitehead">
+  <div class="inner">
+    <span class="rimando-tolto"><img src="data:image/png;base64,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" alt="INNOV2E — innovation to enterprises" width="352" height="129"></span>
+  </div>
+</div>
+
+<div class="sezbar">
+  <div class="inner">
+    <span class="dot"></span>Esercitazioni<span class="qual">· laboratorio e strumenti</span>
+  </div>
+</div>
+
+
+<nav class="topbar">
+  <div class="wrap--wide">
+    <span class="rimando-tolto">Corso</span><span class="sep">/</span>
+    <span class="rimando-tolto">Lezione 1</span><span class="sep">/</span>
+    <span class="here">Come il modello vede il testo</span><span class="sep">·</span>
+    <span class="rimando-tolto">Glossario</span>
+  </div>
+</nav>
+
+<header class="masthead">
+  <div class="wrap--wide">
+    <p class="eyebrow">Strumento didattico · Lezione 1</p>
+    <h1>Come il modello <em>vede</em> il testo</h1>
+    <p class="lede">Scrivete qualcosa e guardatelo frammentare. Le parole comuni restano intere, quelle lunghe o rare si spezzano — ed è lì che si capisce perché si parla di token e non di parole.</p>
+  </div>
+</header>
+
+<section class="band">
+  <div class="wrap--wide">
+
+    <div class="presets">
+      <button data-p="0">Frase comune</button>
+      <button data-p="1">Parole lunghe</button>
+      <button data-p="2">Nomi e sigle</button>
+      <button data-p="3">Numeri e codici</button>
+      <button data-p="4">Inglese e italiano</button>
+    </div>
+
+    <div class="cols">
+      <div>
+        <label class="lab" for="src">Il vostro testo</label>
+        <textarea id="src" spellcheck="false">La riunione di allineamento sulla riorganizzazione dipartimentale è fissata per giovedì.</textarea>
+
+        <div class="count" style="margin-top:1rem">
+          <div><b id="nChar">0</b><span>caratteri</span></div>
+          <div><b id="nWord">0</b><span>parole</span></div>
+          <div><b id="nTok">0</b><span>token stimati</span></div>
+          <div><b id="ratio">0</b><span>token / parola</span></div>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:.95rem">Quanto spazio occupa</h3>
+          <p style="font-size:.9rem; margin:.2rem 0 .6rem; color:var(--ink-soft)">
+            Su una finestra di contesto piccola, tipica delle versioni gratuite:</p>
+          <div class="gauge"><i id="g1"></i></div>
+          <p class="mono" style="font-size:.72rem; margin:0 0 1rem; color:var(--muted)" id="l1"></p>
+
+          <p style="font-size:.9rem; margin:.2rem 0 .6rem; color:var(--ink-soft)">
+            Su una finestra ampia, tipica dei modelli recenti:</p>
+          <div class="gauge wide"><i id="g2"></i></div>
+          <p class="mono" style="font-size:.72rem; margin:0" id="l2"></p>
+        </div>
+      </div>
+
+      <div>
+        <label class="lab">Come lo vede il modello</label>
+        <div class="card">
+          <div class="toks" id="out"></div>
+          <div class="legend">
+            <span><i style="background:var(--accent-pale)"></i>parola intera</span>
+            <span><i style="background:#FCF1DC"></i>parola spezzata</span>
+            <span><i style="background:#F0EDF8"></i>punteggiatura</span>
+            <span><i style="background:#E4E1EE"></i>spazio</span>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:.9rem; border-left:3px solid var(--pending)">
+          <h3 style="font-size:.95rem">Questa è una simulazione</h3>
+          <p style="font-size:.9rem; margin:0">Ogni modello usa un proprio vocabolario di frammentazione, che non è pubblico e cambia da versione a versione. Quello che vedete qui riproduce il <em>comportamento</em> — parole comuni intere, parole rare spezzate, circa un token e mezzo per parola in italiano — non i token esatti di uno strumento specifico. Per la lezione è quello che serve: il conteggio preciso non è mai il punto.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap--wide">
+    <h2>Le tre cose da provare</h2>
+    <div class="grid grid--3">
+      <div class="card">
+        <p><span class="tag">Prova 1</span></p>
+        <h3 style="font-size:1rem">L'italiano costa più dell'inglese</h3>
+        <p style="font-size:.93rem">Scrivete la stessa frase nelle due lingue e confrontate il rapporto token/parola. L'italiano ne consuma di più: parole più lunghe, più flessioni. È il motivo per cui un documento tradotto occupa più spazio dell'originale inglese.</p>
+      </div>
+      <div class="card">
+        <p><span class="tag">Prova 2</span></p>
+        <h3 style="font-size:1rem">Il gergo aziendale è caro</h3>
+        <p style="font-size:.93rem">Provate «riorganizzazione», «internazionalizzazione», «sottoscrizione». Le parole lunghe e specialistiche si spezzano in tre o quattro pezzi. Un testo pieno di gergo occupa molto più spazio di uno scritto in parole comuni — e si legge anche peggio.</p>
+      </div>
+      <div class="card">
+        <p><span class="tag">Prova 3</span></p>
+        <h3 style="font-size:1rem">I codici sono i più costosi</h3>
+        <p style="font-size:.93rem">Incollate una partita IVA, un codice prodotto, un IBAN. Quasi ogni carattere diventa un token. È un dettaglio pratico: un elenco di codici riempie la finestra molto prima di un testo discorsivo della stessa lunghezza.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1.2rem; border-left:3px solid var(--accent)">
+      <h3 style="font-size:.95rem">Cosa portarsi via</h3>
+      <p style="font-size:.95rem; margin:0">Non serve saper contare i token. Serve sapere tre cose: che il limite esiste, che la conversazione lo consuma man mano — comprese le risposte del modello — e che quando si supera, le informazioni date all'inizio perdono peso. Da qui la regola pratica della lezione: <strong>un argomento, una conversazione</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap--wide">
+    <p><span class="rimando-tolto">← Lezione 1</span> · <a href="banco-pilastri.html">Banco dei 4 Pilastri</a> · <a href="filtro-anonimizzazione.html">Filtro dell'anonimizzazione</a></p>
+    <p><span class="rimando-tolto">Indice del corso</span></p>
+      <p class="credit">Tecniche di Base di Prompt Engineering — materiale didattico per i partecipanti - INNOV2E srl</p>
+</div>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+/* Vocabolario semplificato: le parole comuni dell'italiano restano intere,
+   le altre vengono spezzate come farebbe un tokenizzatore reale.          */
+const COMUNI = new Set(("il lo la i gli le un uno una di a da in con su per tra fra e o ma se che chi cui non "+
+"si mi ti ci vi ne è sono era erano sarà essere avere ho hai ha abbiamo avete hanno del della dei delle degli "+
+"al alla ai alle allo dal dalla nel nella nei nelle sul sulla col come quando dove perché più meno molto poco "+
+"tutto tutti ogni questo questa quello quella cosa case casa lavoro tempo anno mese giorno oggi ieri domani "+
+"fare fatto dire detto vedere visto dare dato sapere so bene male grande piccolo nuovo vecchio primo ultimo "+
+"testo prompt modello dato dati email nome ora parte punto stato gruppo mondo vita mano occhio").split(" "));
+
+const SUFFISSI = ["zione","zioni","mente","abile","ibile","aggio","ismo","ista","ante","ente","ale","are","ire",
+                  "ato","ata","ito","ita","oso","osa","ico","ica","ura","ore","tà","ni","re","le","si","no"];
+
+function spezza(p){
+  const low = p.toLowerCase();
+  if(COMUNI.has(low) || p.length <= 4) return [p];
+  if(/^\d[\d.,/-]*$/.test(p))            return p.match(/.{1,2}/g);      // numeri: due cifre per token
+  if(/^[A-Z0-9]{4,}$/.test(p))           return p.match(/.{1,3}/g);      // sigle e codici
+  for(const s of SUFFISSI){
+    if(low.endsWith(s) && p.length - s.length >= 3){
+      const radice = p.slice(0, p.length - s.length);
+      return (radice.length > 6 ? spezza(radice) : [radice]).concat([p.slice(p.length - s.length)]);
+    }
+  }
+  if(p.length > 8) return [p.slice(0,4), p.slice(4,8), p.slice(8)].filter(Boolean);
+  if(p.length > 5) return [p.slice(0,4), p.slice(4)];
+  return [p];
+}
+
+function tokenizza(t){
+  const out = [];
+  const parti = t.match(/[\wÀ-ÿ'’]+|\s+|[^\s\wÀ-ÿ]+/g) || [];
+  for(const p of parti){
+    if(/^\s+$/.test(p)){ out.push({t:p, k:'sp'}); continue; }
+    if(/^[^\s\wÀ-ÿ]+$/.test(p)){ p.split('').forEach(c => out.push({t:c, k:'pun'})); continue; }
+    const pezzi = spezza(p);
+    pezzi.forEach(x => out.push({t:x, k: pezzi.length > 1 ? 'split' : ''}));
+  }
+  return out;
+}
+
+const PRESET = [
+ "La riunione di allineamento sulla riorganizzazione dipartimentale è fissata per giovedì.",
+ "Internazionalizzazione, digitalizzazione e riqualificazione professionale sono le tre direttrici del piano.",
+ "Contattare Giulia Ferrante di Nordest Manifatturiera SpA riguardo alla pratica ANAC-2026-XZ.",
+ "Fattura 2026/00471 del 14/03/2026, importo 12.480,50 euro, IBAN IT60X0542811101000000123456.",
+ "Il team ha completato la review del deployment. La squadra ha completato la revisione del rilascio."
+];
+
+function render(){
+  const testo = $('src').value;
+  const toks  = tokenizza(testo);
+  const utili = toks.filter(x => x.k !== 'sp');
+  const parole = (testo.match(/[\wÀ-ÿ'’]+/g) || []).length;
+  const nTok = toks.length;
+
+  $('out').innerHTML = toks.map(x =>
+    x.k === 'sp' ? '<span class="tk sp">·</span>'
+                 : `<span class="tk ${x.k}">${x.t.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</span>`
+  ).join('');
+
+  $('nChar').textContent = testo.length;
+  $('nWord').textContent = parole;
+  $('nTok').textContent  = nTok;
+  $('ratio').textContent = parole ? (utili.length / parole).toFixed(1) : '0';
+
+  const set = (g, l, cap, nome) => {
+    const pct = Math.min(100, nTok / cap * 100);
+    $(g).style.width = pct.toFixed(3) + '%';
+    $(l).textContent = pct < 0.1
+      ? `meno dello 0,1% di ${nome}`
+      : `${pct.toFixed(pct < 1 ? 2 : 1)}% di ${nome}`;
+  };
+  set('g1','l1',  8000,  '8.000 token');
+  set('g2','l2', 200000, '200.000 token');
+}
+
+$('src').addEventListener('input', render);
+document.querySelectorAll('.presets button').forEach(b => {
+  b.onclick = () => { $('src').value = PRESET[+b.dataset.p]; render(); $('src').focus(); };
+});
+render();
+</script>
+
+<style>
+.rimando-tolto{color:inherit;opacity:.75}
+.tool-provenienza{max-width:70rem;margin:2.5rem auto 0;padding:14px 18px;border:1px dashed #333c52;
+  border-radius:10px;background:rgba(255,255,255,.03);color:#8a93a6;
+  font:400 12.5px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.tool-provenienza b{color:#c9d1de}
+</style>
+<div class="tool-provenienza">Questo strumento fa parte di <b>Tecniche di base di prompt engineering</b>, lezione 1.
+Qui è pubblicato da solo: gli esercizi, i materiali e la conduzione fanno parte del corso.</div>
+<!-- sito:pie -->
+<footer class="sito-pie"><b>INNOV2E</b> &middot; aggiornato al 20 agosto 2026 &middot; <a href="https://innov2e.github.io/I2ETools/strumenti/come-vede-il-testo.html">versione online sempre aggiornata</a><div class="sito-lic">Uso consentito con citazione della fonte. Vietata la rivendita.</div></footer>
+<!-- /sito:pie -->
+</body>
+</html>
