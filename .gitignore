@@ -1,3 +1,9 @@
 # Tooling locale — non fa parte del sito pubblicato
 .claude/
 _bmad/
+
+# macOS
+.DS_Store
+
+# Template di lavoro — non pubblicati
+docs/templates/

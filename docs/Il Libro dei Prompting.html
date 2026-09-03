@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="360 prompt operativi su 8 livelli. Il livello analitico di un incarico di AI strategy da 1,5 milioni di dollari della Big Consulting, ricostruito come prompt copia-e-incolla.">
+<title>Il Libro dei Prompting — Il Prompt Book dei 360 Framework della Big Consulting</title>
+<style>
+:root{
+  --color-navy:#0C2340; --color-navy-light:#1a3a5c;
+  --color-gold:#C99700; --color-gold-light:#d4a820; --color-gold-muted:#AE9142;
+  --color-orange:#E8611A; --color-orange-hover:#d45510; --color-orange-deep:#C4470E;
+  --color-bg:#FDFCFA; --color-bg-alt:#F5F3F0; --color-bg-warm:#FAF8F5; --color-card-bg:#fff;
+  --color-text:#0C2340; --color-text-muted:#5a6474; --color-text-light:#8a919c;
+  --color-border:#e8e4de; --color-border-light:#f0ece6;
+  --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+  --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --content-width:760px; --max-width:1200px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:var(--font-serif);font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.gold-bar{height:4px;background:linear-gradient(90deg,var(--color-gold) 0%,var(--color-gold-light) 50%,var(--color-orange) 100%)}
+.container{max-width:var(--max-width);margin:0 auto;padding:0 1.5rem}
+.content-width{max-width:var(--content-width)}
+
+/* header */
+.site-header{background:var(--color-card-bg);border-bottom:1px solid var(--color-border);position:sticky;top:0;z-index:50}
+.nav-container{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-top:1rem;padding-bottom:1rem}
+.logo{font-family:var(--font-serif);font-size:1.3rem;font-weight:700;color:var(--color-navy);text-decoration:none;letter-spacing:.01em}
+.logo-accent{color:var(--color-orange)}
+.nav-links{display:flex;gap:1.5rem;list-style:none;margin:0;padding:0}
+.nav-links a{font-family:var(--font-sans);font-size:.85rem;color:var(--color-text-muted);text-decoration:none;letter-spacing:.02em}
+.nav-links a:hover{color:var(--color-orange)}
+@media(max-width:760px){.nav-links{display:none}}
+
+/* hero */
+.read-hero{padding:4rem 0 2rem;background:var(--color-bg-warm);border-bottom:1px solid var(--color-border-light)}
+.eyebrow{font-family:var(--font-sans);font-size:.72rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--color-gold-muted);margin:0 0 1rem}
+.read-hero h1{font-family:var(--font-serif);font-size:clamp(2rem,4.5vw,3rem);line-height:1.15;font-weight:700;color:var(--color-navy);margin:0 0 1rem}
+.read-description{font-size:1.15rem;color:var(--color-text-muted);font-style:italic;margin:0}
+
+/* strip */
+.read-book-strip{background:var(--color-navy);color:#fff;padding:1.75rem 0}
+.read-book-strip .content-width{text-align:center}
+.read-book-line{font-family:var(--font-serif);font-size:1.05rem;margin:0 0 1rem;color:#f3f1ee}
+.read-book-cta{display:inline-block;background:var(--color-orange);color:#fff;text-decoration:none;font-family:var(--font-sans);font-weight:600;font-size:.95rem;padding:.8rem 1.6rem;border-radius:3px}
+.read-book-cta:hover{background:var(--color-orange-hover)}
+.read-book-note{font-family:var(--font-sans);font-size:.78rem;color:#b9c2cd;margin:.9rem 0 0}
+
+/* toc */
+.toc{background:var(--color-card-bg);border:1px solid var(--color-border);border-top:3px solid var(--color-gold);border-radius:4px;padding:1.5rem 1.75rem;margin:3rem auto 0}
+.toc h2{font-family:var(--font-sans);font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--color-gold-muted);margin:0 0 .9rem}
+.toc ol{margin:0;padding-left:1.2rem;font-size:.98rem}
+.toc li{margin:.35rem 0}
+.toc a{color:var(--color-navy);text-decoration:none;border-bottom:1px solid transparent}
+.toc a:hover{color:var(--color-orange);border-bottom-color:var(--color-orange)}
+
+/* article */
+.read-content-section{padding:2rem 0 4rem}
+.magnet-article{font-size:1.05rem}
+.magnet-article h2{font-family:var(--font-serif);font-size:clamp(1.6rem,3vw,2.1rem);font-weight:700;color:var(--color-navy);line-height:1.2;margin:3rem 0 1rem;padding-top:.5rem;scroll-margin-top:5rem}
+.magnet-article p{margin:0 0 1.1rem}
+.magnet-article ul,.magnet-article ol{margin:0 0 1.2rem;padding-left:1.4rem}
+.magnet-article li{margin:.3rem 0}
+.magnet-article hr{border:0;border-top:1px solid var(--color-border);margin:2.75rem 0}
+.magnet-article strong{color:var(--color-navy)}
+.magnet-article a{color:var(--color-orange);text-decoration:none;border-bottom:1px solid rgba(232,97,26,.4)}
+.magnet-article a:hover{border-bottom-color:var(--color-orange)}
+
+/* tables */
+.table-wrap{overflow-x:auto;margin:0 0 1.5rem;border:1px solid var(--color-border);border-radius:4px;background:var(--color-card-bg)}
+table{border-collapse:collapse;width:100%;font-family:var(--font-sans);font-size:.85rem}
+th,td{text-align:left;padding:.7rem .9rem;border-bottom:1px solid var(--color-border-light);vertical-align:top}
+thead th{background:var(--color-bg-alt);color:var(--color-navy);font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+td:nth-child(2){white-space:nowrap}
+
+/* code blocks */
+.code-block-wrapper{position:relative;margin:0 0 1.75rem}
+.code-block-wrapper pre{background:#24292e;color:#e1e4e8;overflow-x:auto;margin:0;padding:1.25rem 1.25rem;border-radius:4px;font-family:var(--font-mono);font-size:.82rem;line-height:1.55;tab-size:2}
+.code-block-wrapper code{font-family:inherit;white-space:pre}
+.copy-btn{position:absolute;top:.6rem;right:.6rem;background:#2f363d;color:#c9d1d9;border:1px solid #444c56;border-radius:3px;padding:.35rem .55rem;cursor:pointer;font-family:var(--font-sans);font-size:.7rem;line-height:1;display:flex;align-items:center;gap:.35rem;opacity:.75;transition:opacity .15s,background .15s}
+.copy-btn:hover{opacity:1;background:#3a424a}
+.copy-btn.copied{background:var(--color-orange);border-color:var(--color-orange);color:#fff;opacity:1}
+.prompt-label{font-family:var(--font-sans);font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--color-gold-muted);margin:0 0 .5rem}
+.callout{background:var(--color-bg-alt);border-left:3px solid var(--color-gold);padding:1rem 1.25rem;margin:0 0 1.75rem;font-size:.98rem}
+.callout p{margin:0}
+
+/* final cta */
+.final-cta{padding:4rem 0 3rem;background:var(--color-bg-alt)}
+.final-cta-inner{max-width:720px;margin:0 auto;text-align:center;background:var(--color-card-bg);border:1px solid var(--color-border);border-top:4px solid var(--color-gold);padding:2.5rem 2rem 2rem;border-radius:4px}
+.final-cta-eyebrow{font-family:var(--font-sans);font-size:.72rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--color-gold-muted);margin-bottom:1.25rem}
+.final-cta-headline{font-family:var(--font-serif);font-size:clamp(1.8rem,3vw,2.3rem);font-weight:700;color:var(--color-navy);margin:0 0 1rem;line-height:1.2}
+.final-cta-subtitle{font-family:var(--font-serif);font-style:italic;font-size:1.1rem;color:var(--color-text-muted);line-height:1.5;margin:0 0 1.5rem}
+.cta-buttons{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+.btn-primary,.btn-secondary{font-family:var(--font-sans);font-size:.95rem;font-weight:600;padding:.85rem 1.5rem;border-radius:3px;text-decoration:none;display:inline-block}
+.btn-primary{background:var(--color-orange);color:#fff}
+.btn-primary:hover{background:var(--color-orange-hover)}
+.btn-secondary{background:transparent;color:var(--color-navy);border:1px solid var(--color-border)}
+.btn-secondary:hover{border-color:var(--color-navy)}
+
+/* footer */
+.site-footer{background:var(--color-navy);color:#c8d0da;margin-top:0}
+.footer-content{padding:2.5rem 1.5rem}
+.footer-top{display:flex;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;align-items:baseline}
+.footer-top .logo{color:#fff}
+.footer-bottom{margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid rgba(255,255,255,.12);font-family:var(--font-sans);font-size:.78rem;color:#8e9aa8}
+.footer-bottom a{color:#c8d0da}
+
+/* back to top */
+#toTop{position:fixed;right:1rem;bottom:1rem;background:var(--color-navy);color:#fff;border:0;border-radius:50%;width:42px;height:42px;font-size:1.1rem;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .2s;z-index:60}
+#toTop.show{opacity:.85;pointer-events:auto}
+#toTop:hover{opacity:1}
+@media print{.site-header,.read-book-strip,#toTop,.copy-btn,.final-cta{display:none}body{font-size:11pt}}
+</style>
+</head>
+<body>
+<div class="gold-bar"></div>
+
+<header class="site-header">
+  <nav class="container nav-container">
+    <a href="#top" class="logo">Il Libro <span class="logo-accent">dei Prompting</span></a>
+    <ul class="nav-links">
+      <li><a href="#perche-esiste">Perché esiste</a></li>
+      <li><a href="#come-usarlo">Come usarlo</a></li>
+      <li><a href="#lo-stack">Lo stack</a></li>
+      <li><a href="#settimana-reale">La settimana</a></li>
+      <li><a href="#due-strade">Due strade</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+<section class="read-hero">
+  <div class="container content-width">
+    <p class="eyebrow">La tua guida</p>
+    <h1>Il Prompt Book dei 360 Framework della Big Consulting</h1>
+    <p class="read-description">360 prompt operativi su 8 livelli — il livello analitico di un incarico di AI strategy da 1,5 milioni di dollari della Big Consulting, ricostruito come prompt copia-e-incolla.</p>
+  </div>
+</section>
+
+<section class="read-book-strip">
+  <div class="container content-width">
+    <p class="read-book-line">La guida completa è qui sotto, gratuita. Quando sei pronto a usarla con il tuo team di leadership:</p>
+    <a href="https://cal.com/grant-baldwin/calendar?utm_source=guide&amp;utm_campaign=360-prompt-book" class="read-book-cta">Prenota 30 minuti →</a>
+    <p class="read-book-note">Niente slide. Niente pitch. Solo una conversazione.</p>
+  </div>
+</section>
+
+<section class="read-content-section">
+<div class="container content-width">
+
+<nav class="toc" aria-label="Indice">
+  <h2>Indice</h2>
+  <ol>
+    <li><a href="#perche-esiste">Perché esiste questa guida</a></li>
+    <li><a href="#come-usarlo">Come usare questo Prompt Book</a></li>
+    <li><a href="#lo-stack">Lo stack dei 360 prompt</a></li>
+    <li><a href="#livello-1">Livello 1: Prontezza all'AI e realtà dei dati</a></li>
+    <li><a href="#livello-2">Livello 2: Mappatura dei processi e analisi dei passaggi di consegna</a></li>
+    <li><a href="#livello-3">Livello 3: Prioritizzazione dei casi d'uso e stima del valore</a></li>
+    <li><a href="#livello-4">Livello 4: Decisioni make-or-buy</a></li>
+    <li><a href="#livello-5">Livello 5: Progettazione del target operating model</a></li>
+    <li><a href="#livello-6">Livello 6: Governance, rischio e regole di escalation</a></li>
+    <li><a href="#livello-7">Livello 7: Perimetro del pilota e sequenza di rilascio</a></li>
+    <li><a href="#livello-8">Livello 8: Change management, adozione e allineamento esecutivo</a></li>
+    <li><a href="#settimana-reale">Come far girare il sistema in una settimana reale</a></li>
+    <li><a href="#cosa-viene-dopo">Cosa viene dopo</a></li>
+    <li><a href="#su-geniant">Chi è geniant</a></li>
+    <li><a href="#due-strade">Due strade per andare avanti</a></li>
+  </ol>
+</nav>
+
+<article class="magnet-article">
+
+<p><em>Il livello analitico di un incarico di AI strategy enterprise da 1,5 milioni di dollari, ricostruito come prompt copia-e-incolla per chi opera sul campo.</em><br>
+Di Grant Baldwin — geniant</p>
+
+<hr>
+
+<h2 id="perche-esiste">Perché esiste questa guida</h2>
+<p>1,5 milioni di dollari.</p>
+<p>È quello che la Big Consulting può farsi pagare per il solo livello analitico di un incarico di AI strategy enterprise.</p>
+<p>Non il sistema in produzione. Non il cambiamento dell'operating model. Non il rilascio.</p>
+<p>Il livello analitico: interviste agli stakeholder, modelli di maturità, mappe di processo, issue tree, matrici di prioritizzazione, heat map di prontezza, logica make-or-buy, slide di governance e roadmap dei piloti.</p>
+<p>Centinaia di pagine di pensiero strutturato, impacchettate benissimo, consegnate lentamente e prezzate come se i framework stessi fossero ancora una rarità.</p>
+<p>Non lo sono.</p>
+<p>Questa è la parte scomoda.</p>
+<p>I framework stanno diventando asset di massa. L'analisi di primo passaggio sta diventando output di massa. La vecchia macchina della consulenza è stata costruita per un mondo in cui il lavoro necessario a sintetizzare 200 documenti, estrarre pattern dalle interviste, confrontare casi d'uso e redigere raccomandazioni pronte per il vertice era costoso.</p>
+<p>Quel lavoro sta cambiando. Claude può fare il primo passaggio. ChatGPT può strutturare le opzioni. L'AI può trasformare input operativi disordinati in analisi utilizzabili più in fretta di quanto un team di consulenti junior riesca a fissare il primo giro di interviste.</p>
+<p>Questo non significa che l'AI sostituisca la trasformazione.</p>
+<p>Significa che la parte costosa della trasformazione si sposta.</p>
+<p>Il valore non sta più nel produrre la prima versione della matrice. Il valore sta nel capire se quella matrice ti sta mentendo.</p>
+<p>Un prompt può costruire l'issue tree. Non può dirti quale dirigente bloccherà silenziosamente l'operating model perché il nuovo flusso di lavoro gli toglie un punto di controllo.</p>
+<p>Un prompt può ordinare i casi d'uso. Non può dirti quale team in prima linea ha abbastanza fiducia per sopravvivere all'impatto con un flusso assistito dall'AI.</p>
+<p>Un prompt può redigere la roadmap. Non può sostenere il costo politico di dire al consiglio che l'agente customer-facing luccicante deve aspettare finché i dati di sinistri, finance o supply chain non sono sistemati.</p>
+<p>Quello è il confine.</p>
+<p>Il livello di analisi costa meno ogni settimana che passa.</p>
+<p>Il livello di giudizio vale di più ogni settimana che passa.</p>
+<p>Questa guida ti dà il livello analitico. Non come teoria. Come 360 prompt su tutto lo stack di AI strategy della Big Consulting.</p>
+<p>Usali per comprimere il lavoro.</p>
+<p>Usali per far emergere i vincoli veri.</p>
+<p>Usali per arrivare all'unica parte che conta davvero:</p>
+<p><strong>Capire il lavoro. Costruire il target operating model. Costruire lo strumento.</strong></p>
+<p>In quest'ordine.</p>
+
+<hr>
+
+<h2 id="come-usarlo">Come usare questo Prompt Book</h2>
+<p>Questi prompt sono passaggi diagnostici. L'output non è la risposta. L'output è un'ipotesi strutturata che una figura senior può contestare, riscrivere, difendere o uccidere.</p>
+<p>Se dai in pasto al modello riassunti ripuliti, otterrai sciocchezze ripulite. Se gli dai gli artefatti reali del business, otterrai qualcosa di molto più vicino alla verità.</p>
+<p>Usa input reali:</p>
+<ul>
+<li>Procedure operative (SOP) e documentazione di processo</li>
+<li>Organigrammi e job description</li>
+<li>Mappe dei sistemi e diagrammi di architettura</li>
+<li>Dizionari dati ed export di esempio</li>
+<li>Documenti di governance e policy di approvazione</li>
+<li>Verbali di riunione e trascrizioni delle interviste agli stakeholder</li>
+<li>Log di escalation e report delle eccezioni</li>
+<li>Contratti fornitori e statement of work</li>
+<li>Metriche operative, SLA, backlog e report di qualità</li>
+<li>Presentazioni di strategia passate, materiali per il board e piani di trasformazione</li>
+</ul>
+<p>Esegui le sezioni in ordine quando stai costruendo una AI strategy completa. Ogni livello alimenta il successivo: prontezza, mappatura dei processi, stima del valore, logica make-or-buy, target operating model, governance, sequenza dei piloti e adozione.</p>
+<p>Non saltare il passaggio di revisione umana. Chiedi cosa ha assunto il modello, quale raccomandazione è politicamente corretta ma operativamente impossibile e cosa si romperebbe se provassi a rilasciare il mese prossimo.</p>
+
+<hr>
+
+<h2 id="lo-stack">Lo stack dei 360 prompt</h2>
+<p>Questo Prompt Book è organizzato in otto livelli. La libreria completa contiene 360 prompt. Questa guida ti dà il sistema operativo, l'indice dello stack completo e i prompt rappresentativi che puoi usare da subito.</p>
+
+<div class="table-wrap">
+<table>
+<thead><tr><th>Livello</th><th>N. prompt</th><th>Output principale</th></tr></thead>
+<tbody>
+<tr><td>1. Prontezza all'AI e realtà dei dati</td><td>40</td><td>Heat map di prontezza, registro dei rischi sui dati, backlog di rimedio</td></tr>
+<tr><td>2. Mappatura dei processi e analisi dei passaggi di consegna</td><td>45</td><td>Mappa del processo as-is, inventario dei passaggi di consegna, candidato to-be</td></tr>
+<tr><td>3. Prioritizzazione dei casi d'uso e stima del valore</td><td>50</td><td>Portafoglio dei casi d'uso, modello di valore, shortlist dei piloti</td></tr>
+<tr><td>4. Decisioni make-or-buy</td><td>35</td><td>Raccomandazione build / buy / partner / ridisegno di processo</td></tr>
+<tr><td>5. Progettazione del target operating model</td><td>40</td><td>Operating model uomo + agente e diritti decisionali</td></tr>
+<tr><td>6. Governance, rischio e regole di escalation</td><td>35</td><td>Matrice di approvazione, regole di audit, policy di escalation</td></tr>
+<tr><td>7. Perimetro del pilota e sequenza di rilascio</td><td>45</td><td>Charter del pilota a 60 giorni e roadmap di rilascio</td></tr>
+<tr><td>8. Change management, adozione e allineamento esecutivo</td><td>70</td><td>Mappa degli stakeholder, piano di adozione, narrativa di allineamento esecutivo</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Il punto non è eseguire tutti e 360 i prompt in un'unica sessione maratona. Il punto è sapere quale passaggio diagnostico usare quando il business si blocca.</p>
+<p>Se la lista dei casi d'uso è gonfia, usa il Livello 3. Se il dibattito sul fornitore è emotivo, usa il Livello 4. Se il pilota si arena in legal, security o operations, usa il Livello 6. Se tutti dicono di sostenere l'AI ma nessuno cambia comportamento, usa il Livello 8.</p>
+<p>È così che chi opera sul campo usa i prompt.</p>
+<p>Non come risposte.</p>
+<p>Come test di stress.</p>
+
+<hr>
+
+<h2 id="livello-1">Livello 1: Prontezza all'AI e realtà dei dati</h2>
+<p><strong>Numero di prompt:</strong> 40</p>
+<p><strong>Che cosa sostituisce:</strong> la diagnosi di prontezza da 75.000-250.000 dollari che racconta al vertice quello che la prima linea già sa: i dati sono incoerenti, il processo non è documentato e nessuno è d'accordo su chi possieda la decisione.</p>
+<p><strong>Che cosa produce questo livello:</strong> una heat map di prontezza, un registro dei rischi di integrità dei dati e un backlog di rimedio che separa «l'AI non è pronta» da «questo specifico processo non è pronto».</p>
+<p>La maggior parte delle aziende si pone la domanda sbagliata sulla prontezza.</p>
+<p>Chiedono: «Siamo pronti per l'AI?»</p>
+<p>Quella domanda è troppo ampia per essere utile.</p>
+<p>La domanda giusta è: <strong>quali processi sono pronti per quale livello di delega all'AI e sotto quali vincoli di governance?</strong></p>
+
+<p><strong>L'indice dei 40 prompt</strong></p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Cluster di prompt</th><th>N.</th><th>Da usare quando</th></tr></thead>
+<tbody>
+<tr><td>Inventario delle fonti dati</td><td>5</td><td>Devi sapere quali sistemi alimentano il processo</td></tr>
+<tr><td>Rilevamento dei conflitti tra sistemi di riferimento</td><td>5</td><td>Team diversi si fidano di dati diversi</td></tr>
+<tr><td>Punteggio di qualità e completezza dei dati</td><td>6</td><td>I dati esistono, ma nessuno sa se sono utilizzabili</td></tr>
+<tr><td>Valutazione della chiarezza di processo</td><td>5</td><td>Il processo è troppo informale per un'automazione sicura</td></tr>
+<tr><td>Mappatura dei diritti decisionali</td><td>4</td><td>L'output dell'AI innescherà scontri sulle approvazioni</td></tr>
+<tr><td>Prontezza della governance</td><td>5</td><td>Legal, security, compliance o auditabilità non sono chiari</td></tr>
+<tr><td>Fiducia degli utenti e prontezza all'adozione</td><td>4</td><td>La prima linea non si fida degli input o degli output</td></tr>
+<tr><td>Progettazione del backlog di rimedio</td><td>6</td><td>Ti serve una lista concreta di correzioni prima del pilota</td></tr>
+</tbody>
+</table>
+</div>
+
+<p class="prompt-label">Prompt 1.1 — Scansione dei conflitti tra sistemi di riferimento</p>
+<div class="code-block-wrapper"><pre><code>Sei un senior enterprise data strategist e stai preparando una valutazione
+di prontezza all'AI per un processo in produzione.
+
+Processo in esame: [NOME DEL PROCESSO]
+
+Input che ti fornisco:
+- Mappa dei sistemi
+- Dizionario dati o export di esempio
+- SOP o documentazione di processo
+- Eventuali note su override manuali, gestione delle eccezioni o record duplicati
+
+[INCOLLA QUI GLI ARTEFATTI]
+
+Identifica ogni punto in cui questo processo dipende da un sistema di
+riferimento. Per ciascun sistema fornisci:
+
+1. L'oggetto dato specifico utilizzato, ad esempio cliente, ordine, sinistro,
+   fattura, conto, polizza, dipendente o asset.
+2. Il sistema attualmente considerato autorevole.
+3. Qualsiasi sistema concorrente che sembri contenere dati sovrapposti o in
+   conflitto.
+4. La decisione operativa che verrebbe compromessa se il dato fosse errato.
+5. Il rischio di deployment dell'AI creato dal conflitto.
+6. Il rimedio minimo richiesto prima che un agente AI possa usare questo dato
+   in produzione.
+
+Formato di output: una tabella intitolata "Registro dei conflitti tra sistemi
+di riferimento". Chiudi con una sezione chiamata "Conflitti dati fatali" che
+elenchi i conflitti che dovrebbero bloccare un pilota AI.</code><button class="copy-btn" aria-label="Copia negli appunti">Copia</button></pre></div>
+
+<p class="prompt-label">Prompt 1.2 — Heat map di prontezza all'AI</p>
+<div class="code-block-wrapper"><pre><code>Sei una figura senior di trasformazione enterprise. Assegna un punteggio di
+prontezza all'AI alle funzioni o ai processi rappresentati negli artefatti
+qui sotto.
+
+Input:
+- Organigramma
+- Documentazione di processo
+- Metriche operative
+- Policy di governance
+- Punti di dolore noti o note delle interviste agli stakeholder
+
+[INCOLLA QUI GLI ARTEFATTI]
+
+Costruisci una Heat Map di Prontezza all'AI su queste cinque dimensioni:
+
+1. Qualità dei dati: completezza, coerenza, freschezza e accessibilità.
+2. Chiarezza di processo: se il lavoro è documentato, ripetibile e consapevole
+   delle eccezioni.
+3. Diritti decisionali: se l'autorità di approvazione è esplicita e accettata.
+4. Maturità della governance: se le regole di audit, compliance, privacy e
+   rischio sono chiare.
+5. Fiducia degli utenti: se le persone che fanno il lavoro credono agli input
+   e agli output del sistema.
+
+Assegna a ogni dimensione un punteggio Rosso, Giallo o Verde. Non fare la
+media dei punteggi. Un singolo Rosso su dati, diritti decisionali o governance
+può bloccare la produzione.
+
+Formato di output: tabella heat map per processo o funzione. Chiudi con i
+raggruppamenti "Pronto per il pilota", "Pronto dopo il rimedio" e "Non pronto".</code><button class="copy-btn" aria-label="Copia negli appunti">Copia</button></pre></div>
+
+<div class="callout"><p><strong>Che cosa l'AI non può fare qui:</strong> l'AI non può dirti che il sistema di riferimento ufficiale viene ignorato dal team perché tutti sanno che dopo le 15 è obsoleto. Non può sapere che il VP che possiede i dati rotti combatterà qualunque raccomandazione che esponga il problema. I prompt fanno emergere la realtà della prontezza. Sta a una figura senior decidere se l'organizzazione è disposta ad affrontarla.</p></div>
+
+<hr>
+
+<h2 id="livello-2">Livello 2: Mappatura dei processi e analisi dei passaggi di consegna</h2>
+<p><strong>Numero di prompt:</strong> 45</p>
+<p><strong>Che cosa sostituisce:</strong> il lavoro di process discovery che di solito si trasforma in swimlane, post-it e una lucida presentazione dello stato attuale.</p>
+<p><strong>Che cosa produce questo livello:</strong> una mappa di processo reale: trigger, passaggi di consegna, decisioni, eccezioni, sistemi, attriti sul tempo di ciclo e giudizio umano nascosto.</p>
+<p>È qui che fallisce la maggior parte delle strategie AI enterprise.</p>
+<p>Provano a rilasciare agenti dentro un lavoro che nessuno ha mai mappato davvero.</p>
+<p>Il processo esiste a frammenti. Un team ha la SOP. Un altro team conosce le eccezioni. Un senior manager conosce la vera regola di approvazione. Un analista di prima linea sa quale campo è sempre sbagliato. Il processo ufficiale è finzione.</p>
+<p>L'AI non può sistemare un processo non mappato. Ne accelera la confusione.</p>
+
+<p><strong>L'indice dei 45 prompt</strong></p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Cluster di prompt</th><th>N.</th><th>Da usare quando</th></tr></thead>
+<tbody>
+<tr><td>Estrazione del processo as-is</td><td>7</td><td>Hai SOP, note o interviste e ti serve una mappa di processo</td></tr>
+<tr><td>Analisi dei trigger e delle prese in carico</td><td>4</td><td>Il lavoro entra nel sistema da troppi canali</td></tr>
+<tr><td>Inventario dei passaggi di consegna</td><td>6</td><td>Il tempo di ciclo si perde tra i team</td></tr>
+<tr><td>Estrazione dei punti decisionali</td><td>5</td><td>Il processo dipende da un giudizio che nessuno ha documentato</td></tr>
+<tr><td>Analisi di eccezioni e rilavorazioni</td><td>6</td><td>Il percorso normale non è il percorso reale</td></tr>
+<tr><td>Mappatura dei punti di contatto con i sistemi</td><td>5</td><td>Gli operatori saltano da uno strumento all'altro</td></tr>
+<tr><td>Rilevamento di colli di bottiglia e attese</td><td>6</td><td>Il lavoro resta fermo ma nessuno sa perché</td></tr>
+<tr><td>Processo to-be candidato</td><td>6</td><td>Ti serve una prima bozza uomo + agente</td></tr>
+</tbody>
+</table>
+</div>
+
+<p class="prompt-label">Prompt 2.1 — Estrattore del processo as-is</p>
+<div class="code-block-wrapper"><pre><code>Sei un senior workflow intelligence consultant. Converti gli artefatti qui
+sotto in una mappa del processo as-is per [NOME DEL PROCESSO].
+
+Input:
+- SOP
+- Materiali di formazione
+- Log dei ticket o casi di esempio
+- Note delle interviste agli stakeholder
+- Screenshot dei sistemi o elenchi di campi, se disponibili
+
+[INCOLLA QUI GLI ARTEFATTI]
+
+Costruisci il processo as-is con le colonne seguenti:
+
+1. Numero di step.
+2. Trigger o input.
+3. Ruolo responsabile.
+4. Sistema utilizzato.
+5. Decisione presa.
+6. Dati richiesti.
+7. Output prodotto.
+8. Destinatario del passaggio di consegna.
+9. Eccezioni note.
+10. Realtà non documentata probabile, dedotta dagli artefatti.
+
+Non ripulire il processo. Non ridisegnarlo. Mostra lo stato attuale
+disordinato così come sembra funzionare oggi.
+
+Chiudi con una sezione intitolata "Domande per la prima linea" che elenchi le
+10 domande da porre prima di fidarsi di questa mappa.</code><button class="copy-btn" aria-label="Copia negli appunti">Copia</button></pre></div>
+
+<div class="callout"><p><strong>Che cosa l'AI non può fare qui:</strong> l'AI può dedurre un processo dai documenti. Non può sapere quale scorciatoia non documentata stia proteggendo il business dal limite di un sistema. Non può dirti che l'attesa più lunga esiste perché una persona senior si rifiuta di delegare. La mappa ti porta vicino. È il campo che ti dice la verità.</p></div>
+
+<hr>
+
+<h2 id="livello-3">Livello 3: Prioritizzazione dei casi d'uso e stima del valore</h2>
+<p><strong>Numero di prompt:</strong> 50</p>
+<p><strong>Che cosa sostituisce:</strong> l'inventario dei casi d'uso, la matrice impatto/fattibilità e il lavoro di stima del ROI che riempiono la parte centrale di ogni presentazione di AI strategy.</p>
+<p><strong>Che cosa produce questo livello:</strong> un portafoglio di casi d'uso ripulito, un modello di valore e una shortlist di piloti ancorata alla realtà operativa.</p>
+<p>La maggior parte delle liste di casi d'uso AI enterprise sono liste dei desideri.</p>
+<p>Mescolano problemi di produzione con demo, progetti prediletti dei dirigenti, suggerimenti dei fornitori e vaghe «opportunità di efficienza». Tutto sembra prezioso perché nulla è stato passato al setaccio dei vincoli.</p>
+<p>Il compito di questo livello è separare l'utile dall'appariscente.</p>
+<p>Il miglior primo caso d'uso non è sempre il più grande. È quello con abbastanza valore, fiducia e qualità dei dati, e con abbastanza poche dipendenze, da poter davvero andare in porto.</p>
+
+<p><strong>L'indice dei 50 prompt</strong></p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Cluster di prompt</th><th>N.</th><th>Da usare quando</th></tr></thead>
+<tbody>
+<tr><td>Deduplicazione dei casi d'uso</td><td>5</td><td>La lista contiene idee sovrapposte con nomi diversi</td></tr>
+<tr><td>Stima del valore di business</td><td>8</td><td>Ti serve la logica su tempo di ciclo, costo, qualità, throughput o ricavi</td></tr>
+<tr><td>Punteggio di fattibilità</td><td>7</td><td>I vincoli tecnici e sui dati non sono chiari</td></tr>
+<tr><td>Punteggio di rischio di adozione</td><td>6</td><td>Il cambiamento di comportamento degli utenti può uccidere il valore</td></tr>
+<tr><td>Mappatura delle dipendenze</td><td>5</td><td>Il caso d'uso richiede prima altre correzioni</td></tr>
+<tr><td>Separazione demo / produzione</td><td>5</td><td>Le idee luccicanti stanno soffocando il lavoro rilasciabile</td></tr>
+<tr><td>Prioritizzazione di portafoglio</td><td>8</td><td>Il vertice ha bisogno di una shortlist ordinata</td></tr>
+<tr><td>Selezione dei candidati a pilota</td><td>6</td><td>Ti servono le prime tre scommesse</td></tr>
+</tbody>
+</table>
+</div>
+
+<p class="prompt-label">Prompt 3.1 — Modello di stima del valore</p>
+<div class="code-block-wrapper"><pre><code>Sei una figura di trasformazione AI con mentalità da CFO. Dimensiona il
+valore di business dei casi d'uso qui sotto.
+
+Input:
+- Portafoglio dei casi d'uso ripulito
+- Metriche operative
+- Ipotesi sul costo del lavoro
+- Tassi di errore / rilavorazione
+- Dati su tempo di ciclo o throughput
+- Eventuali metriche di ricavo o di impatto sul cliente
+
+[INCOLLA QUI GLI ARTEFATTI]
+
+Per ogni caso d'uso stima:
+
+1. Volume attuale del processo.
+2. Costo o tempo attuale per transazione.
+3. Tasso attuale di errore, rilavorazione o eccezione.
+4. Intervallo realistico di impatto dell'AI: conservativo, atteso, aggressivo.
+5. Intervallo di valore annualizzato.
+6. Intervallo di costo di implementazione una tantum.
+7. Intervallo di costo operativo ricorrente.
+8. Periodo di payback.
+9. Livello di confidenza nella stima.
+10. Dati mancanti necessari per aumentare la confidenza.
+
+Formato di output: tabella di stima del valore. Sii conservativo. Se i dati
+sono deboli, dillo.</code><button class="copy-btn" aria-label="Copia negli appunti">Copia</button></pre></div>
+
+<p class="prompt-label">Prompt 3.2 — Raccomandazione dei primi tre piloti</p>
+<div class="code-block-wrapper"><pre><code>Stai selezionando i primi piloti AI per un'azienda che ha bisogno di valore
+misurabile, non di teatro.
+
+Input:
+- Portafoglio dei casi d'uso ripulito
+- Modello di stima del valore
+- Heat Map di Prontezza all'AI
+- Mappe dei processi as-is
+- Priorità note del vertice
+
+[INCOLLA QUI GLI ARTEFATTI]
+
+Raccomanda i primi tre piloti AI.
+
+Valuta ogni candidato rispetto a:
+
+1. Valore di business.
+2. Prontezza dei dati.
+3. Chiarezza di processo.
+4. Fattibilità tecnica.
+5. Rischio di adozione.
+6. Rischio di governance.
+7. Complessità delle dipendenze.
+8. Sponsorship esecutiva.
+
+Output:
+
+1. I tre piloti migliori in ordine di priorità.
+2. Perché ciascuno è praticabile adesso.
+3. Che cosa farebbe fallire ciascun pilota.
+4. Quali casi d'uso ad alto valore dovrebbero aspettare.
+5. Quali casi d'uso vanno eliminati.
+
+Chiudi con "La scelta politicamente allettante ma operativamente sbagliata" e
+individua il caso d'uso che la leadership potrebbe voler finanziare ma che non
+dovrebbe partire per primo.</code><button class="copy-btn" aria-label="Copia negli appunti">Copia</button></pre></div>
+
+<div class="callout"><p><strong>Che cosa l'AI non può fare qui:</strong> l'AI può ordinare i casi d'uso. Non può sapere che il pilota «ovvio» appartiene a una business unit che non cambierà mai il processo. Non può sapere che il processo più piccolo ha uno sponsor più forte, dati più puliti e un team di prima linea che ha disperatamente bisogno di aiuto. La scorecard indica. È chi opera sul campo che sceglie.</p></div>
+
+<hr>
+
+<h2 id="livello-4">Livello 4: Decisioni make-or-buy</h2>
+<p><strong>Numero di prompt:</strong> 35</p>
+<p><strong>Che cosa sostituisce:</strong> il dibattito fornitore contro sviluppo interno sepolto dentro ogni incarico di AI strategy.</p>
+<p><strong>Che cosa produce questo livello:</strong> una raccomandazione su se il processo richieda un prodotto di un fornitore, uno sviluppo interno, uno sviluppo con un partner, oppure nessun software perché il problema vero è il processo.</p>
+<p>La decisione make-or-buy sbagliata di solito nasce dalla domanda sbagliata.</p>
+<p>La domanda non è: «Quale strumento dovremmo comprare?»</p>
+<p>La domanda è:</p>
+<p><strong>che cosa deve diventare questo lavoro, e quale percorso ci porta lì con il minor attrito operativo di lungo periodo?</strong></p>
+
+<p><strong>L'indice dei 35 prompt</strong></p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Cluster di prompt</th><th>N.</th><th>Da usare quando</th></tr></thead>
+<tbody>
+<tr><td>Valutazione di aderenza al processo</td><td>5</td><td>Devi capire se il software risolve davvero il problema</td></tr>
+<tr><td>Scansione delle categorie di fornitori</td><td>5</td><td>Ti servono le opzioni disponibili sul mercato</td></tr>
+<tr><td>Fattibilità dello sviluppo interno</td><td>5</td><td>L'engineering vuole costruire ma la capacità non è chiara</td></tr>
+<tr><td>Valutazione del percorso con partner</td><td>4</td><td>Ti serve lavoro su misura ma non la proprietà interna permanente</td></tr>
+<tr><td>Modellazione del TCO</td><td>6</td><td>Il costo di licenza nasconde costi di integrazione e di change</td></tr>
+<tr><td>Analisi di lock-in e rischio di uscita</td><td>4</td><td>La gravità dei dati del fornitore può intrappolare il business</td></tr>
+<tr><td>Sintesi della decisione</td><td>6</td><td>La leadership ha bisogno di una scelta netta</td></tr>
+</tbody>
+</table>
+</div>
+
+<p class="prompt-label">Prompt 4.1 — Costruire, comprare, affidarsi a un partner o ridisegnare</p>
+<div class="code-block-wrapper"><pre><code>Sei un CTO enterprise senior e stratega di operating model. Valuta il
+percorso di delivery corretto per [CASO D'USO AI / PROCESSO].
+
+Input:
+- Processo to-be
+- Architettura di sistema attuale
+- Opzioni fornitori in valutazione
+- Capacità di engineering interna
+- Requisiti di security e compliance
+- Vincoli di budget e di tempi
+
+[INCOLLA QUI GLI ARTEFATTI]
+
+Confronta quattro percorsi:
+
+1. Comprare un prodotto SaaS enterprise.
+2. Costruire internamente.
+3. Affidarsi a un team esterno per uno sviluppo su misura.
+4. Ridisegnare il processo prima di comprare o costruire qualsiasi cosa.
+
+Valuta ogni percorso rispetto a costo, time-to-value, onere di integrazione,
+onere di manutenzione, valore della proprietà intellettuale, lock-in del
+fornitore, rischio di adozione, esposizione di compliance e aderenza al
+target operating model.
+
+Formato di output: matrice decisionale. Chiudi con una raccomandazione netta.
+Nessun tentennamento. Dichiara le ipotesi che cambierebbero la decisione.</code><button class="copy-btn" aria-label="Copia negli appunti">Copia</button></pre></div>
+
+<div class="callout"><p><strong>Che cosa l'AI non può fare qui:</strong> l'AI non può dirti che il procurement imporrà il fornitore storico anche se lo sfidante è migliore. Non può sapere che il team interno è tecnicamente capace ma già impegnato al 100% per 18 mesi. La matrice decisionale è logica. La decisione vera è capacità, politica e responsabilità.</p></div>
+
+<hr>
+
+<h2 id="livello-5">Livello 5: Progettazione del target operating model</h2>
+<p><strong>Numero di prompt:</strong> 40</p>
+<p><strong>Che cosa sostituisce:</strong> la sezione di progettazione dell'operating model nella presentazione di strategia: ruoli, diritti decisionali, processi, governance, KPI e implicazioni organizzative.</p>
+<p><strong>Che cosa produce questo livello:</strong> un target operating model uomo + agente che definisce come il business funzionerà davvero.</p>
+<p>Un target operating model non è un diagramma. È un contratto. Definisce chi fa il lavoro, chi lo approva, chi possiede le eccezioni, che cosa l'agente è autorizzato a fare e che cosa succede quando il processo si rompe.</p>
+<p>Se salti questo livello, non hai una AI strategy. Hai il rollout di uno strumento.</p>
+
+<p><strong>L'indice dei 40 prompt</strong></p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Cluster di prompt</th><th>N.</th><th>Da usare quando</th></tr></thead>
+<tbody>
+<tr><td>Ridisegno dei ruoli</td><td>6</td><td>L'AI cambia chi fa che cosa</td></tr>
+<tr><td>Ridisegno dei diritti decisionali</td><td>6</td><td>L'autorità di approvazione deve spostarsi o stringersi</td></tr>
+<tr><td>Modello human-in-the-loop</td><td>5</td><td>Ti servono punti di revisione e responsabilità sulle eccezioni</td></tr>
+<tr><td>Definizione dei confini dell'agente</td><td>5</td><td>Il sistema ha bisogno di permessi espliciti</td></tr>
+<tr><td>Ridisegno dei KPI</td><td>5</td><td>Le vecchie metriche premiano i vecchi comportamenti</td></tr>
+<tr><td>Implicazioni organizzative e sui livelli manageriali</td><td>4</td><td>L'AI elimina lavoro di coordinamento</td></tr>
+<tr><td>Requisiti di competenze e formazione</td><td>4</td><td>Gli utenti hanno bisogno di nuove capacità</td></tr>
+<tr><td>Sintesi del target operating model</td><td>5</td><td>La leadership ha bisogno del modello completo</td></tr>
+</tbody>
+</table>
+</div>
+
+<p class="prompt-label">Prompt 5.1 — Modello di diritti decisionali e delega</p>
+<div class="code-block-wrapper"><pre><code>Stai definendo i diritti decisionali per un processo enterprise assistito
+dall'AI.
+
+Input:
+- Processo to-be
+- Registro dei rischi
+- Policy di approvazione
+- Descrizioni dei ruoli attuali
+
+[INCOLLA QUI GLI ARTEFATTI]
+
+Costruisci un modello di diritti decisionali con quattro categorie:
+
+1. L'agente può eseguire automaticamente.
+2. L'agente può raccomandare, l'umano approva.
+3. L'agente può preparare le evidenze, l'umano decide.
+4. L'agente non deve mai partecipare oltre il recupero o la sintesi.
+
+Per ogni decisione del processo assegna una categoria e spiega perché.
+
+Includi:
+
+- Livello di rischio
+- Evidenze richieste
+- Responsabile dell'approvazione
+- Percorso di escalation
+- Requisito di log di audit
+- KPI impattato
+
+Chiudi con "Regole di delega che la leadership deve approvare esplicitamente".</code><button class="copy-btn" aria-label="Copia negli appunti">Copia</button></pre></div>
+
+<div class="callout"><p><strong>Che cosa l'AI non può fare qui:</strong> l'AI può progettare un operating model pulito. Non può far accettare ai leader lo spostamento di potere che quel modello crea. Non può rendere un manager sereno nel perdere un passaggio di revisione che giustificava il suo ruolo. La progettazione dell'operating model è il punto in cui la strategia diventa cambiamento organizzativo.</p></div>
+
+<hr>
+
+<h2 id="livello-6">Livello 6: Governance, rischio e regole di escalation</h2>
+<p><strong>Numero di prompt:</strong> 35</p>
+<p><strong>Che cosa sostituisce:</strong> il filone di governance che di solito compare tardi, dopo che i casi d'uso entusiasmanti sono già stati venduti.</p>
+<p><strong>Che cosa produce questo livello:</strong> categorie di rischio, matrici di approvazione, requisiti di audit, regole di stop e logica di escalation.</p>
+<p>La maggior parte delle aziende non ha bisogno di altro entusiasmo per l'AI.</p>
+<p>Ha bisogno di confini abbastanza chiari perché le persone si fidino del sistema.</p>
+<p>L'agente deve sapere quando agire, quando raccomandare, quando chiedere e quando fermarsi.</p>
+<p>Lo stesso vale per il team umano.</p>
+
+<p><strong>L'indice dei 35 prompt</strong></p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Cluster di prompt</th><th>N.</th><th>Da usare quando</th></tr></thead>
+<tbody>
+<tr><td>Inventario degli eventi di rischio</td><td>5</td><td>Devi sapere che cosa può andare storto</td></tr>
+<tr><td>Classificazione del rischio decisionale</td><td>5</td><td>Non tutte le decisioni meritano la stessa revisione</td></tr>
+<tr><td>Progettazione della matrice di approvazione</td><td>5</td><td>La revisione umana deve essere esplicita</td></tr>
+<tr><td>Progettazione delle regole di escalation</td><td>5</td><td>Le eccezioni hanno bisogno di una logica di instradamento</td></tr>
+<tr><td>Requisiti di audit ed evidenze</td><td>4</td><td>La compliance ha bisogno di prove, non di promesse</td></tr>
+<tr><td>Definizione delle regole di stop</td><td>4</td><td>L'agente ha bisogno di confini netti</td></tr>
+<tr><td>Cadenza operativa della governance</td><td>3</td><td>I responsabili hanno bisogno di ritmi di revisione</td></tr>
+<tr><td>Sintesi delle policy</td><td>4</td><td>La leadership ha bisogno di regole scritte</td></tr>
+</tbody>
+</table>
+</div>
+
+<p class="prompt-label">Prompt 6.1 — Registro dei rischi del processo AI</p>
+<div class="code-block-wrapper"><pre><code>Sei un responsabile senior di rischio, compliance e operations. Costruisci un
+registro dei rischi per il rilascio dell'AI dentro [NOME DEL PROCESSO].
+
+Input:
+- Processo to-be
+- Modello di diritti decisionali
+- Fonti dati
+- Policy regolamentari o di compliance
+- Dettagli sull'impatto su clienti, dipendenti, finanza o sicurezza
+
+[INCOLLA QUI GLI ARTEFATTI]
+
+Identifica ogni evento di rischio in queste categorie:
+
+1. Rischio legale o regolamentare.
+2. Rischio finanziario.
+3. Rischio di danno o di esperienza per il cliente.
+4. Rischio di continuità operativa.
+5. Rischio reputazionale.
+6. Rischio di privacy o sicurezza dei dati.
+7. Rischio occupazionale o sulla forza lavoro.
+8. Rischio di comportamento del modello.
+
+Per ogni rischio indica probabilità, gravità, metodo di rilevamento, controllo
+di prevenzione, responsabile dell'escalation e se blocca il lancio del pilota.
+
+Formato di output: registro dei rischi ordinato per gravità. Chiudi con
+"Bloccanti immediati del pilota".</code><button class="copy-btn" aria-label="Copia negli appunti">Copia</button></pre></div>
+
+<p class="prompt-label">Prompt 6.2 — Regole di stop e policy di escalation</p>
+<div class="code-block-wrapper"><pre><code>Stai scrivendo la policy operativa di escalation per un processo assistito
+dall'AI.
+
+Input:
+- Registro dei rischi
+- Modello di diritti decisionali
+- Processo to-be
+- Policy di escalation esistenti
+
+[INCOLLA QUI GLI ARTEFATTI]
+
+Definisci le regole che stabiliscono quando l'agente deve fermarsi e chiedere
+a un umano.
+
+Includi:
+
+1. Soglie di confidenza.
+2. Trigger di dati mancanti.
+3. Trigger di dati in conflitto.
+4. Trigger ad alto rischio su cliente, finanza, legale, sicurezza o rapporto
+   di lavoro.
+5. Trigger di casi nuovi.
+6. Trigger di errori ripetuti.
+7. Trigger di override da parte dell'utente.
+8. Responsabile dell'escalation richiesto per tipo di rischio.
+9. Pacchetto di evidenze richiesto per ogni escalation.
+
+Formato di output: documento di policy scritto in linguaggio chiaro per
+operations, legal, security e manager di prima linea.</code><button class="copy-btn" aria-label="Copia negli appunti">Copia</button></pre></div>
+
+<div class="callout"><p><strong>Che cosa l'AI non può fare qui:</strong> l'AI può redigere un modello di governance. Non può sapere quale propensione al rischio il vertice tollererà davvero quando arriverà la pressione sui ricavi. Non può far rispettare la regola quando il business vuole che l'agente continui a correre. La governance non è un documento. È un comportamento della leadership.</p></div>
+
+<hr>
+
+<h2 id="livello-7">Livello 7: Perimetro del pilota e sequenza di rilascio</h2>
+<p><strong>Numero di prompt:</strong> 45</p>
+<p><strong>Che cosa sostituisce:</strong> le slide di roadmap, il piano di rollout per fasi e il charter del pilota che trasformano l'analisi in lavoro rilasciabile.</p>
+<p><strong>Che cosa produce questo livello:</strong> un pilota delimitato di 60 giorni, metriche di successo, casi limite esclusi, sequenza di rollout e criteri stop / go.</p>
+<p>È qui che la roadmap diventa reale.</p>
+<p>Non quando la presentazione viene approvata.</p>
+<p>Quando il primo processo ha un perimetro abbastanza stretto da sopravvivere.</p>
+<p>Un pilota non deve dimostrare che l'AI è interessante. Lo sanno già tutti.</p>
+<p>Un pilota deve dimostrare che uno specifico target operating model può creare valore misurabile sotto vincoli reali.</p>
+
+<p><strong>L'indice dei 45 prompt</strong></p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Cluster di prompt</th><th>N.</th><th>Da usare quando</th></tr></thead>
+<tbody>
+<tr><td>Progettazione del charter del pilota</td><td>7</td><td>Ti servono perimetro, responsabili e confini</td></tr>
+<tr><td>Definizione delle metriche di successo</td><td>6</td><td>Il pilota deve avere valore misurabile</td></tr>
+<tr><td>Esclusione dei casi limite</td><td>5</td><td>L'allargamento del perimetro minaccia il lancio</td></tr>
+<tr><td>Minimi di dati e integrazione</td><td>5</td><td>L'IT ha bisogno di una checklist di lancio</td></tr>
+<tr><td>Sequenza dei gruppi di utenti</td><td>5</td><td>Non puoi rilasciare a tutti in una volta</td></tr>
+<tr><td>Progettazione della roadmap 30/60/90 giorni</td><td>6</td><td>La leadership ha bisogno di fasi di delivery</td></tr>
+<tr><td>Progettazione della decisione stop / go</td><td>5</td><td>I criteri di scale-up devono essere espliciti</td></tr>
+<tr><td>Passaggio alla prontezza di produzione</td><td>6</td><td>Un pilota riuscito ha bisogno di un percorso di scala</td></tr>
+</tbody>
+</table>
+</div>
+
+<p class="prompt-label">Prompt 7.1 — Charter del pilota a 60 giorni</p>
+<div class="code-block-wrapper"><pre><code>Stai convertendo un caso d'uso AI in un charter di pilota enterprise di 60
+giorni.
+
+Input:
+- Caso d'uso selezionato
+- Processo to-be
+- Modello di stima del valore
+- Regole di governance
+- Valutazione di prontezza dei dati
+- Mappa degli stakeholder
+
+[INCOLLA QUI GLI ARTEFATTI]
+
+Produci un charter del pilota con:
+
+1. Obiettivo del pilota.
+2. Perimetro del processo.
+3. Elementi esplicitamente fuori perimetro.
+4. Gruppo di utenti incluso.
+5. Sistemi inclusi.
+6. Fonti dati incluse.
+7. Capacità dell'agente incluse.
+8. Punti di revisione umana.
+9. Metriche di successo.
+10. Metriche di guardrail.
+11. Approvazioni richieste.
+12. Rischi di lancio.
+13. Piano settimana per settimana.
+14. Responsabile nominato e accountable.
+
+Formato di output: charter del pilota pronto per la revisione del vertice.
+Sii abbastanza specifico da permettere a un delivery team di iniziare a
+pianificare partendo da lì.</code><button class="copy-btn" aria-label="Copia negli appunti">Copia</button></pre></div>
+
+<div class="callout"><p><strong>Che cosa l'AI non può fare qui:</strong> l'AI può scrivere un charter del pilota bellissimo. Non può impedire alla leadership di allargare il perimetro nella seconda settimana. Non può obbligare il business ad accettare una decisione di stop quando il progetto prediletto manca i suoi obiettivi. Il pilota funziona solo se chi opera protegge il confine.</p></div>
+
+<hr>
+
+<h2 id="livello-8">Livello 8: Change management, adozione e allineamento esecutivo</h2>
+<p><strong>Numero di prompt:</strong> 70</p>
+<p><strong>Che cosa sostituisce:</strong> il filone di change management che tutti sottovalutano finché il pilota non fallisce.</p>
+<p><strong>Che cosa produce questo livello:</strong> mappa degli stakeholder, mappa delle resistenze, narrativa esecutiva, piano di adozione per la prima linea, requisiti di formazione, metriche di cambiamento comportamentale e cadenza di rinforzo.</p>
+<p>Questo è il livello più grande, e c'è un motivo.</p>
+<p>Il modello è raramente la ragione per cui l'AI enterprise muore.</p>
+<p>Cambia il processo. Cambiano gli incentivi. Cambiano i diritti di approvazione. Il manager perde un punto di controllo. L'analista perde un'attività manuale che lo faceva sentire prezioso. Lo sponsor esecutivo sparisce dopo il kickoff. Il team di prima linea annuisce in aula e poi continua a usare il foglio di calcolo.</p>
+<p>È lì che muore il 95% dei rilasci AI.</p>
+<p>Non nel modello.</p>
+<p>Nell'operating model.</p>
+
+<p><strong>L'indice dei 70 prompt</strong></p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Cluster di prompt</th><th>N.</th><th>Da usare quando</th></tr></thead>
+<tbody>
+<tr><td>Mappatura degli stakeholder</td><td>8</td><td>Devi sapere chi può bloccare, abilitare o ignorare il pilota</td></tr>
+<tr><td>Mappatura delle resistenze</td><td>9</td><td>Le obiezioni visibili non sono le obiezioni vere</td></tr>
+<tr><td>Analisi degli incentivi</td><td>6</td><td>Le metriche attuali premiano i vecchi comportamenti</td></tr>
+<tr><td>Narrativa di allineamento esecutivo</td><td>8</td><td>La leadership ha bisogno di una storia sola</td></tr>
+<tr><td>Narrativa di adozione per la prima linea</td><td>8</td><td>Gli utenti hanno bisogno di motivi comprensibili per cambiare</td></tr>
+<tr><td>Progettazione di formazione e abilitazione</td><td>7</td><td>I team hanno bisogno di nuove abitudini, non di una demo</td></tr>
+<tr><td>Metriche di cambiamento comportamentale</td><td>6</td><td>L'adozione va misurata nel comportamento dentro il processo</td></tr>
+<tr><td>Cadenza di comunicazione</td><td>5</td><td>Il rollout ha bisogno di rinforzo</td></tr>
+<tr><td>Abilitazione dei manager</td><td>5</td><td>Il middle management può uccidere il cambiamento in silenzio</td></tr>
+<tr><td>Ciclo di feedback e eccezioni</td><td>4</td><td>Gli utenti hanno bisogno di un modo per migliorare il sistema</td></tr>
+<tr><td>Valutazione di prontezza alla scala</td><td>4</td><td>L'adozione in un gruppo non dimostra la prontezza dell'azienda</td></tr>
+</tbody>
+</table>
+</div>
+
+<p class="prompt-label">Prompt 8.1 — Mappa degli stakeholder e delle resistenze</p>
+<div class="code-block-wrapper"><pre><code>Sei una figura senior di change management e stai preparando il rollout di un
+processo AI.
+
+Input:
+- Charter del pilota
+- Target operating model
+- Organigramma
+- Note delle interviste agli stakeholder
+- KPI e incentivi attuali
+- Vincoli politici noti
+
+[INCOLLA QUI GLI ARTEFATTI]
+
+Costruisci una mappa degli stakeholder e delle resistenze.
+
+Per ogni gruppo di stakeholder o ruolo nominato includi:
+
+1. Relazione attuale con il processo.
+2. Che cosa cambia per loro.
+3. Che cosa guadagnano.
+4. Che cosa perdono.
+5. Obiezione pubblica probabile.
+6. Preoccupazione privata probabile.
+7. Livello di influenza.
+8. Livello di supporto.
+9. Azione necessaria per portarli verso il supporto.
+10. Responsabile della gestione della relazione.
+
+Formato di output: tabella degli stakeholder. Chiudi con "Bloccanti silenziosi"
+e "Campioni critici".</code><button class="copy-btn" aria-label="Copia negli appunti">Copia</button></pre></div>
+
+<p class="prompt-label">Prompt 8.2 — Narrativa di adozione per la prima linea</p>
+<div class="code-block-wrapper"><pre><code>Stai scrivendo la narrativa di adozione per il team di prima linea che userà
+un processo assistito dall'AI.
+
+Input:
+- Processo as-is
+- Processo to-be
+- Charter del pilota
+- Punti di dolore noti della prima linea
+- Regole di governance e di escalation
+
+[INCOLLA QUI GLI ARTEFATTI]
+
+Scrivi la narrativa di adozione in linguaggio semplice.
+
+Deve rispondere a:
+
+1. Che cosa cambia nel lavoro quotidiano.
+2. Che cosa non cambia.
+3. Che cosa farà l'agente.
+4. Che cosa non farà l'agente.
+5. Che cosa resta di proprietà delle persone.
+6. Come vanno gestiti errori o output sbagliati.
+7. Come il feedback degli utenti migliorerà il sistema.
+8. Come verrà misurato il successo.
+9. Che cosa la leadership sta chiedendo al team di fare diversamente.
+
+Evita il linguaggio aziendalese. Non dire "abbracciare l'AI". Non lasciare
+intendere che lo strumento sia perfetto. Rendilo credibile per operatori
+esperti che hanno già visto rollout software fatti male.</code><button class="copy-btn" aria-label="Copia negli appunti">Copia</button></pre></div>
+
+<div class="callout"><p><strong>Che cosa l'AI non può fare qui:</strong> l'AI può scrivere il memo. Non può entrare nella stanza e far sì che lo sponsor esecutivo protegga il pilota quando arrivano le resistenze. Non può guardare negli occhi un manager di prima linea e ricostruire la fiducia dopo anni di sistemi mal fatti. Il change management non è comunicazione. È comportamento, incentivi e potere.</p></div>
+
+<hr>
+
+<h2 id="settimana-reale">Come far girare il sistema in una settimana reale</h2>
+<p>Se vuoi usarlo in modo pratico, non cominciare eseguendo tutti i prompt.</p>
+<p>Comincia da un solo processo.</p>
+<p>Scegli un processo in cui siano vere tre cose:</p>
+<ol>
+<li>Il dolore è evidente.</li>
+<li>I dati sono raggiungibili.</li>
+<li>Un vero responsabile di business è disposto a sponsorizzare il cambiamento.</li>
+</ol>
+<p>Poi esegui uno sprint analitico di una settimana:</p>
+<p><strong>Giorno 1: prontezza e realtà dei dati.</strong> Esegui il Livello 1. Se i dati sono rotti o la proprietà non è chiara, smetti di fingere che sia un problema di modello.</p>
+<p><strong>Giorno 2: mappatura del processo.</strong> Esegui il Livello 2. Costruisci la mappa as-is e validala con qualcuno che il lavoro lo fa davvero.</p>
+<p><strong>Giorno 3: valore dei casi d'uso e prioritizzazione.</strong> Esegui il Livello 3. Dimensiona l'opportunità e decidi se questo processo merita di essere il primo.</p>
+<p><strong>Giorno 4: make-or-buy e target operating model.</strong> Esegui i Livelli 4 e 5. Scegli il percorso di delivery e definisci i diritti decisionali.</p>
+<p><strong>Giorno 5: governance, perimetro del pilota e adozione.</strong> Esegui i Livelli 6, 7 e 8. Scrivi il charter del pilota, le regole di stop, la mappa degli stakeholder e la narrativa di adozione.</p>
+<p>A fine settimana non dovresti avere una grande presentazione di strategia. Dovresti avere qualcosa di più utile: una valutazione di prontezza specifica per quel processo, una mappa del processo, un modello di valore, una raccomandazione build / buy / partner / ridisegno, un target operating model, regole di governance, un charter del pilota a 60 giorni e un piano di adozione.</p>
+<p>Quello è il livello analitico. Prima richiedeva mesi. Ora può richiedere giorni, se gli input sono reali e chi opera sa che cosa sta guardando.</p>
+<p>Ma non confondere la velocità con il completamento.</p>
+<p>L'analisi è l'inizio.</p>
+<p>Il rilascio è il lavoro.</p>
+
+<hr>
+
+<h2 id="cosa-viene-dopo">Cosa viene dopo</h2>
+<p>Adesso hai la ricetta.</p>
+<p>La ricetta è gratuita.</p>
+<p>Ma è il RISTORANTE che conta.</p>
+<p>Puoi farlo da solo. Una figura interna forte, con accesso agli artefatti giusti, può usare questo Prompt Book per comprimere il livello analitico di un incarico da 1,5 milioni di dollari della Big Consulting in uno sprint focalizzato.</p>
+<p>Realisticamente, aspettati 40-80 ore per un singolo processo se la documentazione è disponibile e le persone giuste rispondono alle domande. Aspettati 150-300 ore per un portafoglio cross-funzionale. Aspettati di più se la proprietà dei dati non è chiara, i diritti decisionali sono politici o i processi esistono soprattutto nella testa delle persone.</p>
+<p>Quello non è un problema di prompt.</p>
+<p>Quello è il business.</p>
+<p>I prompt ti daranno mappe, registri, matrici, charter e memo. Ti aiuteranno ad andare più veloce. Imporranno struttura al disordine.</p>
+<p>Ma non prenderanno le decisioni difficili al posto tuo.</p>
+<p>Non diranno al vertice che il loro caso d'uso preferito deve aspettare. Non convinceranno un capo funzione a rinunciare a un punto di controllo. Non ricostruiranno la fiducia con un team di prima linea dopo tre rollout software falliti. Non staranno seduti nel comitato di indirizzo quando il pilota manca una milestone della seconda settimana e tutti vogliono cambiare i criteri di successo.</p>
+<p>È lì che sta il lavoro.</p>
+<p>È lì che muore il 95% dei rilasci AI.</p>
+<p>Non nel modello.</p>
+<p>Nell'operating model.</p>
+<p>Il livello di analisi è ormai una commodity.</p>
+<p>Chi opera sul campo no.</p>
+
+<hr>
+
+<h2 id="su-geniant">Chi è geniant</h2>
+<p>geniant è la società che prima di tutto capisce il lavoro.</p>
+<p>Da 15 anni aiutiamo le aziende a passare dalla strategia alla produzione con un unico team integrato: experience design, workflow intelligence, progettazione dell'operating model e sviluppo abilitato dall'AI.</p>
+<p>Lavoriamo dove la posta in gioco è alta, i sistemi sono complessi e il lavoro non può essere ridotto a un generico rollout software: banche globali, grandi compagnie aeree e di trasporto, grandi manifatture, organizzazioni sanitarie, retailer, agenzie federali e imprese mid-market complesse.</p>
+<p>Il nostro vantaggio non è avere una presentazione di strategia più bella.</p>
+<p>Il nostro vantaggio è che colleghiamo tutta la catena:</p>
+<p><strong>Capire il lavoro.</strong></p>
+<p>Mappare il processo reale. Ogni passaggio di consegna. Ogni eccezione. Ogni scorciatoia. Ogni dipendenza dai dati. Ogni punto di giudizio umano.</p>
+<p><strong>Costruire il target operating model.</strong></p>
+<p>Definire come il business deve funzionare con l'AI dentro il processo: ruoli, diritti decisionali, percorsi di escalation, governance, metriche, adozione e change management.</p>
+<p><strong>Costruire lo strumento.</strong></p>
+<p>Progettare e rilasciare il sistema abilitato dall'AI attorno all'operating model, non il contrario.</p>
+<p>Un solo team.</p>
+<p>Nessun passaggio di consegna tra strategia, design e sviluppo.</p>
+<p>Nessuna finzione che lo strumento sistemi il processo da solo.</p>
+<p>Quattro studi: Dallas, Chicago, San Francisco, Londra.</p>
+<p>La sequenza non cambia.</p>
+<p>Capire il lavoro.</p>
+<p>Costruire il target operating model.</p>
+<p>Costruire lo strumento.</p>
+<p>In quest'ordine.</p>
+
+<hr>
+
+<h2 id="due-strade">Due strade per andare avanti</h2>
+<p><strong>Opzione 1: fallo da solo.</strong></p>
+<p>Usa il Prompt Book. Scegli un processo. Esegui lo sprint analitico di una settimana. Valida ogni output con le persone che il lavoro lo fanno davvero.</p>
+<p>Se hai in azienda una figura senior capace di gestire la politica, proteggere il perimetro e guidare il cambiamento dell'operating model, puoi risparmiare gran parte della parcella di consulenza tradizionale.</p>
+<p>È esattamente questo il punto.</p>
+<p>Il livello analitico dovrebbe costare meno, adesso.</p>
+<p><strong>Opzione 2: lascia a geniant la parte difficile.</strong></p>
+<p>Se non hai la capacità interna, o se il lavoro attraversa troppe funzioni, sistemi e confini politici, porta dentro un team che l'ha già fatto.</p>
+<p>geniant aiuta i team enterprise a passare dall'analisi generata dai prompt a operating model pronti per la produzione e sistemi AI funzionanti.</p>
+<p>Possiamo aiutarti a:</p>
+<ul>
+<li>Individuare il processo in cui l'AI può davvero creare valore misurabile</li>
+<li>Mappare lo stato attuale e far emergere i vincoli reali</li>
+<li>Progettare il target operating model comprensivo di AI</li>
+<li>Definire governance, diritti decisionali e regole di escalation</li>
+<li>Costruire il perimetro del pilota e la sequenza di rilascio</li>
+<li>Progettare e rilasciare il processo abilitato dall'AI</li>
+<li>Gestire il cambiamento necessario all'adozione</li>
+</ul>
+<p>Parti da qui:</p>
+<p><a href="https://geniant.com/?utm_source=lead_magnet&amp;utm_medium=guide&amp;utm_campaign=prompts">Scopri geniant</a></p>
+<p><a href="https://cal.com/grant-baldwin/calendar?utm_source=lead_magnet&amp;utm_medium=guide&amp;utm_campaign=prompts">Prenota una sessione di strategia</a></p>
+<p>Arriviamo preparati con domande, non con un pitch.</p>
+
+<hr>
+
+<p><em>Realizzato con Claude Opus 4.7. I prompt di questa guida sono pensati per comprimere il livello analitico della AI strategy enterprise, non per sostituire il giudizio senior richiesto per portare l'AI in produzione.</em></p>
+
+</article>
+</div>
+</section>
+
+<section class="final-cta">
+  <div class="container">
+    <div class="final-cta-inner">
+      <p class="final-cta-eyebrow">Il passo successivo</p>
+      <h2 class="final-cta-headline">Il livello analitico è tuo. Il giudizio resta il lavoro.</h2>
+      <p class="final-cta-subtitle">Scegli un processo. Esegui lo sprint di una settimana. Poi decidi se ti serve un team che l'ha già fatto.</p>
+      <div class="cta-buttons">
+        <a class="btn-primary" href="https://cal.com/grant-baldwin/calendar?utm_source=guide&amp;utm_campaign=360-prompt-book">Prenota 30 minuti →</a>
+        <a class="btn-secondary" href="https://geniant.com/?utm_source=lead_magnet&amp;utm_medium=guide&amp;utm_campaign=prompts">Scopri geniant</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <div class="gold-bar"></div>
+  <div class="container footer-content">
+    <div class="footer-top">
+      <a href="#top" class="logo">Il Libro <span class="logo-accent">dei Prompting</span></a>
+      <p style="font-family:var(--font-sans);font-size:.82rem;margin:0;color:#a9b4c0">Traduzione italiana di «The 360 Big Consulting Framework Prompt Book» — The Craft of AI / geniant</p>
+    </div>
+    <div class="footer-bottom">
+      Documento autoconsistente: nessuna risorsa esterna, nessun tracciamento. Fonte originale: <a href="https://www.thecraftofai.com/read/360-prompt-book">thecraftofai.com/read/360-prompt-book</a>
+    </div>
+  </div>
+</footer>
+
+<button id="toTop" aria-label="Torna su">↑</button>
+
+<script>
+document.querySelectorAll('.copy-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var code = btn.closest('pre').querySelector('code');
+    var text = code.innerText;
+    var done = function(){
+      var old = btn.textContent;
+      btn.textContent = 'Copiato';
+      btn.classList.add('copied');
+      setTimeout(function(){ btn.textContent = old; btn.classList.remove('copied'); }, 1600);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done).catch(function(){ fallback(text, done); });
+    } else { fallback(text, done); }
+  });
+});
+function fallback(text, done){
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); done(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+var toTop = document.getElementById('toTop');
+window.addEventListener('scroll', function(){
+  toTop.classList.toggle('show', window.scrollY > 600);
+});
+toTop.addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); });
+</script>
+</body>
+</html>
